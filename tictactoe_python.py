@@ -2,6 +2,7 @@
 #!/usr/bin/env python
 
 import random
+from typing import Union, Literal
 
 
 class TicTacToe:
@@ -130,7 +131,7 @@ class TicTacToe:
         """
         for row in self.board:
             for item in row:
-                if item == "-":
+                if item == self.empty_indicator:
                     return False
         return True
 
@@ -159,6 +160,31 @@ class TicTacToe:
                 print(item, end=" ")
             print()
 
+    def get_player_input(self) -> Union[Literal[False], tuple[int]]:
+        """Asks the player for input and validates it
+
+        Args:
+            None
+
+        Returns:
+            Tuple of whether input is valid and if so also the input
+        """
+        # taking user input
+        player_input = input("Enter row and column numbers to fix spot: ").split()
+        if len(player_input) != 2:
+            print(
+                f"You entered {len(player_input)} value{'' if len(player_input) == 1 else 's'}. You need to enter exactly two integers to defined your position!"
+            )
+            return False
+        try:
+            row, col = list(map(int, player_input))
+        except ValueError:
+            print(
+                f"At least one of your entered inputs of ({player_input[0]}, {player_input[1]}) could not be converted to an integer. Try again!"
+            )
+            return False
+        return (row, col)
+
     def start(self) -> None:
         """Starts the game and contains the main game loop
 
@@ -178,22 +204,11 @@ class TicTacToe:
 
                 self.show_board()
 
-                # taking user input
-                player_input = input(
-                    "Enter row and column numbers to fix spot: "
-                ).split()
-                if len(player_input) != 2:
-                    print(
-                        f"You entered {len(player_input)} value{'' if len(player_input) == 1 else 's'}. You need to enter exactly two integers to defined your position!"
-                    )
+                player_input = self.get_player_input()
+                if not player_input:
                     continue
-                try:
-                    row, col = list(map(int, player_input))
-                except ValueError:
-                    print(
-                        f"At least one of your entered inputs of ({player_input[0]}, {player_input[1]}) could not be converted to an integer. Try again!"
-                    )
-                    continue
+                row, col = player_input
+
                 print()
                 # fixing the spot
                 valid_move = self.fix_spot(row - 1, col - 1, player)
