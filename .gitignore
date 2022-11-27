@@ -1,2 +1,6 @@
 *.code-workspace
 .vscode/
+.eslintrc
+node_modules/
+package.json
+package-lock.json

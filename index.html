@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+</html>
+
+<head>
+    <!--
+		Tic Tac Toe with Minimax AI Algorithm
+		Author: Clederson Cruz
+		Year: 2017
+		License: GNU GENERAL PUBLIC LICENSE (GPL)
+		-->
+
+    <meta charset="UTF-8" />
+    <title>Tic-Tac-Toe javascript</title>
+    <meta content="Jan-Eric Nitschke" name="author" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <noscript>Sorry, your browser does not support JavaScript!</noscript>
+</head>
+
+<body>
+    <header>
+        <h1>Tic-Tac-Toe javascript</h1>
+    </header>
+    <br />
+    <p id="message">Select game mode</p>
+    <br />
+    <table id="table" cellspacing="0">
+        <tr>
+            <td id="00" onclick="clickedField(this)"></td>
+            <td id="01" onclick="clickedField(this)"></td>
+            <td id="02" onclick="clickedField(this)"></td>
+        </tr>
+        <tr>
+            <td id="10" onclick="clickedField(this)"></td>
+            <td id="11" onclick="clickedField(this)"></td>
+            <td id="12" onclick="clickedField(this)"></td>
+        </tr>
+        <tr>
+            <td id="20" onclick="clickedField(this)"></td>
+            <td id="21" onclick="clickedField(this)"></td>
+            <td id="22" onclick="clickedField(this)"></td>
+        </tr>
+    </table>
+    <div id="buttonsDiv">
+        <button type="button" id="button1" class="controlButton" onclick="button1click(this)">1 Player</button>
+        <button type="button" id="button2" class="controlButton" onclick="button2click(this)">2 Players</button>
+    </div>
+
+</body>
+
+</html>

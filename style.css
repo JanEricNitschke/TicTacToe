@@ -1,0 +1,151 @@
+body {
+    background-color: #232F3E;
+}
+
+h1 {
+    color: #722007;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #f9f9f9;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    color: #f9f9f9;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+label,
+button {
+    color: #FF9900;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    margin: 5px;
+}
+
+input {
+    color: #232F3E;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+ul {
+    list-style-type: none;
+    font-size: 20px;
+    padding: 0px;
+    overflow: hidden;
+    background-color: #232F3E;
+    vertical-align: top;
+    margin: 0px;
+}
+
+li {
+    margin: 0px;
+    display: inline-block;
+}
+
+/* ****************** Table style ****************** */
+#table {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    font-size: 4em;
+    font-family: Sans;
+    color: #FF9900;
+    background: #F8F8F8;
+    width: 510px;
+    height: 500px;
+    text-align: center;
+    vertical-align: center;
+    border: 1px solid #CECECE;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px #CCC;
+}
+
+/*Column style*/
+#table td {
+    border-collapse: collapse;
+    border-left: 5px solid #CCC;
+    border-bottom: 5px solid #CCC;
+}
+
+#table td:first-child {
+    border-left: none;
+}
+
+#table tr:last-child td {
+    border-bottom: none;
+}
+
+/*Cells*/
+#table td {
+    cursor: pointer;
+    height: 95px;
+    width: 95px;
+}
+
+#table td:hover {
+    background: #ECECEC;
+}
+
+#message {
+    color: #FF9900;
+    font-size: 14pt;
+    font-weight: bold;
+    font-family: Sans;
+    text-align: center;
+    position: relative;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+#buttonsDiv {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    font-size: 1.5em;
+    justify-content: space-around;
+}
+
+.controlButton {
+    display: block;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    font-size: 1.0em;
+    color: #FF9900;
+    background-color: #F8F8F8;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.controlButton:hover {
+    background-color: #ECECEC;
+}
+
+.controlButton:active {
+    color: #FF9900;
+}
+
+.controlButton:disabled {
+    color: #722007;
+    background: #444;
+}
