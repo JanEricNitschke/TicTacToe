@@ -112,6 +112,9 @@ function checkEndState(state) {
 
 function clickedField(field) {
     if (game_status != "ongoing") {
+        document.getElementById('message').style.animation = "";
+        document.getElementById('message').offsetHeight; /* trigger reflow */
+        document.getElementById('message').style.animation = "shake 0.5s linear 4";
         return;
     }
     let x = field.id.split("")[0];
