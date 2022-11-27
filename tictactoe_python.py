@@ -1,6 +1,8 @@
 """Script to play ticatactoe"""
 #!/usr/bin/env python
 
+import sys
+from time import sleep
 import random
 from typing import Union, Literal
 
@@ -11,11 +13,13 @@ class TicTacToe:
     Attributes:
         board (list[list[string]]): 2D list that contains the ticatactoe board.
         empty_indicator (str): String to indicate that a position has not been taken by either player
+        single_player (bool): Whether to play alone vs ai (true) or not (false). Default is False
     """
 
     def __init__(self):
         self.board = []
         self.empty_indicator = "-"
+        self.single_player = False
 
     def create_board(self) -> None:
         """Initializes the board as a list of lists containting only '-'
@@ -25,6 +29,7 @@ class TicTacToe:
         Returns:
             None (board modified in place)
         """
+        self.board = []
         for _ in range(3):
             row = []
             for _ in range(3):
@@ -69,24 +74,25 @@ class TicTacToe:
         self.board[row][col] = player
         return True
 
-    def is_player_win(self, player: str) -> bool:
+    def is_player_win(self, player: str, board: list[list[str]]) -> bool:
         """Checks if the given player has won the game
 
         Args:
             player (str): Player for which to check if they have won the game
+            board (list[list[str]]): Board as a list of lists
 
         Returns:
             bool
         """
         win = None
 
-        n = len(self.board)
+        n = len(board)
 
         # checking rows
         for i in range(n):
             win = True
             for j in range(n):
-                if self.board[i][j] != player:
+                if board[i][j] != player:
                     win = False
                     break
             if win:
@@ -96,7 +102,7 @@ class TicTacToe:
         for i in range(n):
             win = True
             for j in range(n):
-                if self.board[j][i] != player:
+                if board[j][i] != player:
                     win = False
                     break
             if win:
@@ -105,7 +111,7 @@ class TicTacToe:
         # checking diagonals
         win = True
         for i in range(n):
-            if self.board[i][i] != player:
+            if board[i][i] != player:
                 win = False
                 break
         if win:
@@ -113,7 +119,7 @@ class TicTacToe:
 
         win = True
         for i in range(n):
-            if self.board[i][n - 1 - i] != player:
+            if board[i][n - 1 - i] != player:
                 win = False
                 break
         if win:
@@ -185,6 +191,108 @@ class TicTacToe:
             return False
         return (row, col)
 
+    def ai_turn(self, player: str) -> None:
+        """Logic for AI taking a turn
+
+        Args:
+            player (str): Which side the AI is playing on
+
+        Returns:
+            None"""
+        print(f"AI turn as {player}.")
+        self.show_board()
+        print(flush=True)
+        row, col, _ = self.minmax(self.board, player)
+        self.board[row][col] = player
+        sleep(1)
+
+    def empty_cells(self, board: list[list[str]]) -> list[tuple[int]]:
+        """Get all the empty cells on a given board
+
+        Args:
+            board (list[list[str]]): Board as a list of lists
+
+        Returns:
+            list of tuples of empty board coordinates
+        """
+        empty_cells = []
+        for row in range(len(board)):
+            for col in range(len(board[0])):
+                if board[row][col] == self.empty_indicator:
+                    empty_cells.append((row, col))
+        return empty_cells
+
+    def minmax(self, board: list[list[str]], player: str) -> list:
+        """Takes a board state and returns the coordinates of the optimal move for the given player
+
+        Args:
+            board (list[list[str]]): Board as a list of lists
+            player (str): The player whose move it currently is
+
+        Returns:
+            list of [row, col, value] of best move
+        """
+        best_move = [-1, -1, -1]
+        if self.is_player_win(player, board):
+            best_move[2] = 1
+            return best_move
+        if self.is_player_win(self.swap_player_turn(player), board):
+            best_move[2] = -1
+            return best_move
+        best_move = [-1, -1, -1]
+        empty_cells = self.empty_cells(board)
+        if not empty_cells:
+            best_move[2] = 0
+            return best_move
+        if len(empty_cells) == 9:
+            return [0, 0, 0]
+        for row, col in empty_cells:
+            board[row][col] = player
+            _, _, value = self.minmax(board, self.swap_player_turn(player))
+            if -value >= best_move[2]:
+                best_move = [row, col, -value]
+            board[row][col] = self.empty_indicator
+        return best_move
+
+    def player_turn(self, player: str) -> None:
+        """Logic for AI taking a turn
+
+        Args:
+            player (str): Which side the user is playing on
+
+        Returns:
+            None"""
+        valid_move = False
+        while not valid_move:
+            print(f"Player {player} turn")
+
+            self.show_board()
+
+            player_input = self.get_player_input()
+            if not player_input:
+                continue
+            row, col = player_input
+
+            print()
+            # fixing the spot
+            valid_move = self.fix_spot(row - 1, col - 1, player)
+
+    def get_player_number(self) -> None:
+        """Get input from the player(s) whether it is two real players or one vs AI"""
+        solo = ""
+        while solo not in ["Y", "N"]:
+            try:
+                solo = input("Play alone vs AI?[y/n]: ").upper()
+            except (EOFError, KeyboardInterrupt):
+                print("Bye")
+                sys.exit()
+            except (KeyError, ValueError, AttributeError):
+                print("Bad choice")
+        if solo == "Y":
+            self.single_player = True
+        else:
+            self.single_player = False
+
     def start(self) -> None:
         """Starts the game and contains the main game loop
 
@@ -195,26 +303,18 @@ class TicTacToe:
             None"""
         self.create_board()
 
+        self.get_player_number()
+
         player = "X" if self.get_random_first_player() == 1 else "O"
         while True:
 
-            valid_move = False
-            while not valid_move:
-                print(f"Player {player} turn")
-
-                self.show_board()
-
-                player_input = self.get_player_input()
-                if not player_input:
-                    continue
-                row, col = player_input
-
-                print()
-                # fixing the spot
-                valid_move = self.fix_spot(row - 1, col - 1, player)
+            if self.single_player and player == "X":
+                self.ai_turn(player)
+            else:
+                self.player_turn(player)
 
             # checking whether current player is won or not
-            if self.is_player_win(player):
+            if self.is_player_win(player, self.board):
                 print(f"Player {player} wins the game!")
                 break
 
