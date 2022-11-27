@@ -198,31 +198,6 @@ class TestTicTacToe:
         assert self.tictactoe.minmax(board, "O") == [1, 1, 1]
         board = [
             [
-                self.tictactoe.empty_indicator,
-                self.tictactoe.empty_indicator,
-                self.tictactoe.empty_indicator,
-            ],
-            [
-                self.tictactoe.empty_indicator,
-                self.tictactoe.empty_indicator,
-                self.tictactoe.empty_indicator,
-            ],
-            [
-                self.tictactoe.empty_indicator,
-                self.tictactoe.empty_indicator,
-                self.tictactoe.empty_indicator,
-            ],
-        ]
-        self.tictactoe.minmax_calls = 0
-        assert self.tictactoe.minmax(board, "X") in [
-            [0, 2, 0],
-            [0, 0, 0],
-            [2, 2, 0],
-            [2, 0, 0],
-        ]
-        self.tictactoe.minmax_calls = 0
-        board = [
-            [
                 "O",
                 self.tictactoe.empty_indicator,
                 self.tictactoe.empty_indicator,

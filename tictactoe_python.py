@@ -239,13 +239,12 @@ class TicTacToe:
         if self.is_player_win(self.swap_player_turn(player), board):
             best_move[2] = -1
             return best_move
-        best_move = [-1, -1, -1]
         empty_cells = self.empty_cells(board)
         if not empty_cells:
             best_move[2] = 0
             return best_move
         if len(empty_cells) == 9:
-            return [0, 0, 0]
+            return [random.randint(0, 2), random.randint(0, 2), 0]
         for row, col in empty_cells:
             board[row][col] = player
             _, _, value = self.minmax(board, self.swap_player_turn(player))
