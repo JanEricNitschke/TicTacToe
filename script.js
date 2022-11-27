@@ -163,7 +163,7 @@ function minmax(cur_player, state) {
         return best;
     }
     if (empties.length === 9) {
-        best = [0, 0, 0];
+        best = [parseInt(Math.random() * 3), parseInt(Math.random() * 3), 0];
         return best;
     }
     empties.forEach(function (field) {
@@ -237,6 +237,7 @@ function button2click(button) {
         button.innerHTML = "2 Players";
         button1 = message = document.getElementById("button1");
         button1.innerHTML = "1 Player";
+        button1.disabled = false;
         message = document.getElementById("message");
         message.innerHTML = "Select game mode";
         game_mode = "";
