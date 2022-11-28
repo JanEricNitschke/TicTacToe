@@ -22,55 +22,64 @@ function swap_player() {
 function is_player_win(cur_player, state) {
     let win = false;
     const n = state.length;
+    let fields;
     // checking rows
-    for (let row of state) {
+    for (let i = 0; i < n; i++) {
         win = true;
-        for (let value of row) {
-            if (value != cur_player) {
+        fields = [];
+        for (let j = 0; j < n; j++) {
+            fields.push([i, j]);
+            if (state[i][j] != cur_player) {
                 win = false;
                 break;
             }
         }
         if (win) {
-            return win;
+            return fields;
         }
     }
 
     // checking columns
     for (let i = 0; i < n; i++) {
         win = true;
+        fields = [];
         for (let j = 0; j < n; j++) {
+            fields.push([j, i]);
             if (state[j][i] != cur_player) {
                 win = false;
                 break;
             }
         }
         if (win) {
-            return win;
+            return fields;
         }
     }
 
     // checking diagonals
     win = true;
+    fields = [];
     for (let i = 0; i < n; i++) {
+        fields.push([i, i]);
         if (state[i][i] != cur_player) {
             win = false;
             break;
         }
     }
     if (win) {
-        return win;
+        return fields;
     }
 
     win = true;
+    fields = [];
     for (let i = 0; i < n; i++) {
+        fields.push([i, n - i - 1]);
         if (state[i][n - i - 1] != cur_player) {
             win = false;
             break;
         }
     }
     if (win) {
-        return win;
+        return fields;
     }
     return false;
 }
@@ -94,20 +103,33 @@ function setMove(x, y) {
     return false;
 }
 
+function color_red(fields) {
+    for (const field of fields) {
+        row = field[0];
+        col = field[1];
+        cell = document.getElementById(row.toString() + col.toString());
+        console.log(cell, row.toString() + col.toString());
+        cell.style.color = "#ff0000";
+    }
+}
+
 function checkEndState(state) {
-    if (is_player_win(player, state)) {
+    fields = is_player_win(player, state);
+    if (fields) {
         message = document.getElementById("message");
         message.innerHTML = "Player " + player + " wins!";
         game_status = player + " won";
-        return 1;
+        console.log(fields);
+        color_red(fields);
+        return true;
     }
     if (empty_cells(state).length === 0) {
         message = document.getElementById("message");
         message.innerHTML = "Draw!";
         game_status = "Draw";
-        return 0;
+        return true;
     }
-    return -1;
+    return false;
 }
 
 function clickedField(field) {
@@ -125,15 +147,16 @@ function clickedField(field) {
         restartButton = document.getElementById("button1");
         restartButton.disabled = true;
         restartButton.innerHTML = "Restart";
-        if (checkEndState(board) != -1) {
+        if (checkEndState(board)) {
             restartButton.disabled = false;
             return;
         }
         swap_player();
+        if (game_mode == "1Player") {
+            ai_turn();
+        }
     }
-    if (game_mode == "1Player") {
-        ai_turn();
-    }
+
 }
 
 function restart() {
@@ -144,6 +167,7 @@ function restart() {
         for (let col = 0; col < board.length; col++) {
             cell = document.getElementById(row.toString() + col.toString());
             cell.innerHTML = "";
+            cell.style.color = "#FF9900";
             message = document.getElementById("message");
             message.innerHTML = "Player X's turn";
         }
@@ -189,7 +213,7 @@ function ai_turn() {
     if (setMove(row, col)) {
         field = document.getElementById(row.toString() + col.toString());
         field.innerHTML = player;
-        if (checkEndState(board) != -1) {
+        if (checkEndState(board)) {
             restartButton.disabled = false;
             return;
         }
