@@ -33,3 +33,4 @@
 
 *.code-workspace
 .vscode/
+build/
