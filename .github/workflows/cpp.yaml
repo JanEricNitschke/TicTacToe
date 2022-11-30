@@ -1,4 +1,4 @@
-name: build_cpp
+name: C++
 
 on:
   push:

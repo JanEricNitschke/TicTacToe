@@ -1,5 +1,5 @@
 # This workflow will run the tests on the python version of tictactoe
-name: build_python
+name: Python
 
 on:
   push:
