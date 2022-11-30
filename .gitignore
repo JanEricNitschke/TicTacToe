@@ -166,5 +166,3 @@ package-lock.json
 *.exe
 *.out
 *.app
-
-build/

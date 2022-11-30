@@ -2,13 +2,13 @@
 Collection of tictactoe games written in different langues.
 
 
-# TicTacToe-python
+## TicTacToe-python
 Simple two player Tic-Tac-Toe with python.
 
-# TicTacToe-javascript
+## TicTacToe-javascript
 Simple tictactoe game with javascript
 
-# TicTacToe-Cpp
+## TicTacToe-Cpp
 Simple tictactoe game with C++
 
 To build and tests run:

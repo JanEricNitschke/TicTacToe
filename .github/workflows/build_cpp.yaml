@@ -1,4 +1,4 @@
-name: build
+name: build_cpp
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_cpp
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
