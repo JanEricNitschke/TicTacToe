@@ -1,4 +1,3 @@
-
 # TicTacToe
 Collection of tictactoe games written in different langues.
 
@@ -7,3 +6,5 @@ Collection of tictactoe games written in different langues.
 
 Simple two player Tic-Tac-Toe with python.
 
+# TicTacToe-javascript
+Simple tictactoe game with javascript
