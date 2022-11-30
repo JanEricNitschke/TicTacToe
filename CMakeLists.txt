@@ -7,7 +7,10 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # The following folder will be included
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/src")
+include_directories("${PROJECT_SOURCE_DIR}/tests")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -22,12 +25,12 @@ enable_testing()
 
 add_executable(
   tictactoe
-  tictactoe.cpp
+  src/main.cpp
 )
 
 add_executable(
   tictactoe_test
-  tictactoe_test.cpp
+  tests/tictactoe_test.cpp
 )
 
 target_link_libraries(
