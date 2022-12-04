@@ -7,29 +7,53 @@ use std::time::Duration;
 #[macro_use]
 extern crate scan_rules;
 
+/// Defines `Board` as an alias for the 3x3 array of chars used to represent game board.
 type Board = [[char; 3]; 3];
 
+/// Defines a struct for the moves being made in the game.
 #[derive(Debug, Copy, Clone, Default)]
 struct Move {
+    /// Row and col attributes for the position where the move should be made.
+    /// Positive integers expected to be in the range 0..=2.
     row: usize,
     col: usize,
+    /// Value attribute for the outcome of this move given perfect follow up play by both sides.
+    /// Should be -1, 0 or 1 for loss, draw and win.
     value: isize,
 }
 
 impl std::cmp::PartialEq for Move {
+    /// Define equalitiy between moves if all three attributes are equal.
+    ///
+    /// # Arguments
+    ///
+    /// * `self` - The Move on the left side of the `==`
+    /// * `other` - The Move on the right side
     fn eq(&self, other: &Self) -> bool {
         self.row == other.row && self.col == other.col && self.value == other.value
     }
 }
 
+/// Representing a game of tictactoe
 #[derive(Debug, Copy, Clone, Default)]
 pub struct TicTacToe {
+    // Contains the given board state of the game
     board: Board,
+    /// Tracks whether it is one person playing vs AI or not
     ai_opponent: bool,
+    /// Hold the char that the AI is playing as
     ai_player: char,
 }
 
 impl TicTacToe {
+    /// Returns a TicTacToe game with an empty board
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use tictactoe_rust::TicTacToe;
+    /// let tictactoe = TicTacToe::new();
+    /// ```
     pub fn new() -> TicTacToe {
         TicTacToe {
             board: [['-'; 3]; 3],
@@ -38,6 +62,15 @@ impl TicTacToe {
         }
     }
 
+    /// Starts a game of tictactoe on the instance it is called on
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use tictactoe_rust::TicTacToe;
+    /// let mut tictactoe = TicTacToe::new();
+    /// tictactoe.play();
+    /// ```
     pub fn play(&mut self) {
         let mut player = 'X';
         loop {
@@ -63,6 +96,11 @@ impl TicTacToe {
         self.show_board();
     }
 
+    /// Performs an optimal AI turn on the current game state
+    ///
+    /// # Arguments
+    ///
+    /// * `player` - A char of the currently active player
     fn ai_turn(&mut self, player: char) {
         println!("AI turn as {player}.");
         self.show_board();
@@ -71,65 +109,98 @@ impl TicTacToe {
         thread::sleep(Duration::from_secs(1));
     }
 
+    /// Performs an human turn on the current game state
+    /// Asks a user for input via the command line
+    ///
+    /// # Arguments
+    ///
+    /// * `player` - A char of the currently active player
     fn player_turn(&mut self, player: char) {
         println!("Player {player} turn.");
 
         self.show_board();
         loop {
             println!("Enter row and column number to fix spot: ");
+            // Get user input
             let result = try_readln! {
                 (let row: usize, let col: usize) => (row, col)
             };
+            // Checks if the read was valid
             match result {
+                // Reading worked
+                // Then check if it was a valid and open spot
+                // If reading worked and input was valid exit the loop
+                // If input was invalid continue the loop
                 Ok((row, col)) => match self.fix_spot(player, row - 1, col - 1) {
                     true => break,
                     false => (),
                 },
+                // Reading was unsuccesfull
+                // Continue loop and let user enter new inout
                 Err(e) => println!("Failed to parse input: {}", e),
             }
         }
     }
 
+    /// Checks if the given player has won the game
+    ///
+    /// # Arguments
+    ///
+    /// * `player` - A char of the player to check the win for
     fn is_player_win(&self, player: char) -> bool {
+        // Hash maps to store how often the player shows up
+        // in each row, column and diagonals
         let mut rows_map = collections::HashMap::new();
         let mut cols_map = collections::HashMap::new();
         let mut diag_map = collections::HashMap::new();
         for row in 0..self.board.len() {
             for col in 0..self.board[0].len() {
                 if self.board[row][col] == player {
+                    // Player shows up +1 time in this row
                     let count = rows_map.entry(row).or_insert(0);
                     *count += 1;
+                    // and column
                     let count = cols_map.entry(col).or_insert(0);
                     *count += 1;
                     if row == col {
+                        // and on the main diagonal
                         let count = diag_map.entry(0).or_insert(0);
                         *count += 1;
                     }
                     if row == (self.board.len() - col - 1) {
+                        // and on the anti-diagonal
                         let count = diag_map.entry(1).or_insert(0);
                         *count += 1;
                     }
                 }
             }
         }
+        // Check if the player has 3 entries in any row
         for (_, value) in rows_map {
             if value == 3 {
                 return true;
             }
         }
+        // or column
         for (_, value) in cols_map {
             if value == 3 {
                 return true;
             }
         }
+        // or diagonal
         for (_, value) in diag_map {
             if value == 3 {
                 return true;
             }
         }
+        // if not he has not won the game
         false
     }
 
+    /// Checks if the board is filled
+    ///
+    /// After a negative check if either player has won
+    /// this indicates a draw
     fn is_board_filled(&self) -> bool {
         for row in 0..self.board.len() {
             for col in 0..self.board[0].len() {
@@ -141,6 +212,11 @@ impl TicTacToe {
         true
     }
 
+    /// Returns the char for the other player
+    ///
+    /// # Arguments
+    ///
+    /// * `player` - A char of the current player
     fn swap_player(&self, player: char) -> char {
         if player == 'X' {
             return 'O';
@@ -148,7 +224,16 @@ impl TicTacToe {
         'X'
     }
 
-    fn show_board(&self) {
+    /// Prints the current game board to stdout
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use tictactoe_rust::TicTacToe;
+    /// let tictactoe = TicTacToe::new();
+    /// tictactoe.show_board();
+    /// ```
+    pub fn show_board(&self) {
         let str_line = "---------------";
 
         println!("{str_line}");
@@ -160,6 +245,17 @@ impl TicTacToe {
         }
     }
 
+    /// Fixes the given spot for the given player
+    ///
+    /// Places the players char in the given spot if it was valid (open and in bounds)
+    /// Then returns true
+    /// If the spot was invalid a message is printed instead and false returned
+    ///
+    /// # Arguments
+    ///
+    /// * `player` - A char of the player making the move
+    /// * `row` - An unsigned integer of the row number to make the move on (0 indexed)
+    /// * `col` - An unsigned integer of the column number to make the move on (0 indexed)
     fn fix_spot(&mut self, player: char, row: usize, col: usize) -> bool {
         if row >= 3 || col >= 3 {
             println!("Row {} or column {} are out of bounds. They have to be between 1 and 3 inclusive. Try again!", row+1, col+1);
@@ -173,6 +269,7 @@ impl TicTacToe {
         true
     }
 
+    /// Gathers all empty cells in the current game state
     fn empty_cells(&self) -> Vec<[usize; 2]> {
         let mut empty_cells_vector = Vec::new();
         for row in 0..self.board.len() {
@@ -185,6 +282,12 @@ impl TicTacToe {
         empty_cells_vector
     }
 
+    /// Finds the optimal move to make for the given player
+    /// for the current game state. Does so via the [minmax algorithm](https://en.wikipedia.org/wiki/Minimax)
+    ///
+    /// # Arguments
+    ///
+    /// * `player` - A char of the player to find the best move for
     fn minmax(&mut self, player: char) -> Move {
         let mut best_move = Move {
             row: 0,
@@ -232,10 +335,21 @@ impl TicTacToe {
         best_move
     }
 
+    /// Gets the game settings from the user via the command line
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use tictactoe_rust::TicTacToe;
+    /// let mut tictactoe = TicTacToe::new();
+    /// tictactoe.get_settings();
+    /// ```
     pub fn get_settings(&mut self) {
         self.get_ai_opponent_setting()
     }
 
+    /// Gets the game settings for the AI opponent
+    /// So whether there should be one and if it should start first
     fn get_ai_opponent_setting(&mut self) {
         loop {
             let mut choice = String::new();
@@ -256,6 +370,7 @@ impl TicTacToe {
         }
     }
 
+    /// Gets the setting whether or not the AI opponent should start first
     fn get_ai_opponent_start(&mut self) {
         loop {
             let mut choice = String::new();
