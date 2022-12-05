@@ -1,6 +1,8 @@
 use rand::Rng;
 use std::collections;
 use std::io;
+use std::ops::Neg;
+use std::ops::Not;
 use std::thread;
 use std::time::Duration;
 
@@ -17,9 +19,8 @@ struct Move {
     /// Positive integers expected to be in the range 0..=2.
     row: usize,
     col: usize,
-    /// Value attribute for the outcome of this move given perfect follow up play by both sides.
-    /// Should be -1, 0 or 1 for loss, draw and win.
-    value: isize,
+    /// end_state attribute for the outcome of this move given perfect follow up play by both sides.
+    end_state: EndState,
 }
 
 impl std::cmp::PartialEq for Move {
@@ -30,7 +31,38 @@ impl std::cmp::PartialEq for Move {
     /// * `self` - The Move on the left side of the `==`
     /// * `other` - The Move on the right side
     fn eq(&self, other: &Self) -> bool {
-        self.row == other.row && self.col == other.col && self.value == other.value
+        self.row == other.row && self.col == other.col && self.end_state == other.end_state
+    }
+}
+
+/// Define enum to hold game EndState possibilities
+#[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Copy, Clone, Default)]
+enum EndState {
+    #[default]
+    Loss,
+    Draw,
+    Win,
+}
+
+impl Not for EndState {
+    type Output = Self;
+
+    /// Define logical negation of the EndState
+    fn not(self) -> Self::Output {
+        match self {
+            EndState::Draw => EndState::Draw,
+            EndState::Loss => EndState::Win,
+            EndState::Win => EndState::Loss,
+        }
+    }
+}
+
+impl Neg for EndState {
+    type Output = Self;
+
+    /// Define -EndState to be the same as !EndState
+    fn neg(self) -> Self::Output {
+        !self
     }
 }
 
@@ -104,7 +136,11 @@ impl TicTacToe {
     fn ai_turn(&mut self, player: char) {
         println!("AI turn as {player}.");
         self.show_board();
-        let Move { row, col, value: _ } = self.minmax(player);
+        let Move {
+            row,
+            col,
+            end_state: _,
+        } = self.minmax(player);
         self.board[row][col] = player;
         thread::sleep(Duration::from_secs(1));
     }
@@ -292,26 +328,26 @@ impl TicTacToe {
         let mut best_move = Move {
             row: 0,
             col: 0,
-            value: -1,
+            end_state: EndState::Loss,
         };
         if self.is_player_win(player) {
-            best_move.value = 1;
+            best_move.end_state = EndState::Win;
             return best_move;
         }
         if self.is_player_win(self.swap_player(player)) {
-            best_move.value = -1;
+            best_move.end_state = EndState::Loss;
             return best_move;
         }
         let empty_cells = self.empty_cells();
         if empty_cells.is_empty() {
-            best_move.value = 0;
+            best_move.end_state = EndState::Draw;
             return best_move;
         }
         if empty_cells.len() == 9 {
             best_move = Move {
                 row: rand::thread_rng().gen_range(0..=2),
                 col: rand::thread_rng().gen_range(0..=2),
-                value: 0,
+                end_state: EndState::Draw,
             };
             return best_move;
         }
@@ -321,13 +357,13 @@ impl TicTacToe {
             let Move {
                 row: _,
                 col: _,
-                value,
+                end_state,
             } = self.minmax(self.swap_player(player));
-            if -value >= best_move.value {
+            if -end_state >= best_move.end_state {
                 best_move = Move {
                     row,
                     col,
-                    value: -value,
+                    end_state: -end_state,
                 };
             }
             self.board[row][col] = '-'
@@ -394,6 +430,49 @@ impl TicTacToe {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn move_equality_works() {
+        let move1 = Move {
+            row: 0,
+            col: 1,
+            end_state: EndState::Draw,
+        };
+        let move2 = Move {
+            row: 1,
+            col: 1,
+            end_state: EndState::Loss,
+        };
+        let move3 = Move {
+            row: 0,
+            col: 1,
+            end_state: EndState::Draw,
+        };
+        assert_eq!(move1, move3);
+        assert_ne!(move2, move3);
+        assert_ne!(move1, move2);
+    }
+
+    #[test]
+    fn endstate_ordering_works() {
+        assert!(EndState::Win > EndState::Draw);
+        assert!(EndState::Draw > EndState::Loss);
+        assert!(EndState::Win > EndState::Loss);
+    }
+
+    #[test]
+    fn endstate_not_works() {
+        assert_eq!(!EndState::Win, EndState::Loss);
+        assert_eq!(!EndState::Draw, EndState::Draw);
+        assert_eq!(!EndState::Loss, EndState::Win);
+    }
+
+    #[test]
+    fn endstate_neg_works() {
+        assert_eq!(-EndState::Win, EndState::Loss);
+        assert_eq!(-EndState::Draw, EndState::Draw);
+        assert_eq!(-EndState::Loss, EndState::Win);
+    }
 
     #[test]
     fn new_creates_empty_board() {
@@ -536,47 +615,47 @@ mod tests {
             Move {
                 row: 0,
                 col: 0,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 0,
                 col: 1,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 0,
                 col: 2,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 1,
                 col: 0,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 1,
                 col: 1,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 1,
                 col: 2,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 2,
                 col: 0,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 2,
                 col: 1,
-                value: 0,
+                end_state: EndState::Draw,
             },
             Move {
                 row: 2,
                 col: 2,
-                value: 0,
+                end_state: EndState::Draw,
             },
         ];
         assert!(valid_moves.contains(&tictactoe.minmax('X')));
@@ -595,7 +674,7 @@ mod tests {
             Move {
                 row: 0,
                 col: 0,
-                value: 1
+                end_state: EndState::Win
             }
         );
         assert_eq!(
@@ -603,7 +682,7 @@ mod tests {
             Move {
                 row: 0,
                 col: 0,
-                value: -1
+                end_state: EndState::Loss
             }
         );
         tictactoe.board = [['X', 'O', 'X'], ['O', 'X', 'O'], ['O', 'X', 'O']];
@@ -612,7 +691,7 @@ mod tests {
             Move {
                 row: 0,
                 col: 0,
-                value: 0
+                end_state: EndState::Draw
             }
         );
         assert_eq!(
@@ -620,7 +699,7 @@ mod tests {
             Move {
                 row: 0,
                 col: 0,
-                value: 0
+                end_state: EndState::Draw
             }
         );
     }
@@ -633,7 +712,7 @@ mod tests {
             Move {
                 row: 0,
                 col: 2,
-                value: 1
+                end_state: EndState::Win
             }
         );
         assert_eq!(
@@ -641,7 +720,7 @@ mod tests {
             Move {
                 row: 0,
                 col: 2,
-                value: 1
+                end_state: EndState::Win
             }
         );
 
@@ -651,7 +730,7 @@ mod tests {
             Move {
                 row: 1,
                 col: 1,
-                value: 0
+                end_state: EndState::Draw
             }
         );
 
@@ -661,17 +740,17 @@ mod tests {
             Move {
                 row: 1,
                 col: 1,
-                value: 1
+                end_state: EndState::Win
             }
         );
 
         tictactoe.board = [['X', '-', 'X'], ['O', '-', 'A'], ['X', 'A', 'O']];
         let mut result = tictactoe.minmax('O');
-        assert_eq!(result.value, -1);
+        assert_eq!(result.end_state, EndState::Loss);
 
         tictactoe.board = [['X', '-', '-'], ['-', '-', '-'], ['-', '-', 'O']];
         result = tictactoe.minmax('X');
-        assert_eq!(result.value, 1);
+        assert_eq!(result.end_state, EndState::Win);
 
         tictactoe.board = [['X', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
         assert_eq!(
@@ -679,7 +758,7 @@ mod tests {
             Move {
                 row: 1,
                 col: 1,
-                value: 0
+                end_state: EndState::Draw
             }
         );
     }
