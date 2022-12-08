@@ -166,3 +166,5 @@ package-lock.json
 *.exe
 *.out
 *.app
+
+dist-newstyle/
