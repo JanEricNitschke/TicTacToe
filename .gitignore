@@ -167,4 +167,6 @@ package-lock.json
 *.out
 *.app
 
+# Haskell
 dist-newstyle/
+*.project.local*

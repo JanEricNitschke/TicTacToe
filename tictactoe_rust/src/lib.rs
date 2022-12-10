@@ -703,6 +703,7 @@ mod tests {
             }
         );
     }
+
     #[test]
     fn minmax_makes_best_move() {
         let mut tictactoe = TicTacToe::new();
