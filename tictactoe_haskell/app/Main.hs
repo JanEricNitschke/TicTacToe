@@ -1,11 +1,22 @@
 module Main where
 import System.IO ( hFlush, stdout )
 import Data.Char ( isSpace, toUpper )
-import Data.List ( transpose )
+import Data.List ( transpose)
 
 type Row = [Char]
 type Board = [Row]
-type Move = (Int, Int)
+data EndState = Loss | Draw | Win deriving (Eq, Ord, Show, Read, Bounded, Enum)
+
+negateState :: EndState -> EndState
+negateState state
+  | state == Loss = Win
+  | state == Draw = Draw
+  | state == Win = Loss
+
+data Move = Move { value :: EndState
+                 , row:: Int
+                 , col :: Int
+                     } deriving (Show, Eq, Ord)
 
 
 data FixSpotResult = Valid | InvalidInput | OutOfBounds | Taken deriving (Show)
@@ -15,9 +26,6 @@ main =  do
     setting <- getAIOpponent
     start <- if setting then getAISart else return False
     playGame setting start
-
-
-
 
 -- Functionality for playing the game
 playGame :: Bool -> Bool -> IO ()
@@ -40,11 +48,11 @@ takeTurns aiOpponent aiTurn player board = do
   let newAiTurn = not aiTurn
   -- Check if the game is over. If so end
      -- If not then there will be more turns
-  if checkWin player newBoard
+  if isWin player newBoard
     then do
       putStrLn $ "Player " ++ [player] ++ " wins the game!"
       return newBoard
-  else if checkDraw newBoard
+  else if isDraw newBoard
     then do
       putStrLn $ "Match Draw!"
       return newBoard
@@ -58,7 +66,59 @@ takeTurn aiOpponent aiTurn player board
 
 -- AI does a turn
 takeAiTurn :: Char -> Board -> IO Board
-takeAiTurn player board = return board
+takeAiTurn player board = do
+  -- Tell the user that it is the AI's turn now
+  putStrLn $ "AI turn as " ++ [player] ++ "."
+  -- Remind them of the board state
+  showBoard board
+  -- And make it do its move
+  return $ doAIMove player board
+
+doAIMove :: Char -> Board -> Board
+doAIMove player board =  changeBoard player (row, col)  board
+  where Move _ row col = minmax player board
+
+minmax :: Char -> Board -> Move
+minmax player board
+ | isWin player board = Move Win 0 0
+ | isWin (swapPlayer player) board = Move Loss 0 0
+ | isDraw board = Move Draw 0 0
+ | length emptyCells == 9 = Move Draw 0 0
+ | otherwise = myBestMove
+  where
+    -- Partially apply player so now only the spots and the board are missing
+    changeBoardToPlayer = changeBoard player
+    -- Grab all empty cells from the board
+    emptyCells = getEmptyCells board
+    -- Partially apply each empty cell so only the board is missing
+    changingEmptyCellsOfBoard = map changeBoardToPlayer emptyCells
+    -- Apply each change to the board
+    -- Now we have a list of boards where each
+    -- is the original board except one empty spot has been changed to the player
+    changedBoard = changingEmptyCellsOfBoard <*> [board]
+    -- Now for each of these board apply minmax for the opposite player
+    -- This gives for each board state the best move that the opponent could do
+    bestMovesFromOpponent = map (minmax $ swapPlayer player) changedBoard
+    -- Pair up this list of best move for the opponent with our move that lead to that board
+    bestMoveOfOpponentWithYourMove = zip bestMovesFromOpponent emptyCells
+    -- Find the pair of (best move for the opponent, after this move my me)
+    -- That has the worst best move to the opponent
+    -- So basically check if there was any board where the opponent loses with every move
+    -- Or at least check if there is any move where only a draw was possible
+    (worstOpponentMove, (myRow, myCol)) = minimum bestMoveOfOpponentWithYourMove
+    -- Then build our best move from that.
+    -- We take the move we made (myRow, myCol) and reverse the EndState that the opponent got.
+    -- If they lose that means we won.
+    myBestMove = Move{ value=(negateState $ value worstOpponentMove), row=myRow, col=myCol}
+
+
+getEmptyCells :: Board -> [(Int, Int)]
+getEmptyCells board =
+    [ (x, y)                        -- generate a Coord pair
+    | (x, row) <- zip [0..] board    -- for each row with its coordinate
+    , (y, cell) <- zip [0..] row     -- for each tile in the row (with coordinate)
+    , cell == '-']                     -- if the tile is 1
+
 
 -- Actions for a playing taking a turn
 takePlayerTurn :: Char -> Board -> IO Board
@@ -100,7 +160,7 @@ fixSpot [Just input1, Just input2] player board
  | row < 0 || row > 2 || col < 0 || col > 2 = (OutOfBounds, board)
 -- Move has to happen in an empty space
  | spotTaken row col board = (Taken, board)
- | otherwise = (Valid, changeBoard (row) (col) player board)
+ | otherwise = (Valid, changeBoard player (row, col)  board)
 -- Input was invalid if there are != inputs or any didnt get parsed
   where
     row = input1-1
@@ -112,9 +172,9 @@ spotTaken :: Int -> Int -> Board -> Bool
 -- If the element at position [row][col] is anything but the default then it is taken
 spotTaken row col board = board !! row !! col /= '-'
 
-changeBoard :: Int -> Int -> Char -> Board -> Board
+changeBoard ::  Char -> (Int, Int) -> Board -> Board
 -- Change the given spot on the board to the current player
-changeBoard row col player board = replace2D player (row, col) board
+changeBoard player (row, col) board = replace2D player (row, col) board
 
 replace :: Int -> (a->a) -> [a]-> [a]
 replace p f xs = [ if i == p then f x else x | (x, i) <- zip xs [0..] ]
@@ -139,15 +199,15 @@ maybeRead s = case reads s of
     [(x, "")] -> Just x
     _         -> Nothing
 
-checkEnd :: Char -> Board -> Bool
-checkEnd player board
- | checkWin player board = True
- | checkDraw board = True
+isEnd :: Char -> Board -> Bool
+isEnd player board
+ | isWin player board = True
+ | isDraw board = True
  | otherwise = False
 
 
-checkWin :: Char -> Board -> Bool
-checkWin player board
+isWin :: Char -> Board -> Bool
+isWin player board
   -- There is any row where all entries match player
   | any (all (==player)) board = True
   -- There is any column where all entries match player
@@ -158,10 +218,10 @@ checkWin player board
   | all (==player) (zipWith (!!) board [2,1,0]) = True
   | otherwise = False
 
-checkDraw :: Board -> Bool
+isDraw :: Board -> Bool
 -- Game is drawn when no spot is equal to '-' anymore
 -- Win has to be checked first
-checkDraw board = all (all (/='-')) board
+isDraw board = all (all (/='-')) board
 
 
 swapPlayer :: Char -> Char
