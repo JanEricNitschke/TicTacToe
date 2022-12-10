@@ -12,10 +12,11 @@ negateState state
   | state == Loss = Win
   | state == Draw = Draw
   | state == Win = Loss
+  | otherwise = Loss
 
 data Move = Move { value :: EndState
-                 , row:: Int
-                 , col :: Int
+                 , moveRow:: Int
+                 , moveCol :: Int
                      } deriving (Show, Eq, Ord)
 
 
@@ -105,11 +106,11 @@ minmax player board
     -- That has the worst best move to the opponent
     -- So basically check if there was any board where the opponent loses with every move
     -- Or at least check if there is any move where only a draw was possible
-    (worstOpponentMove, (myRow, myCol)) = minimum bestMoveOfOpponentWithYourMove
+    (worstOpponentMove, (row, col)) = minimum bestMoveOfOpponentWithYourMove
     -- Then build our best move from that.
     -- We take the move we made (myRow, myCol) and reverse the EndState that the opponent got.
     -- If they lose that means we won.
-    myBestMove = Move{ value=(negateState $ value worstOpponentMove), row=myRow, col=myCol}
+    myBestMove = Move{ value=(negateState $ value worstOpponentMove), moveRow=row, moveCol=col}
 
 
 getEmptyCells :: Board -> [(Int, Int)]

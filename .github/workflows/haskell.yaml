@@ -1,0 +1,25 @@
+# This workflow will run the tests on the haskell version of tictactoe
+
+name: haskell
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_haskell
+    steps:
+    - uses: actions/checkout@v3
+    - uses: haskell/actions/setup@v2
+    - name: Build
+      run: cabal build
+    # - name: Test
+    #   run: cargo test --verbose
