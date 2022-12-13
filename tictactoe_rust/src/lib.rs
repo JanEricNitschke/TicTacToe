@@ -1,3 +1,10 @@
+/*!
+# tictactoe_rust
+
+`tictactoe_rust` is a collection of utilities to
+allow you to play TicTacToe alone or with a friend.
+*/
+
 use rand::Rng;
 use std::collections;
 use std::io;

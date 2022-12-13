@@ -1,0 +1,39 @@
+# This workflow will run the tests on the go version of tictactoe
+
+name: go
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_go
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '^1.19.4' # The Go version to download (if necessary) and use.
+    - name: Build
+      run: go build
+    - name: Test
+      run: |
+        go test -covermode=count -coverprofile=coverage.out
+        go tool cover -html=coverage.out -o coverage.html
+    - name: Fuzz
+      run: |
+        go test -fuzz=FuzzSwapPlayer -fuzztime 30s
+        go test -fuzz=FuzzGetEmptyCells -fuzztime 30s
+        go test -fuzz=FuzzMinMax -fuzztime 60s
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage-report
+        path: ./tictactoe_go/coverage.html
