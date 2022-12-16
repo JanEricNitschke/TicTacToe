@@ -55,3 +55,8 @@ go test -fuzz=FuzzSwapPlayer -fuzztime 30s
 go test -fuzz=FuzzGetEmptyCells -fuzztime 30s
 go test -fuzz=FuzzMinMax -fuzztime 60s
 ```
+
+## TicTacToe-scratch
+Very simple two player tictactoe game with Scratch
+
+To play load it on the [Scratch website](https://scratch.mit.edu/)
