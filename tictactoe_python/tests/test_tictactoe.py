@@ -47,12 +47,6 @@ class TestTicTacToe:
             ],
         ]
 
-    def test_get_random_first_player(self):
-        """Tets get_random_first_player"""
-        random_value = self.tictactoe.get_random_first_player()
-        assert isinstance(random_value, int)
-        assert random_value in range(2)
-
     def test_fix_spot(self):
         """Tests fix_spot"""
         assert not self.tictactoe.fix_spot(-1, -1, "X")
@@ -63,29 +57,35 @@ class TestTicTacToe:
 
     def test_is_player_win(self):
         """Tests is_player_win"""
+        # Row win X
         board = [["X", "X", "X"], ["-", "-", "-"], ["-", "-", "-"]]
         assert self.tictactoe.is_player_win("X", board)
         assert not self.tictactoe.is_player_win("O", board)
+        # Row no win
         board = [["X", "X", "O"], ["-", "-", "-"], ["-", "-", "-"]]
         assert not self.tictactoe.is_player_win("X", board)
         assert not self.tictactoe.is_player_win("O", board)
+        # Col win X
         board = [["X", "O", "O"], ["X", "-", "-"], ["X", "-", "-"]]
         assert self.tictactoe.is_player_win("X", board)
         assert not self.tictactoe.is_player_win("O", board)
+        # Col no win
         board = [["X", "O", "O"], ["X", "-", "-"], ["O", "-", "-"]]
         assert not self.tictactoe.is_player_win("X", board)
         assert not self.tictactoe.is_player_win("O", board)
-
+        # Diagonal win O
         board = [["O", "X", "O"], ["X", "O", "-"], ["X", "-", "O"]]
         assert self.tictactoe.is_player_win("O", board)
         assert not self.tictactoe.is_player_win("X", board)
+        # Diagonal no win
         board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
         assert not self.tictactoe.is_player_win("O", board)
         assert not self.tictactoe.is_player_win("X", board)
-
+        # Antidiagonal win O
         board = [["O", "X", "O"], ["X", "O", "-"], ["O", "O", "-"]]
         assert self.tictactoe.is_player_win("O", board)
         assert not self.tictactoe.is_player_win("X", board)
+        # Antidiagonal no win
         board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
         assert not self.tictactoe.is_player_win("O", board)
         assert not self.tictactoe.is_player_win("X", board)
@@ -128,7 +128,7 @@ class TestTicTacToe:
     def test_show_board(self, print_mock):
         """Tests show_board"""
         self.tictactoe.show_board()
-        assert print_mock.call_count == 3 * 3 + 3
+        assert print_mock.call_count == 3 * 3 + 3 + 1
 
     @patch("builtins.input")
     def test_get_player_input(self, input_mock):
@@ -159,16 +159,50 @@ class TestTicTacToe:
         """Tests get_player_number"""
         input_mock.side_effect = ["y", "n", "", "Y", 1, "N"]
         self.tictactoe.get_player_number()
-        assert self.tictactoe.single_player is True
+        assert self.tictactoe.ai_opponent is True
         assert input_mock.call_count == 1
         self.tictactoe.get_player_number()
-        assert self.tictactoe.single_player is False
+        assert self.tictactoe.ai_opponent is False
         assert input_mock.call_count == 2
         self.tictactoe.get_player_number()
-        assert self.tictactoe.single_player is True
+        assert self.tictactoe.ai_opponent is True
         assert input_mock.call_count == 4
         self.tictactoe.get_player_number()
-        assert self.tictactoe.single_player is False
+        assert self.tictactoe.ai_opponent is False
+        assert input_mock.call_count == 6
+
+    @patch("builtins.input")
+    def test_get_ai_start(self, input_mock):
+        """Tests get_ai_start"""
+        input_mock.side_effect = ["y", "n", "", "Y", 1, "N"]
+        self.tictactoe.get_ai_start()
+        assert self.tictactoe.ai_marker == "X"
+        assert input_mock.call_count == 1
+        self.tictactoe.get_ai_start()
+        assert self.tictactoe.ai_marker == "O"
+        assert input_mock.call_count == 2
+        self.tictactoe.get_ai_start()
+        assert self.tictactoe.ai_marker == "X"
+        assert input_mock.call_count == 4
+        self.tictactoe.get_ai_start()
+        assert self.tictactoe.ai_marker == "O"
+        assert input_mock.call_count == 6
+
+    @patch("builtins.input")
+    def test_get_ai_strength(self, input_mock):
+        """Tests get_ai_start"""
+        input_mock.side_effect = ["1", "2", "", "3", "X", "4"]
+        self.tictactoe.get_ai_strength()
+        assert self.tictactoe.ai_function == self.tictactoe.random_move
+        assert input_mock.call_count == 1
+        self.tictactoe.get_ai_strength()
+        assert self.tictactoe.ai_function == self.tictactoe.win_move
+        assert input_mock.call_count == 2
+        self.tictactoe.get_ai_strength()
+        assert self.tictactoe.ai_function == self.tictactoe.block_win_move
+        assert input_mock.call_count == 4
+        self.tictactoe.get_ai_strength()
+        assert self.tictactoe.ai_function == self.tictactoe.minmax
         assert input_mock.call_count == 6
 
     def test_minmax(self):
@@ -220,6 +254,7 @@ class TestTicTacToe:
     def test_ai_turn(self, show_mock, minmax_mock):
         """Tests ai_turn"""
         minmax_mock.side_effect = [[0, 0, 1], [1, 0, 0], [2, 2, 1]]
+        self.tictactoe.ai_function = minmax_mock
         self.tictactoe.create_board()
         assert self.tictactoe.board[0][0] == self.tictactoe.empty_indicator
         assert self.tictactoe.board[1][0] == self.tictactoe.empty_indicator
@@ -248,3 +283,110 @@ class TestTicTacToe:
         assert show_mock.call_count == 3
         assert input_mock.call_count == 3
         assert fix_mock.call_count == 2
+
+    def test_random_move(self):
+        """Tests random_move"""
+        random_move = self.tictactoe.random_move(
+            [
+                [
+                    self.tictactoe.empty_indicator,
+                    self.tictactoe.empty_indicator,
+                    self.tictactoe.empty_indicator,
+                ],
+                [
+                    self.tictactoe.empty_indicator,
+                    self.tictactoe.empty_indicator,
+                    self.tictactoe.empty_indicator,
+                ],
+                [
+                    self.tictactoe.empty_indicator,
+                    self.tictactoe.empty_indicator,
+                    self.tictactoe.empty_indicator,
+                ],
+            ],
+            "X",
+        )
+        assert len(random_move) == 3
+        assert random_move[0] in range(3)
+        assert random_move[1] in range(3)
+        assert random_move[2] == 0
+        assert self.tictactoe.random_move(
+            [
+                ["X", "X", self.tictactoe.empty_indicator],
+                ["O", "X", "O"],
+                ["X", "O", "O"],
+            ],
+            "X",
+        ) == [0, 2, 0]
+
+    @patch("tictactoe_python.TicTacToe.get_winning_move")
+    @patch("tictactoe_python.TicTacToe.random_move")
+    def test_win_move(self, random_move_mock, winning_move_mock):
+        """Tests win_move"""
+        winning_move_mock.side_effect = [[0, 0, 1], None]
+        random_move_mock.side_effect = [[1, 1, 1]]
+        assert self.tictactoe.win_move([], "X") == [0, 0, 1]
+        assert winning_move_mock.call_count == 1
+        assert random_move_mock.call_count == 0
+        assert self.tictactoe.win_move([], "X") == [1, 1, 1]
+        assert winning_move_mock.call_count == 2
+        assert random_move_mock.call_count == 1
+
+    def test_get_winning_move(self):
+        """Tests get_winning_move"""
+        # Finds win on row
+        board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
+        assert self.tictactoe.get_winning_move(board, "X") == [2, 2, 0]
+        # Finds win on col
+        board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
+        assert self.tictactoe.get_winning_move(board, "O") == [1, 0, 0]
+        # Finds win on diagonal
+        board = [["O", "-", "-"], ["-", "O", "-"], ["-", "-", "-"]]
+        assert self.tictactoe.get_winning_move(board, "O") == [2, 2, 0]
+        # Finds win on antidiagonal
+        board = [["-", "-", "-"], ["-", "X", "-"], ["X", "-", "-"]]
+        assert self.tictactoe.get_winning_move(board, "X") == [0, 2, 0]
+        # Finds no win
+        board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
+        assert self.tictactoe.get_winning_move(board, "X") is None
+
+    @patch("tictactoe_python.TicTacToe.get_winning_move")
+    @patch("tictactoe_python.TicTacToe.get_blocking_move")
+    @patch("tictactoe_python.TicTacToe.random_move")
+    def test_block_win_move(
+        self, random_move_mock, blocking_move_mock, winning_move_mock
+    ):
+        """Tests block_win_move"""
+        winning_move_mock.side_effect = [[0, 0, 1], None, None]
+        blocking_move_mock.side_effect = [[2, 2, -1], None]
+        random_move_mock.side_effect = [[1, 1, 0]]
+        assert self.tictactoe.block_win_move([], "X") == [0, 0, 1]
+        assert winning_move_mock.call_count == 1
+        assert blocking_move_mock.call_count == 0
+        assert random_move_mock.call_count == 0
+        assert self.tictactoe.block_win_move([], "X") == [2, 2, -1]
+        assert winning_move_mock.call_count == 2
+        assert blocking_move_mock.call_count == 1
+        assert random_move_mock.call_count == 0
+        assert self.tictactoe.block_win_move([], "X") == [1, 1, 0]
+        assert winning_move_mock.call_count == 3
+        assert blocking_move_mock.call_count == 2
+        assert random_move_mock.call_count == 1
+
+    def test_get_blocking_move(self):
+        """Tests get_blocking_move"""
+        # Finds block on row
+        board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
+        assert self.tictactoe.get_blocking_move(board, "O") == [2, 2, 0]
+        # Finds block on col
+        board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
+        assert self.tictactoe.get_blocking_move(board, "X") == [1, 0, 0]
+        # Finds block on diagonal
+        board = [["O", "-", "-"], ["-", "O", "-"], ["-", "-", "-"]]
+        assert self.tictactoe.get_blocking_move(board, "X") == [2, 2, 0]
+        # Finds block on antidiagonal
+        board = [["-", "-", "-"], ["-", "X", "-"], ["X", "-", "-"]]
+        assert self.tictactoe.get_blocking_move(board, "O") == [0, 2, 0]
+        # Finds no block
+        board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
+        assert self.tictactoe.get_blocking_move(board, "O") is None
