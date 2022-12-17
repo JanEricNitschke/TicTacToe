@@ -9,13 +9,21 @@ int main()
 {
     srand((unsigned int)time(NULL));
     GameBoard board = createBoard();
-    std::string player = ((rand() % 2) == 0) ? "X" : "O";
+    std::string player = "X";
     bool singlePlayer = getPlayerNumber();
+    std::string AI_marker;
+    int AI_strength;
+    if (singlePlayer)
+    {
+        AI_marker = getAIStart();
+        AI_strength = getAIStrength();
+    }
+
     while (true)
     {
-        if (singlePlayer && player == "X")
+        if (singlePlayer && player == AI_marker)
         {
-            aiTurn(player, board);
+            aiTurn(player, board, AI_strength);
         }
         else
         {

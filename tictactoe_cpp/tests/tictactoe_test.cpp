@@ -171,3 +171,128 @@ TEST(minmax, partialBoards)
     };
     EXPECT_THAT(expectedResult, minmax("X", refBoard));
 }
+
+TEST(getWinningMove, row)
+{
+    GameBoard refBoard = {{{"O", "X", "O"}, {"X", "O", "-"}, {"X", "X", "-"}}};
+    Move expectedResult = {{2, 2, 0}};
+    EXPECT_THAT(expectedResult, getWinningMove("X", refBoard));
+}
+
+TEST(getWinningMove, col)
+{
+    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    Move expectedResult = {{1, 0, 0}};
+    EXPECT_THAT(expectedResult, getWinningMove("O", refBoard));
+}
+
+TEST(getWinningMove, diagonal)
+{
+    GameBoard refBoard = {{{"O", "-", "-"}, {"-", "O", "-"}, {"-", "-", "-"}}};
+    Move expectedResult = {{2, 2, 0}};
+    EXPECT_THAT(expectedResult, getWinningMove("O", refBoard));
+}
+
+TEST(getWinningMove, antidiagonal)
+{
+    GameBoard refBoard = {{{"-", "-", "-"}, {"-", "X", "-"}, {"X", "-", "-"}}};
+    Move expectedResult = {{0, 2, 0}};
+    EXPECT_THAT(expectedResult, getWinningMove("X", refBoard));
+}
+
+TEST(getWinningMove, none)
+{
+    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    Move expectedResult = {{-1, -1, -1}};
+    EXPECT_THAT(expectedResult, getWinningMove("X", refBoard));
+}
+
+TEST(getBlockingMove, row)
+{
+    GameBoard refBoard = {{{"O", "X", "O"}, {"X", "O", "-"}, {"X", "X", "-"}}};
+    Move expectedResult = {{2, 2, 0}};
+    EXPECT_THAT(expectedResult, getBlockingMove("O", refBoard));
+}
+
+TEST(getBlockingMove, col)
+{
+    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    Move expectedResult = {{1, 0, 0}};
+    EXPECT_THAT(expectedResult, getBlockingMove("X", refBoard));
+}
+
+TEST(getBlockingMove, diagonal)
+{
+    GameBoard refBoard = {{{"O", "-", "-"}, {"-", "O", "-"}, {"-", "-", "-"}}};
+    Move expectedResult = {{2, 2, 0}};
+    EXPECT_THAT(expectedResult, getBlockingMove("X", refBoard));
+}
+
+TEST(getBlockingMove, antidiagonal)
+{
+    GameBoard refBoard = {{{"-", "-", "-"}, {"-", "X", "-"}, {"X", "-", "-"}}};
+    Move expectedResult = {{0, 2, 0}};
+    EXPECT_THAT(expectedResult, getBlockingMove("O", refBoard));
+}
+
+TEST(getBlockingMove, none)
+{
+    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    Move expectedResult = {{-1, -1, -1}};
+    EXPECT_THAT(expectedResult, getBlockingMove("O", refBoard));
+}
+
+TEST(randomMove, emptyBoard)
+{
+    GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
+    Move result = randomMove("X", refBoard);
+    EXPECT_TRUE(result[0] >= 0 && result[0] < 3);
+    EXPECT_TRUE(result[1] >= 0 && result[1] < 3);
+    EXPECT_TRUE(result[2] == 0);
+}
+
+TEST(randomMove, oneOption)
+{
+    GameBoard refBoard = {{{"X", "X", "-"}, {"O", "X", "O"}, {"X", "O", "O"}}};
+    Move expectedResult = {{0, 2, 0}};
+    EXPECT_THAT(expectedResult, randomMove("X", refBoard));
+}
+
+TEST(winMove, prioritizesWin)
+{
+    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    Move expectedResult = {{1, 0, 0}};
+    EXPECT_THAT(expectedResult, winMove("O", refBoard));
+}
+
+TEST(winMove, worksWithoutWin)
+{
+    GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
+    Move result = winMove("X", refBoard);
+    EXPECT_TRUE(result[0] >= 0 && result[0] < 3);
+    EXPECT_TRUE(result[1] >= 0 && result[1] < 3);
+    EXPECT_TRUE(result[2] == 0);
+}
+
+TEST(blockWinMove, prioritizesWin)
+{
+    GameBoard refBoard = {{{"X", "-", "O"}, {"-", "-", "-"}, {"X", "-", "O"}}};
+    Move expectedResult = {{1, 0, 0}};
+    EXPECT_THAT(expectedResult, blockWinMove("X", refBoard));
+}
+
+TEST(blockWinMove, blocksIfNoWin)
+{
+    GameBoard refBoard = {{{"X", "-", "O"}, {"-", "-", "-"}, {"-", "-", "O"}}};
+    Move expectedResult = {{1, 2, 0}};
+    EXPECT_THAT(expectedResult, blockWinMove("X", refBoard));
+}
+
+TEST(blockWinMove, worksWithoutBlockWin)
+{
+    GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
+    Move result = blockWinMove("X", refBoard);
+    EXPECT_TRUE(result[0] >= 0 && result[0] < 3);
+    EXPECT_TRUE(result[1] >= 0 && result[1] < 3);
+    EXPECT_TRUE(result[2] == 0);
+}
