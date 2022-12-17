@@ -2,6 +2,13 @@ let board = [["", "", ""], ["", "", ""], ["", "", ""]];
 let player = "X";
 let game_status = "paused";
 let game_mode = "";
+let difficulty_setting = 4;
+
+function handleSelectChange(event) {
+    var selectElement = event.target;
+
+    difficulty_setting = selectElement.value;
+}
 
 function get_other_player(cur_player) {
     if (cur_player === "X") {
@@ -206,8 +213,99 @@ function minmax(cur_player, state) {
     return best;
 }
 
+function random_move(_, state) {
+    const empties = empty_cells(state);
+    move = empties[Math.floor(Math.random() * empties.length)];
+    return [move[0], move[1], 0];
+}
+
+function get_blocking_move(cur_player, state) {
+    return get_winning_move(get_other_player(cur_player), state);
+}
+
+function get_winning_move(cur_player, state) {
+    let win_conditions = new Map([
+        ["row0", new Set([`0_0`, `0_1`, `0_2`])],
+        ["row1", new Set([`1_0`, `1_1`, `1_2`])],
+        ["row2", new Set([`2_0`, `2_1`, `2_2`])],
+        ["col0", new Set([`0_0`, `1_0`, `2_0`])],
+        ["col1", new Set([`0_1`, `1_1`, `2_1`])],
+        ["col2", new Set([`0_2`, `1_2`, `2_2`])],
+        ["diag", new Set([`0_0`, `1_1`, `2_2`])],
+        ["antidiag", new Set([`0_2`, `1_1`, `2_0`])],
+    ]);
+    for (let row = 0; row < state.length; row++) {
+        for (let col = 0; col < state.length; col++) {
+            if (state[row][col] == cur_player) {
+                if (win_conditions.get("row" + row.toString()).has(`${row}_${col}`)) {
+                    win_conditions.get("row" + row.toString()).delete(`${row}_${col}`);
+                }
+                if (win_conditions.get("col" + col.toString()).has(`${row}_${col}`)) {
+                    win_conditions.get("col" + col.toString()).delete(`${row}_${col}`);
+                }
+                if (row == col && win_conditions.get("diag").has(`${row}_${col}`)) {
+                    win_conditions.get("diag").delete(`${row}_${col}`);
+                }
+                if (row == (state.length - 1 - col) && win_conditions.get("antidiag").has(`${row}_${col}`)) {
+                    win_conditions.get("antidiag").delete(`${row}_${col}`);
+                }
+            }
+            if (state[row][col] == get_other_player(cur_player)) {
+                win_conditions.get("row" + row.toString()).clear();
+                win_conditions.get("col" + col.toString()).clear();
+                if (row == col) {
+                    win_conditions.get("diag").clear();
+                }
+                if (row == (state.length - 1 - col)) {
+                    win_conditions.get("antidiag").clear();
+                }
+            }
+        }
+    }
+
+    for (let win_condition of win_conditions.values()) {
+        if (win_condition.size == 1) {
+            const coords = win_condition.values().next().value.split("_");
+            return [coords[0], coords[1], 0];
+        }
+    }
+    return null;
+}
+
+function win_move(cur_player, state) {
+    let winning_move = get_winning_move(cur_player, state);
+    if (winning_move != null) {
+        return winning_move;
+    }
+    return random_move(cur_player, state);
+}
+
+function block_win_move(cur_player, state) {
+    let winning_move = get_winning_move(cur_player, state);
+    if (winning_move != null) {
+        return winning_move;
+    }
+    let blocking_move = get_blocking_move(cur_player, state);
+    if (blocking_move != null) {
+        return blocking_move;
+    }
+    return random_move(cur_player, state);
+}
+
 function ai_turn() {
-    best = minmax(player, board);
+    let best = null;
+    if (difficulty_setting == 1) {
+        best = random_move(player, board);
+    }
+    else if (difficulty_setting == 2) {
+        best = win_move(player, board);
+    }
+    else if (difficulty_setting == 3) {
+        best = block_win_move(player, board);
+    }
+    else {
+        best = minmax(player, board);
+    }
     const row = best[0];
     const col = best[1];
     if (setMove(row, col)) {

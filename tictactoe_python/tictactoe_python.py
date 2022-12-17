@@ -288,7 +288,7 @@ class TicTacToe:
             list of [row, col, value] of a winning move
             or None if there is none.
         """
-        win_condidtions = {
+        win_conditions = {
             "row0": {(0, 0), (0, 1), (0, 2)},
             "row1": {(1, 0), (1, 1), (1, 2)},
             "row2": {(2, 0), (2, 1), (2, 2)},
@@ -301,25 +301,25 @@ class TicTacToe:
         for row in range(len(board)):
             for col in range(len(board[0])):
                 if board[row][col] == player:
-                    if (row, col) in win_condidtions["row" + str(row)]:
-                        win_condidtions["row" + str(row)].remove((row, col))
-                    if (row, col) in win_condidtions["col" + str(col)]:
-                        win_condidtions["col" + str(col)].remove((row, col))
-                    if row == col and (row, col) in win_condidtions["diag"]:
-                        win_condidtions["diag"].remove((row, col))
+                    if (row, col) in win_conditions["row" + str(row)]:
+                        win_conditions["row" + str(row)].remove((row, col))
+                    if (row, col) in win_conditions["col" + str(col)]:
+                        win_conditions["col" + str(col)].remove((row, col))
+                    if row == col and (row, col) in win_conditions["diag"]:
+                        win_conditions["diag"].remove((row, col))
                     if (
                         row == (len(board) - 1 - col)
-                        and (row, col) in win_condidtions["antidiag"]
+                        and (row, col) in win_conditions["antidiag"]
                     ):
-                        win_condidtions["antidiag"].remove((row, col))
+                        win_conditions["antidiag"].remove((row, col))
                 if board[row][col] == self.swap_player_turn(player):
-                    win_condidtions["row" + str(row)].clear()
-                    win_condidtions["col" + str(col)].clear()
+                    win_conditions["row" + str(row)].clear()
+                    win_conditions["col" + str(col)].clear()
                     if row == col:
-                        win_condidtions["diag"].clear()
+                        win_conditions["diag"].clear()
                     if row == (len(board) - 1 - col):
-                        win_condidtions["antidiag"].clear()
-        for moves in win_condidtions.values():
+                        win_conditions["antidiag"].clear()
+        for moves in win_conditions.values():
             if len(moves) == 1:
                 winning_move = moves.pop()
                 return [winning_move[0], winning_move[1], 0]

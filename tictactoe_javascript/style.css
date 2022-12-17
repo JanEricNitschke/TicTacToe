@@ -122,6 +122,17 @@ li {
     justify-content: space-around;
 }
 
+#selectDiv {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    font-size: 1.5em;
+    justify-content: center;
+}
+
 .controlButton {
     display: block;
     padding: 10px;
@@ -149,6 +160,22 @@ li {
     background: #444;
 }
 
+select {
+    width: 150px;
+    color: #FF9900;
+    font-size: 16px;
+    border: 1px solid #CCC;
+    height: 34px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* background: url(https://stackoverflow.com/favicon.ico) 96% / 15% no-repeat #EEE; */
+}
+
+
+.difficultyOption {
+    color: #FF9900;
+}
 
 
 @keyframes shake {

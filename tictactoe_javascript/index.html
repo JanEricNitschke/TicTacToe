@@ -6,9 +6,8 @@
 <head>
     <!--
 		Tic Tac Toe with Minimax AI Algorithm
-		Author: Clederson Cruz
-		Year: 2017
-		License: GNU GENERAL PUBLIC LICENSE (GPL)
+		Author: Jan-Eric Nitschke
+		Year: 2022
 		-->
 
     <meta charset="UTF-8" />
@@ -48,7 +47,15 @@
         <button type="button" id="button1" class="controlButton" onclick="button1click(this)">1 Player</button>
         <button type="button" id="button2" class="controlButton" onclick="button2click(this)">2 Players</button>
     </div>
-
+    <div id="selectDiv">
+        <label for="difficulty">Choose an AI difficulty:</label>
+        <select name="difficulty" id="difficulty" onchange="handleSelectChange(event)">
+            <option value=1 class="difficultyOption">Easy</option>
+            <option value=2 class="difficultyOption">Medium</option>
+            <option value=3 class="difficultyOption">Hard</option>
+            <option value=4 class="difficultyOption" selected="selected">Impossible</option>
+        </select>
+    </div>
 </body>
 
 </html>
