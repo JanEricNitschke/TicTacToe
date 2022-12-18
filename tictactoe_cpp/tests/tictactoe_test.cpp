@@ -181,7 +181,7 @@ TEST(getWinningMove, row)
 
 TEST(getWinningMove, col)
 {
-    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    GameBoard refBoard = {{{"O", "-", "-"}, {"-", "-", "-"}, {"O", "X", "X"}}};
     Move expectedResult = {{1, 0, 0}};
     EXPECT_THAT(expectedResult, getWinningMove("O", refBoard));
 }
@@ -216,7 +216,7 @@ TEST(getBlockingMove, row)
 
 TEST(getBlockingMove, col)
 {
-    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    GameBoard refBoard = {{{"O", "-", "-"}, {"-", "-", "-"}, {"O", "X", "X"}}};
     Move expectedResult = {{1, 0, 0}};
     EXPECT_THAT(expectedResult, getBlockingMove("X", refBoard));
 }
@@ -260,7 +260,7 @@ TEST(randomMove, oneOption)
 
 TEST(winMove, prioritizesWin)
 {
-    GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
+    GameBoard refBoard = {{{"O", "-", "X"}, {"-", "-", "-"}, {"O", "X", "X"}}};
     Move expectedResult = {{1, 0, 0}};
     EXPECT_THAT(expectedResult, winMove("O", refBoard));
 }

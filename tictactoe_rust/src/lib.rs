@@ -5,6 +5,7 @@
 allow you to play TicTacToe alone or with a friend.
 */
 
+use rand::prelude::SliceRandom;
 use rand::Rng;
 use std::collections;
 use std::io;
@@ -82,6 +83,8 @@ pub struct TicTacToe {
     ai_opponent: bool,
     /// Hold the char that the AI is playing as
     ai_player: char,
+    /// Holds the difficulty setting for the AI
+    ai_difficulty: usize,
 }
 
 impl TicTacToe {
@@ -98,6 +101,7 @@ impl TicTacToe {
             board: [['-'; 3]; 3],
             ai_opponent: false,
             ai_player: 'O',
+            ai_difficulty: 4,
         }
     }
 
@@ -143,11 +147,17 @@ impl TicTacToe {
     fn ai_turn(&mut self, player: char) {
         println!("AI turn as {player}.");
         self.show_board();
+
         let Move {
             row,
             col,
             end_state: _,
-        } = self.minmax(player);
+        } = match self.ai_difficulty {
+            1 => self.random_move(),
+            2 => self.win_move(player),
+            3 => self.block_win_move(player),
+            _ => self.minmax(player),
+        };
         self.board[row][col] = player;
         thread::sleep(Duration::from_secs(1));
     }
@@ -378,6 +388,173 @@ impl TicTacToe {
         best_move
     }
 
+    // Perform a random valid move
+    fn random_move(&mut self) -> Move {
+        // Get all empty cells
+        let empty_cells = self.empty_cells();
+        // Pick a random one
+        // This should never be called when there are no empty cells
+        let cell = empty_cells
+            .choose(&mut rand::thread_rng())
+            .expect("random_move should never be called with a full board!");
+        Move {
+            row: cell[0],
+            col: cell[1],
+            end_state: EndState::Draw,
+        }
+    }
+
+    /*
+    Tries to find a move where the given player wins on the
+    given board. So any line that contains the player twice
+    and an empty cell as the last slot
+    */
+    fn get_winning_move(&mut self, player: char) -> Option<Move> {
+        // Build  all of the possible lines
+        let mut win_conditions: std::collections::HashMap<
+            String,
+            std::collections::HashSet<(usize, usize)>,
+        > = collections::HashMap::from([
+            (
+                "row0".to_string(),
+                collections::HashSet::from_iter([(0, 0), (0, 1), (0, 2)]),
+            ),
+            (
+                "row1".to_string(),
+                collections::HashSet::from_iter([(1, 0), (1, 1), (1, 2)]),
+            ),
+            (
+                "row2".to_string(),
+                collections::HashSet::from_iter([(2, 0), (2, 1), (2, 2)]),
+            ),
+            (
+                "col0".to_string(),
+                collections::HashSet::from_iter([(0, 0), (1, 0), (2, 0)]),
+            ),
+            (
+                "col1".to_string(),
+                collections::HashSet::from_iter([(0, 1), (1, 1), (2, 1)]),
+            ),
+            (
+                "col2".to_string(),
+                collections::HashSet::from_iter([(0, 2), (1, 2), (2, 2)]),
+            ),
+            (
+                "diag".to_string(),
+                collections::HashSet::from_iter([(0, 0), (1, 1), (2, 2)]),
+            ),
+            (
+                "antidiag".to_string(),
+                collections::HashSet::from_iter([(0, 2), (1, 1), (2, 0)]),
+            ),
+        ]);
+        for row in 0..self.board.len() {
+            for col in 0..self.board[0].len() {
+                /*
+                If the given player occupies this cell
+                then that reduces the required positions
+                in that line by one
+                */
+                if self.board[row][col] == player {
+                    win_conditions
+                        .entry("row".to_owned() + &row.to_string())
+                        .and_modify(|set| {
+                            _ = set.remove(&(row, col));
+                        });
+                    win_conditions
+                        .entry("col".to_owned() + &col.to_string())
+                        .and_modify(|set| {
+                            _ = set.remove(&(row, col));
+                        });
+                    if row == col {
+                        win_conditions.entry("diag".to_string()).and_modify(|set| {
+                            _ = set.remove(&(row, col));
+                        });
+                    }
+                    if row == (self.board.len() - 1 - col) {
+                        win_conditions
+                            .entry("antidiag".to_string())
+                            .and_modify(|set| {
+                                _ = set.remove(&(row, col));
+                            });
+                    }
+                }
+                // If the opposing player occupies this cell
+                // then all lines that contain it become useless
+                if self.board[row][col] == self.swap_player(player) {
+                    win_conditions
+                        .entry("row".to_owned() + &row.to_string())
+                        .and_modify(|set| {
+                            set.clear();
+                        });
+                    win_conditions
+                        .entry("col".to_owned() + &col.to_string())
+                        .and_modify(|set| {
+                            set.clear();
+                        });
+                    if row == col {
+                        win_conditions.entry("diag".to_string()).and_modify(|set| {
+                            set.clear();
+                        });
+                    }
+                    if row == (self.board.len() - 1 - col) {
+                        win_conditions
+                            .entry("antidiag".to_string())
+                            .and_modify(|set| {
+                                set.clear();
+                            });
+                    }
+                }
+            }
+        }
+        // Check if any line requires exactly one more
+        // position from the player to be fulfilled
+        println!("{:?}", win_conditions);
+        for value in win_conditions.values() {
+            if value.len() == 1 {
+                let cell = value
+                    .iter()
+                    .next()
+                    .expect("This is only called when there is exactly one element in the set.");
+                return Some(Move {
+                    row: cell.0,
+                    col: cell.1,
+                    end_state: EndState::Draw,
+                });
+            }
+        }
+        // There was no winning move
+        None
+    }
+
+    // Try to perform a winning move
+    // If there is none return a random one instead
+    fn win_move(&mut self, player: char) -> Move {
+        match self.get_winning_move(player) {
+            Some(win_move) => win_move,
+            None => self.random_move(),
+        }
+    }
+
+    // Tries to find a move that would block the opponent
+    // winning on their next move
+    fn get_blocking_move(&mut self, player: char) -> Option<Move> {
+        // Just find a move that would make the opponent win
+        self.get_winning_move(self.swap_player(player))
+    }
+
+    // Try to find a winning or blocking move
+    // If neither exists do a random one instead
+    fn block_win_move(&mut self, player: char) -> Move {
+        if let Some(win_move) = self.get_winning_move(player) {
+            return win_move;
+        }
+        match self.get_blocking_move(player) {
+            Some(block_move) => block_move,
+            None => self.random_move(),
+        }
+    }
+
     /// Gets the game settings from the user via the command line
     ///
     /// # Examples
@@ -388,47 +565,74 @@ impl TicTacToe {
     /// tictactoe.get_settings();
     /// ```
     pub fn get_settings(&mut self) {
-        self.get_ai_opponent_setting()
+        self.get_ai_opponent_setting();
+        if self.ai_opponent {
+            self.get_ai_opponent_start();
+            self.get_ai_difficulty()
+        }
+    }
+
+    fn get_player_yes_no(&mut self, question: &str) -> bool {
+        loop {
+            let mut choice = String::new();
+            println!("{}", question);
+            io::stdin()
+                .read_line(&mut choice)
+                .expect("Failed to read line");
+            choice = choice.trim().to_uppercase();
+            if choice == "Y" {
+                return true;
+            }
+            if choice == "N" {
+                return false;
+            }
+        }
     }
 
     /// Gets the game settings for the AI opponent
     /// So whether there should be one and if it should start first
     fn get_ai_opponent_setting(&mut self) {
-        loop {
-            let mut choice = String::new();
-            println!("Play alone vs AI?[y/n]");
-            io::stdin()
-                .read_line(&mut choice)
-                .expect("Failed to read line");
-            choice = choice.trim().to_uppercase();
-            if choice == "Y" {
-                self.ai_opponent = true;
-                self.get_ai_opponent_start();
-                break;
-            }
-            if choice == "N" {
-                self.ai_opponent = false;
-                break;
-            }
-        }
+        self.ai_opponent = self.get_player_yes_no("Play alone vs AI?[y/n]");
     }
 
     /// Gets the setting whether or not the AI opponent should start first
     fn get_ai_opponent_start(&mut self) {
+        if self.get_player_yes_no("Should the AI make the first move?[y/n]") {
+            self.ai_player = 'X';
+        } else {
+            self.ai_player = 'O';
+        }
+    }
+
+    /// Gets settings for AI difficulty
+    fn get_ai_difficulty(&mut self) {
+        println!("AI strength settings:");
+        println!("1: Easy");
+        println!("2: Medium");
+        println!("3: Hard");
+        println!("4: Impossible");
         loop {
-            let mut choice = String::new();
-            println!("Should the AI make the first move?[y/n]");
-            io::stdin()
-                .read_line(&mut choice)
-                .expect("Failed to read line");
-            choice = choice.trim().to_uppercase();
-            if choice == "Y" {
-                self.ai_player = 'X';
-                break;
-            }
-            if choice == "N" {
-                self.ai_player = 'O';
-                break;
+            println!("How strong should the AI be?[1-4]: ");
+            // Get user input
+            let result = try_readln! {
+                (let strength: usize) => strength
+            };
+            // Checks if the read was valid
+            match result {
+                // Reading worked
+                // Then check if it was a valid and open spot
+                // If reading worked and input was valid exit the loop
+                // If input was invalid continue the loop
+                Ok(strength) => match strength < 5 {
+                    true => {
+                        self.ai_difficulty = strength;
+                        break;
+                    }
+                    false => (),
+                },
+                // Reading was unsuccesfull
+                // Continue loop and let user enter new inout
+                Err(e) => println!("Failed to parse input: {}", e),
             }
         }
     }
@@ -769,5 +973,217 @@ mod tests {
                 end_state: EndState::Draw
             }
         );
+    }
+
+    #[test]
+    fn get_winning_move_finds_row() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', 'X', 'O'], ['X', 'O', '-'], ['X', 'X', '-']];
+        assert_eq!(
+            tictactoe.get_winning_move('X'),
+            Some(Move {
+                row: 2,
+                col: 2,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_winning_move_finds_col() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', '-', '-'], ['-', '-', '-'], ['O', 'X', 'X']];
+        assert_eq!(
+            tictactoe.get_winning_move('O'),
+            Some(Move {
+                row: 1,
+                col: 0,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_winning_move_finds_diagonal() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', '-', '-'], ['-', 'O', '-'], ['-', '-', '-']];
+        assert_eq!(
+            tictactoe.get_winning_move('O'),
+            Some(Move {
+                row: 2,
+                col: 2,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_winning_move_finds_antidiagonal() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['-', '-', '-'], ['-', 'X', '-'], ['X', '-', '-']];
+        assert_eq!(
+            tictactoe.get_winning_move('X'),
+            Some(Move {
+                row: 0,
+                col: 2,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_winning_move_works_with_no_win() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', 'X', 'X'], ['-', 'O', '-'], ['O', 'X', '-']];
+        assert_eq!(tictactoe.get_winning_move('X'), None);
+    }
+
+    #[test]
+    fn get_blocking_move_finds_row() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', 'X', 'O'], ['X', 'O', '-'], ['X', 'X', '-']];
+        assert_eq!(
+            tictactoe.get_blocking_move('O'),
+            Some(Move {
+                row: 2,
+                col: 2,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_blocking_move_finds_col() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', '-', '-'], ['-', '-', '-'], ['O', 'X', 'X']];
+        assert_eq!(
+            tictactoe.get_blocking_move('X'),
+            Some(Move {
+                row: 1,
+                col: 0,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_blocking_move_finds_diagonal() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', '-', '-'], ['-', 'O', '-'], ['-', '-', '-']];
+        assert_eq!(
+            tictactoe.get_blocking_move('X'),
+            Some(Move {
+                row: 2,
+                col: 2,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_blocking_move_finds_antidiagonal() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['-', '-', '-'], ['-', 'X', '-'], ['X', '-', '-']];
+        assert_eq!(
+            tictactoe.get_blocking_move('O'),
+            Some(Move {
+                row: 0,
+                col: 2,
+                end_state: EndState::Draw
+            })
+        );
+    }
+
+    #[test]
+    fn get_blocking_move_works_with_no_win() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', 'X', 'X'], ['-', 'O', '-'], ['O', 'X', '-']];
+        assert_eq!(tictactoe.get_blocking_move('O'), None);
+    }
+
+    #[test]
+    fn random_move_is_in_range() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
+        let random_move: Move = tictactoe.random_move();
+        assert!(random_move.row < 3);
+        assert!(random_move.col < 3);
+        assert!(random_move.end_state == EndState::Draw);
+    }
+
+    #[test]
+    fn random_move_finds_valid_spot() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['X', 'X', '-'], ['O', 'X', 'O'], ['X', 'O', 'O']];
+        assert_eq!(
+            tictactoe.random_move(),
+            Move {
+                row: 0,
+                col: 2,
+                end_state: EndState::Draw
+            }
+        )
+    }
+
+    #[test]
+    fn win_move_prioritizes_win() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['O', '-', '-'], ['-', '-', '-'], ['O', 'X', 'X']];
+        assert_eq!(
+            tictactoe.win_move('O'),
+            Move {
+                row: 1,
+                col: 0,
+                end_state: EndState::Draw
+            }
+        )
+    }
+
+    #[test]
+    fn win_move_works_without_win() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
+        let result_move: Move = tictactoe.win_move('X');
+        assert!(result_move.row < 3);
+        assert!(result_move.col < 3);
+        assert!(result_move.end_state == EndState::Draw);
+    }
+
+    #[test]
+    fn block_win_move_prioritizes_win() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['X', '-', 'O'], ['-', '-', '-'], ['X', '-', 'O']];
+        assert_eq!(
+            tictactoe.block_win_move('X'),
+            Move {
+                row: 1,
+                col: 0,
+                end_state: EndState::Draw
+            }
+        )
+    }
+
+    #[test]
+    fn block_win_move_blocks_when_no_win() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['X', '-', 'O'], ['-', '-', '-'], ['-', '-', 'O']];
+        assert_eq!(
+            tictactoe.block_win_move('X'),
+            Move {
+                row: 1,
+                col: 2,
+                end_state: EndState::Draw
+            }
+        )
+    }
+
+    #[test]
+    fn block_win_move_works_without_win() {
+        let mut tictactoe = TicTacToe::new();
+        tictactoe.board = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
+        let result_move: Move = tictactoe.block_win_move('X');
+        assert!(result_move.row < 3);
+        assert!(result_move.col < 3);
+        assert!(result_move.end_state == EndState::Draw);
     }
 }

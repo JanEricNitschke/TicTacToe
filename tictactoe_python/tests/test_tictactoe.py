@@ -338,7 +338,7 @@ class TestTicTacToe:
         board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
         assert self.tictactoe.get_winning_move(board, "X") == [2, 2, 0]
         # Finds win on col
-        board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
+        board = [["O", "X", "-"], ["-", "O", "-"], ["O", "X", "X"]]
         assert self.tictactoe.get_winning_move(board, "O") == [1, 0, 0]
         # Finds win on diagonal
         board = [["O", "-", "-"], ["-", "O", "-"], ["-", "-", "-"]]
@@ -379,7 +379,7 @@ class TestTicTacToe:
         board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
         assert self.tictactoe.get_blocking_move(board, "O") == [2, 2, 0]
         # Finds block on col
-        board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
+        board = [["O", "-", "-"], ["-", "-", "-"], ["O", "X", "X"]]
         assert self.tictactoe.get_blocking_move(board, "X") == [1, 0, 0]
         # Finds block on diagonal
         board = [["O", "-", "-"], ["-", "O", "-"], ["-", "-", "-"]]
