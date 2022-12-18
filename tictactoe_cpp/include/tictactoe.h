@@ -11,16 +11,21 @@
 #include <set>
 #include <tuple>
 
+// Define aliases for the data structures
+// used for Move and GameBoard as they are common
+// and long
 typedef std::array<std::array<std::string, 3>, 3>
     GameBoard;
 typedef std::array<int, 3> Move;
 
+// Initialize an empty game board
 GameBoard createBoard()
 {
     GameBoard board = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
     return board;
 }
 
+// Function to get yes/no response from the player
 bool getPlayerYesNo(const std::string question)
 {
     std::string solo;
@@ -37,11 +42,17 @@ bool getPlayerYesNo(const std::string question)
     return false;
 }
 
+// Get information whether it is a
+// 1 person or 2 person game
 bool getPlayerNumber()
 {
     return getPlayerYesNo("Play alone vs AI?[y/n]: ");
 }
 
+// Get information whether the AI should make
+// the first move.
+// Player 'X' makes odd moves so if AI
+// should make the first it needs to be player 'X'
 std::string getAIStart()
 {
     if (getPlayerYesNo("Should the AI make the first move?[y/n]: "))
@@ -51,6 +62,11 @@ std::string getAIStart()
     return "O";
 }
 
+// Ask user for AI strength
+// 1 is Random
+// 2 wins if possible
+// 3 wins or blocks if possible
+// 4 plays perfect
 int getAIStrength()
 {
     std::string input;
@@ -83,6 +99,8 @@ int getAIStrength()
     return strength;
 }
 
+// Checks if the given player
+// has won on the given board
 bool isPlayerWin(const std::string player, const GameBoard &board)
 {
     bool win = false;
@@ -139,6 +157,7 @@ bool isPlayerWin(const std::string player, const GameBoard &board)
         return win;
     }
 
+    // checking antidiagonal
     win = true;
     for (int i = 0; i < n; i++)
     {
@@ -153,9 +172,14 @@ bool isPlayerWin(const std::string player, const GameBoard &board)
         return win;
     }
 
+    // found no line of 3
     return false;
 }
 
+// Checks if the board is completely filled
+// That is the case if no '-' can be found
+// Will be used to check for draw after checking
+// for either player win first
 bool isBoardFilled(const GameBoard &board)
 {
     const int n = board.size();
@@ -172,6 +196,8 @@ bool isBoardFilled(const GameBoard &board)
     return true;
 }
 
+// Swap between player X and O
+// Only expected X or O as input
 std::string swapPlayer(const std::string player)
 {
     return (player == "X") ? "O" : "X";
@@ -194,15 +220,22 @@ std::vector<std::array<int, 2>> getEmptyCells(const GameBoard &board)
     return emptyCells;
 }
 
+// Performs any random valid move
 Move randomMove(const std::string player, GameBoard &board)
 {
+    // Get all the empty cells
     const std::vector<std::array<int, 2>> emptyCells = getEmptyCells(board);
+    // Pick a random number in range 0, length of the list and take that element
     std::array<int, 2> chosenCell = emptyCells[std::rand() % emptyCells.size()];
     return {{chosenCell[0], chosenCell[1], 0}};
 }
 
+// Tries to find a move where the given player wins on the
+// given board. So any line that contains the player twice
+// and an empty cell as the last slot
 Move getWinningMove(const std::string player, GameBoard &board)
 {
+    // Build  all of the possible lines
     std::map<std::string, std::set<std::tuple<int, int>>> win_conditions{
         {"row0", std::set<std::tuple<int, int>>({std::make_tuple(0, 0), std::make_tuple(0, 1), std::make_tuple(0, 2)})},
         {"row1", std::set<std::tuple<int, int>>({std::make_tuple(1, 0), std::make_tuple(1, 1), std::make_tuple(1, 2)})},
@@ -217,6 +250,9 @@ Move getWinningMove(const std::string player, GameBoard &board)
     {
         for (int col = 0; col < n; col++)
         {
+            // If the given player occupies this cell
+            // then that reduces the required positions
+            // in that line by one
             if (board[row][col] == player)
             {
                 if (win_conditions["row" + std::to_string(row)].find(std::make_tuple(row, col)) != win_conditions["row" + std::to_string(row)].end())
@@ -236,6 +272,8 @@ Move getWinningMove(const std::string player, GameBoard &board)
                     win_conditions["antidiag"].erase(std::make_tuple(row, col));
                 }
             }
+            // If the opposing player occupies this cell
+            // then all lines that contain it become useless
             if (board[row][col] == swapPlayer(player))
             {
                 win_conditions["row" + std::to_string(row)].clear();
@@ -251,6 +289,8 @@ Move getWinningMove(const std::string player, GameBoard &board)
             }
         }
     }
+    // Check if any line requires exactly one more
+    // position from the player to be fulfilled
     for (auto const &x : win_conditions)
     {
         if (x.second.size() == 1)
@@ -260,14 +300,20 @@ Move getWinningMove(const std::string player, GameBoard &board)
             return winMove;
         }
     }
+    // If there is no winning move return a default value
     return {{-1, -1, -1}};
 }
 
+// Tries to find a move that would block the opponent
+// winning on their next move
 Move getBlockingMove(const std::string player, GameBoard &board)
 {
+    // Just find a move that would make the opponent win
     return getWinningMove(swapPlayer(player), board);
 }
 
+// Try to perform a winning move
+// If there is none return a random one instead
 Move winMove(const std::string player, GameBoard &board)
 {
     Move winMove = getWinningMove(player, board);
@@ -278,6 +324,8 @@ Move winMove(const std::string player, GameBoard &board)
     return randomMove(player, board);
 }
 
+// Try to find a winning or blocking move
+// If neither exists do a random one instead
 Move blockWinMove(const std::string player, GameBoard &board)
 {
     Move winMove = getWinningMove(player, board);
@@ -292,26 +340,34 @@ Move blockWinMove(const std::string player, GameBoard &board)
     }
     return randomMove(player, board);
 }
-
+// Takes a board state and returns the coordinates of the optimal move for the given player
 Move minmax(const std::string player, GameBoard &board)
 {
+    // Base cases
+    // Player won
     Move bestMove = {{-1, -1, -1}};
     if (isPlayerWin(player, board))
     {
         bestMove[2] = 1;
         return bestMove;
     }
+    // Player lost
     if (isPlayerWin(swapPlayer(player), board))
     {
         bestMove[2] = -1;
         return bestMove;
     }
     const std::vector<std::array<int, 2>> emptyCells = getEmptyCells(board);
+    // Game is drawn
     if (emptyCells.size() == 0)
     {
         bestMove[2] = 0;
         return bestMove;
     }
+    // To reduce required computation
+    // and increase replayability
+    // just do a random move as the first
+    // Optimal play still forces a draw
     if (emptyCells.size() == 9)
     {
         bestMove[0] = std::rand() % 3;
@@ -319,6 +375,7 @@ Move minmax(const std::string player, GameBoard &board)
         bestMove[2] = 0;
         return bestMove;
     }
+    // Recursively apply minmax algorithm
     for (const std::array<int, 2> &cell : emptyCells)
     {
         board[cell[0]][cell[1]] = player;
@@ -332,6 +389,7 @@ Move minmax(const std::string player, GameBoard &board)
     return bestMove;
 }
 
+// Pretty print the current board
 void showBoard(const GameBoard &board)
 {
     std::string line_separator = "---------------";
@@ -348,11 +406,14 @@ void showBoard(const GameBoard &board)
     }
 }
 
+// Perform AI move
 void aiTurn(const std::string player, GameBoard &board, int AI_strength)
 {
+    // Inform the player of the game state
     std::cout << "AI turn as player " << player << "." << std::endl;
     showBoard(board);
     Move bestMove;
+    // Check which function to use to perform AI move
     switch (AI_strength)
     {
     case 1:
@@ -367,15 +428,19 @@ void aiTurn(const std::string player, GameBoard &board, int AI_strength)
     default:
         bestMove = minmax(player, board);
     }
+    // Perform the move
     board[bestMove[0]][bestMove[1]] = player;
+    // Wait 1 second to have a smooth playing experience
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
+// Perform player turn
 void playerTurn(const std::string player, GameBoard &board)
 {
     int row = -1;
     int col = -1;
     bool validMove = false;
+    // Let the player input their move and validate
     while (!validMove)
     {
         std::cout << "Player " << player << " turn" << std::endl;
@@ -385,6 +450,7 @@ void playerTurn(const std::string player, GameBoard &board)
         std::string input2;
         std::cout << "Enter row and column numbers to fix spot: " << std::endl;
         std::cin >> input1 >> input2;
+        // That they entered two numbers
         try
         {
             row = std::stoi(input1);
@@ -396,12 +462,14 @@ void playerTurn(const std::string player, GameBoard &board)
             validMove = false;
             continue;
         }
+        // That the numbers are within bounds
         if (row > 3 || row < 1 || col > 3 || col < 1)
         {
             std::cout << "Row " << row << " or column " << col << " are out of bounds. They have to be between 1 and 3 inclusive. Try again!" << std::endl;
             validMove = false;
             continue;
         }
+        // And that the position is not taken
         if (board[row - 1][col - 1] != "-")
         {
             std::cout << "The position (" << row << ", " << col << ") has already been taken by a player! Please do your move on an empty position." << std::endl;
