@@ -31,6 +31,10 @@ testMove = TestCase (do
   assertEqual "Loss < Win" LT (myMove4 `compare` myMove5)
   )
 
+
+
+
+
 testminmaxFullBoard :: Test
 testminmaxFullBoard = TestCase (do
   let board1 = [['X', 'X', 'X'], ['X', 'X', 'X'], ['X', 'X', 'X']]
@@ -62,6 +66,90 @@ testminmaxBestMove = TestCase (do
   assertEqual "Correctly determines win when setting up split is possible" Win myEndState2
   let board6 = [['X', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
   assertEqual "Correctly blocks middle after opponent opens with corner" (Move Draw 1 1) (minmax 'O' board6)
+  )
+
+testgetAnyWinningMoveFindsWinningMove :: Test
+testgetAnyWinningMoveFindsWinningMove = TestCase (do
+  let board1 = [['O', 'X', 'O'], ['X', 'O', '-'], ['X', 'X', '-']]
+  assertEqual "Correctly finds winning move in row" (Just $ Move Draw 2 2) (getAnyWinningMove 'X' board1)
+  let board2 = [['O', '-', '-'], ['-', '-', '-'], ['O', 'X', 'X']]
+  assertEqual "Correctly finds winning move in col" (Just $ Move Draw 1 0) (getAnyWinningMove 'O' board2)
+  let board3 = [['O', '-', '-'], ['-', 'O', '-'], ['-', '-', '-']]
+  assertEqual "Correctly finds winning move in diagonal" (Just $ Move Draw 2 2) (getAnyWinningMove 'O' board3)
+  let board4 = [['-', '-', '-'], ['-', 'X', '-'], ['X', '-', '-']]
+  assertEqual "Correctly finds winning move in antidiagonal" (Just $ Move Draw 0 2) (getAnyWinningMove 'X' board4)
+  )
+
+testgetAnyWinningMoveNoWinner :: Test
+testgetAnyWinningMoveNoWinner = TestCase (do
+  let board1 = [['O', 'X', 'X'], ['-', 'O', '-'], ['O', 'X', '-']]
+  assertEqual "Correctly finds no winning move" (Nothing) (getAnyWinningMove 'X' board1)
+  )
+
+testgetAnyBlockingMoveFindsWinningMove :: Test
+testgetAnyBlockingMoveFindsWinningMove = TestCase (do
+  let board1 = [['O', 'X', 'O'], ['X', 'O', '-'], ['X', 'X', '-']]
+  assertEqual "Correctly finds blocking move in row" (Just $ Move Draw 2 2) (getAnyBlockingMove 'O' board1)
+  let board2 = [['O', '-', '-'], ['-', '-', '-'], ['O', 'X', 'X']]
+  assertEqual "Correctly finds blocking move in col" (Just $ Move Draw 1 0) (getAnyBlockingMove 'X' board2)
+  let board3 = [['O', '-', '-'], ['-', 'O', '-'], ['-', '-', '-']]
+  assertEqual "Correctly finds blocking move in diagonal" (Just $ Move Draw 2 2) (getAnyBlockingMove 'X' board3)
+  let board4 = [['-', '-', '-'], ['-', 'X', '-'], ['X', '-', '-']]
+  assertEqual "Correctly finds blocking move in antidiagonal" (Just $ Move Draw 0 2) (getAnyBlockingMove 'O' board4)
+  )
+
+testgetAnyBlockingMoveNoWinner :: Test
+testgetAnyBlockingMoveNoWinner = TestCase (do
+  let board1 = [['O', 'X', 'X'], ['-', 'O', '-'], ['O', 'X', '-']]
+  assertEqual "Correctly finds no blocking move" (Nothing) (getAnyBlockingMove 'O' board1)
+  )
+
+testrandMoveEmptyBoard :: Test
+testrandMoveEmptyBoard = TestCase (do
+  let board1 = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+  let Move state row col = randomMove board1
+  assertBool "randomMove is in bounds" (row >= 0 && row < 3 && col >= 0 && col < 3)
+  assertEqual "EndState is given as draw" (Draw) (state)
+  )
+
+testrandomMoveOneSpot :: Test
+testrandomMoveOneSpot = TestCase (do
+  let board1 = [['X', 'X', '-'], ['O', 'X', 'O'], ['X', 'O', 'O']]
+  assertEqual "randomMove picks only valid spot" (Move Draw 0 2) (randomMove board1)
+  )
+
+testwinMoveWithWin :: Test
+testwinMoveWithWin = TestCase (do
+  let board1 = [['O', '-', '-'], ['-', '-', '-'], ['O', 'X', 'X']]
+  assertEqual "winMove prioritizes win" (Move Draw 1 0) (winMove 'O' board1)
+  )
+
+testwinMoveWithOutWin :: Test
+testwinMoveWithOutWin = TestCase (do
+  let board1 = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+  let Move state row col = winMove 'X' board1
+  assertBool "Random fallback is in bounds" (row >= 0 && row < 3 && col >= 0 && col < 3)
+  assertEqual "Random fallback state is given as draw" (Draw) (state)
+  )
+
+testblockWinMoveWithWin :: Test
+testblockWinMoveWithWin = TestCase (do
+  let board1 = [['X', '-', 'O'], ['-', '-', '-'], ['X', '-', 'O']]
+  assertEqual "blockWinMove prioritizes win" (Move Draw 1 0) (blockWinMove 'X' board1)
+  )
+
+testblockWinMoveWithBlock :: Test
+testblockWinMoveWithBlock = TestCase (do
+  let board1 = [['X', '-', 'O'], ['-', '-', '-'], ['-', '-', 'O']]
+  assertEqual "blockWinMove blocks if there is no win" (Move Draw 1 2) (blockWinMove 'X' board1)
+  )
+
+testblockWinMoveWithOutWin :: Test
+testblockWinMoveWithOutWin = TestCase (do
+  let board1 = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+  let Move state row col = blockWinMove 'X' board1
+  assertBool "Random fallback is in bounds" (row >= 0 && row < 3 && col >= 0 && col < 3)
+  assertEqual "Random fallback state is given as draw" (Draw) (state)
   )
 
 -- Helper function to check if two lists contain the same elements
@@ -234,5 +322,16 @@ main = runTestTTAndExit (TestList [
   TestLabel "isEnd works in both win and draw situations" testisEnd,
   TestLabel "Swap player works" testswapPlayer,
   TestLabel "Trim works in all configurations" testtrimHelper,
-  TestLabel "Show cell works for both player" testshowCell
+  TestLabel "Show cell works for both player" testshowCell,
+  TestLabel "getAnyWinningMove finds a winning move if one is available" testgetAnyWinningMoveFindsWinningMove,
+  TestLabel "getAnyWinningMove finds nothing if no winning move is available" testgetAnyWinningMoveNoWinner,
+  TestLabel "getAnyBlockingMove finds a winning move if one is available" testgetAnyBlockingMoveFindsWinningMove,
+  TestLabel "getAnyBlockingMove finds nothing if no winning move is available" testgetAnyBlockingMoveNoWinner,
+  TestLabel "randomMove behaves within bounds" testrandMoveEmptyBoard,
+  TestLabel "randomMove picks valid spot" testrandomMoveOneSpot,
+  TestLabel "winMove finds win if possible" testwinMoveWithWin,
+  TestLabel "winMove still gives a move without win" testwinMoveWithOutWin,
+  TestLabel "blockWinMove finds win if possible" testblockWinMoveWithWin,
+  TestLabel "blockWinMove finds win if possible" testblockWinMoveWithBlock,
+  TestLabel "blockWinMove still gives a move without win" testblockWinMoveWithOutWin
   ])

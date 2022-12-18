@@ -4,6 +4,7 @@ import System.IO ( hFlush, stdout )
 import Data.Char ( isSpace, toUpper )
 import Data.List ( transpose)
 import Control.Concurrent
+import Control.Monad (msum)
 
 type Row = [Char]
 type Board = [Row]
@@ -28,24 +29,25 @@ main :: IO ()
 main =  do
     setting <- getAIOpponent
     start <- if setting then getAISart else return False
-    playGame setting start
+    difficulty <- if setting then getAIStrength else return 4
+    playGame setting start difficulty
 
 -- Functionality for playing the game
-playGame :: Bool -> Bool -> IO ()
-playGame opponent start = do
+playGame :: Bool -> Bool -> Int -> IO ()
+playGame opponent start difficulty = do
     -- Initialize player char and board
     let player = 'X'
     let board = [['-','-','-'],['-','-','-'],['-','-','-']]
     -- Play the actual game
-    newBoard <- takeTurns opponent start player board
+    newBoard <- takeTurns opponent start difficulty player board
     -- Show the final game board
     showBoard newBoard
 
 -- Game loop of alternating turns
-takeTurns :: Bool -> Bool -> Char -> Board -> IO Board
-takeTurns aiOpponent aiTurn player board = do
+takeTurns :: Bool -> Bool -> Int -> Char -> Board -> IO Board
+takeTurns aiOpponent aiTurn aiDifficulty player board = do
   -- Do one turn
-  newBoard <- takeTurn aiOpponent aiTurn player board
+  newBoard <- takeTurn aiOpponent aiTurn aiDifficulty player board
   -- Swap the active player and whether it is the AI's turn
   let newPlayer = swapPlayer player
   let newAiTurn = not aiTurn
@@ -59,17 +61,17 @@ takeTurns aiOpponent aiTurn player board = do
     then do
       putStrLn $ "Match Draw!"
       return newBoard
-  else do takeTurns aiOpponent newAiTurn newPlayer newBoard
+  else do takeTurns aiOpponent newAiTurn aiDifficulty newPlayer newBoard
 
 -- Taking a turn in the current game state
-takeTurn :: Bool -> Bool -> Char -> Board ->  IO Board
-takeTurn aiOpponent aiTurn player board
-  | aiOpponent && aiTurn = takeAiTurn player board
+takeTurn :: Bool -> Bool -> Int -> Char -> Board ->  IO Board
+takeTurn aiOpponent aiTurn aiDifficulty player board
+  | aiOpponent && aiTurn = takeAiTurn aiDifficulty player board
   | otherwise = takePlayerTurn player board
 
 -- AI does a turn
-takeAiTurn :: Char -> Board -> IO Board
-takeAiTurn player board = do
+takeAiTurn :: Int -> Char -> Board -> IO Board
+takeAiTurn difficulty player board = do
   -- Tell the user that it is the AI's turn now
   putStrLn $ "AI turn as " ++ [player] ++ "."
   -- Remind them of the board state
@@ -77,12 +79,65 @@ takeAiTurn player board = do
   hFlush stdout
   threadDelay 1000000
   -- And make it do its move
-  return $ doAIMove player board
+  return $ doAIMove difficulty player board
 
 -- Get best move and perform it on the board
-doAIMove :: Char -> Board -> Board
-doAIMove player board =  changeBoard player (row, col)  board
-  where Move _ row col = minmax player board
+doAIMove :: Int -> Char -> Board -> Board
+doAIMove difficulty player board
+  | difficulty == 1 = let Move _ row col = randomMove board in changeBoard player (row, col)  board
+  | difficulty == 2 = let Move _ row col = winMove player board in changeBoard player (row, col)  board
+  | difficulty == 3 = let Move _ row col = blockWinMove player board in changeBoard player (row, col)  board
+  | otherwise  =  let Move _ row col = minmax player board in changeBoard player (row, col)  board
+
+-- Not really a random move at the moment
+-- but who cares...
+randomMove :: Board -> Move
+randomMove board = Move Draw row col
+  where (row, col) = (getEmptyCells board)!!0
+
+-- Try to get a winning move for a given line(list of cells)
+-- for a player given a board.
+getWinningMoveForLine :: Char -> [(Int, Int)] -> Board -> Maybe Move
+getWinningMoveForLine player lineIndices board
+  | length openMoves == 1 && length doneMoves == 2 = Just (openMoves!!0)
+  | otherwise = Nothing
+  where doneMoves = [(row, col) | (row, col)<-lineIndices, board!!row!!col == player]
+        openMoves = [Move Draw row col | (row, col)<-lineIndices, board!!row!!col == '-']
+
+-- Try to get any winning move for a player given a board by checking each
+-- potentially winning line
+getAnyWinningMove :: Char -> Board -> Maybe Move
+getAnyWinningMove player board = msum (listOfMaybeWinningMovesForEachLine)
+  where listOfWinningLines = [[(0,0),(0,1),(0,2)],[(1,0),(1,1),(1,2)],[(2,0),(2,1),(2,2)],[(0,0),(1,0),(2,0)],[(0,1),(1,1),(2,1)],[(0,2),(1,2),(2,2)],[(0,0),(1,1),(2,2)],[(0,2),(1,1),(2,0)]]
+        -- Partially apply the player already
+        getWinningMoveForLineForPlayer = getWinningMoveForLine player
+        -- Get a list of functions that each check for a different line if the given board has a winning move on that line
+        listOfgetWinningMoveLineForPlayer = map (getWinningMoveForLineForPlayer) listOfWinningLines
+        -- Apply each of these functions to the board and get a where each entry is Just a winning move (or nothing) for each line on the passed board
+        listOfMaybeWinningMovesForEachLine = (listOfgetWinningMoveLineForPlayer) <*> [board]
+        -- msum grabs the first 'Just' value in the list or gives 'Nothing' if there is none
+        -- msum ((map (getWinningMoveForLine player) listOfWinningLines) <*> [board])
+
+-- Try to get any blocking move for a player given a board
+getAnyBlockingMove :: Char -> Board -> Maybe Move
+-- A blocking move is one that prevents the opponent from making a winning move
+getAnyBlockingMove player board = getAnyWinningMove (swapPlayer player) board
+
+-- Try to perform a winning move
+-- if there is none do a random one instead
+winMove :: Char -> Board -> Move
+winMove player board = case getAnyWinningMove player board of
+  Just move -> move
+  Nothing -> randomMove board
+
+-- Try to perform a winning or blocking move
+-- if there is neither do a random one instead
+blockWinMove :: Char -> Board -> Move
+blockWinMove player board  = case getAnyWinningMove player board of
+  Just move -> move
+  Nothing -> case getAnyBlockingMove player board of
+                Just move -> move
+                Nothing -> randomMove board
 
 -- Get the best possible move for the player given the current board
 -- via the minmax algorithm
@@ -114,10 +169,12 @@ minmax player board
     -- So basically check if there was any board where the opponent loses with every move
     -- Or at least check if there is any move where only a draw was possible
     (worstOpponentMove, (row, col)) = minimum bestMoveOfOpponentWithYourMove
+    -- (worstOpponentMove, (row, col)) = minimum $ zip (map (minmax $ swapPlayer player) ((map (changeBoard player) (getEmptyCells board)) <*> [board])) (getEmptyCells board)
     -- Then build our best move from that.
     -- We take the move we made (myRow, myCol) and reverse the EndState that the opponent got.
     -- If they lose that means we won.
     myBestMove = Move{ value=(negateState $ value worstOpponentMove), moveRow=row, moveCol=col}
+
 
 -- Get all empty cell on the board
 getEmptyCells :: Board -> [(Int, Int)]
@@ -178,7 +235,7 @@ fixSpot _ _ board = (InvalidInput, board)
 
 spotTaken :: Int -> Int -> Board -> Bool
 -- If the element at position [row][col] is anything but the default then it is taken
-spotTaken row col board = board !! row !! col /= '-'
+spotTaken row col board = board!!row!! col /= '-'
 
 changeBoard ::  Char -> (Int, Int) -> Board -> Board
 -- Change the given spot on the board to the current player
@@ -195,6 +252,26 @@ getPlayerInput = do
   hFlush stdout
   -- Get the input from the player
   readInts
+
+getAIStrength :: IO Int
+getAIStrength = do
+    putStrLn "AI strength settings:"
+    putStrLn "1: Easy"
+    putStrLn "2: Medium"
+    putStrLn "3: Hard"
+    putStrLn "4: Impossible"
+    getAIStrengthFromPlayer
+
+getAIStrengthFromPlayer :: IO Int
+getAIStrengthFromPlayer = do
+    putStr $ "How strong should the AI be?[1-4]: "
+    hFlush stdout
+    input <- readInts
+    case input of
+      [Just difficulty]
+        | difficulty > 0 && difficulty < 4 -> return difficulty
+        | otherwise -> getAIStrengthFromPlayer
+      _ -> getAIStrengthFromPlayer
 
 
 -- Try to read every word in the line as Int and produce a list of the results
@@ -240,27 +317,23 @@ swapPlayer _ = 'X'
 -- Functionality for getting the game settings via stdin
 -- Get the information whether there should be an AI opponent
 getAIOpponent :: IO Bool
-getAIOpponent = do
-          putStr $ "Play vs AI?[y/n]: "
-          hFlush stdout
-          getYesNo getAIOpponent
+getAIOpponent = getYesNo "Play vs AI?[y/n]: "
 
 -- Get information of the AI opponent should make the first move
 getAISart :: IO Bool
-getAISart = do
-          putStr $ "Should the AI make the first move?[y/n]: "
-          hFlush stdout
-          getYesNo getAISart
+getAISart = getYesNo "Should the AI make the first move?[y/n]: "
 
-getYesNo :: IO Bool -> IO Bool
-getYesNo restartFunction = do
+getYesNo :: String -> IO Bool
+getYesNo question = do
+    putStr $ question
+    hFlush stdout
     str <- getLine
     case map toUpper $ trim str of
             "Y" -> return True
             "N" -> return False
             _   -> do
               putStrLn "Invalid input."
-              restartFunction
+              getYesNo question
 
 trim :: String -> String
 trim = f . f
