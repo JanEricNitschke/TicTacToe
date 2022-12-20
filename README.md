@@ -15,6 +15,8 @@ coverage html
 ## TicTacToe-javascript
 Simple tictactoe game with Javascript
 
+Hosted [here](https://main.dwbh88xp4gd1m.amplifyapp.com/) on AWS.
+
 ## TicTacToe-Cpp
 Simple tictactoe game with C++
 

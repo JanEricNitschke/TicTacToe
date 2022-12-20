@@ -15,7 +15,7 @@ let difficulty_setting = 4;
 function handleSelectChange(event) {
     var selectElement = event.target;
 
-    difficulty_setting = selectElement.value;
+    difficulty_setting = parseInt(selectElement.value);
 }
 
 // Swap the player between X and O
@@ -363,17 +363,21 @@ function block_win_move(cur_player, state) {
 function ai_turn() {
     let best = null;
     // Get a move according to the difficulty setting
-    if (difficulty_setting == 1) {
-        best = random_move(player, board);
-    }
-    else if (difficulty_setting == 2) {
-        best = win_move(player, board);
-    }
-    else if (difficulty_setting == 3) {
-        best = block_win_move(player, board);
-    }
-    else {
-        best = minmax(player, board);
+    switch (difficulty_setting) {
+        case 1:
+            best = random_move(player, board);
+            break;
+        case 2:
+            best = win_move(player, board);
+            break;
+        case 3:
+            best = block_win_move(player, board);
+            break;
+        default:
+            best = minmax(player, board);
+            if (best[2] == -1) {
+                best = block_win_move(player, board);
+            }
     }
     const row = best[0];
     const col = best[1];
