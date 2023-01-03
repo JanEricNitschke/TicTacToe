@@ -7,7 +7,7 @@
 #include <chrono>
 #include <thread>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <tuple>
 
@@ -101,7 +101,7 @@ int getAIStrength()
 
 // Checks if the given player
 // has won on the given board
-bool isPlayerWin(const std::string player, const GameBoard &board)
+bool isPlayerWin(const std::string &player, const GameBoard &board)
 {
     bool win = false;
     const int n = board.size();
@@ -198,7 +198,7 @@ bool isBoardFilled(const GameBoard &board)
 
 // Swap between player X and O
 // Only expected X or O as input
-std::string swapPlayer(const std::string player)
+std::string swapPlayer(const std::string &player)
 {
     return (player == "X") ? "O" : "X";
 }
@@ -221,7 +221,7 @@ std::vector<std::array<int, 2>> getEmptyCells(const GameBoard &board)
 }
 
 // Performs any random valid move
-Move randomMove(const std::string player, GameBoard &board)
+Move randomMove(const std::string &player, GameBoard &board)
 {
     // Get all the empty cells
     const std::vector<std::array<int, 2>> emptyCells = getEmptyCells(board);
@@ -233,10 +233,10 @@ Move randomMove(const std::string player, GameBoard &board)
 // Tries to find a move where the given player wins on the
 // given board. So any line that contains the player twice
 // and an empty cell as the last slot
-Move getWinningMove(const std::string player, GameBoard &board)
+Move getWinningMove(const std::string &player, GameBoard &board)
 {
     // Build  all of the possible lines
-    std::map<std::string, std::set<std::tuple<int, int>>> win_conditions{
+    std::unordered_map<std::string, std::set<std::tuple<int, int>>> win_conditions{
         {"row0", std::set<std::tuple<int, int>>({std::make_tuple(0, 0), std::make_tuple(0, 1), std::make_tuple(0, 2)})},
         {"row1", std::set<std::tuple<int, int>>({std::make_tuple(1, 0), std::make_tuple(1, 1), std::make_tuple(1, 2)})},
         {"row2", std::set<std::tuple<int, int>>({std::make_tuple(2, 0), std::make_tuple(2, 1), std::make_tuple(2, 2)})},
@@ -306,7 +306,7 @@ Move getWinningMove(const std::string player, GameBoard &board)
 
 // Tries to find a move that would block the opponent
 // winning on their next move
-Move getBlockingMove(const std::string player, GameBoard &board)
+Move getBlockingMove(const std::string &player, GameBoard &board)
 {
     // Just find a move that would make the opponent win
     return getWinningMove(swapPlayer(player), board);
@@ -314,7 +314,7 @@ Move getBlockingMove(const std::string player, GameBoard &board)
 
 // Try to perform a winning move
 // If there is none return a random one instead
-Move winMove(const std::string player, GameBoard &board)
+Move winMove(const std::string &player, GameBoard &board)
 {
     Move winMove = getWinningMove(player, board);
     if (winMove[2] == 0)
@@ -326,7 +326,7 @@ Move winMove(const std::string player, GameBoard &board)
 
 // Try to find a winning or blocking move
 // If neither exists do a random one instead
-Move blockWinMove(const std::string player, GameBoard &board)
+Move blockWinMove(const std::string &player, GameBoard &board)
 {
     Move winMove = getWinningMove(player, board);
     if (winMove[2] == 0)
@@ -341,7 +341,7 @@ Move blockWinMove(const std::string player, GameBoard &board)
     return randomMove(player, board);
 }
 // Takes a board state and returns the coordinates of the optimal move for the given player
-Move minmax(const std::string player, GameBoard &board)
+Move minmax(const std::string &player, GameBoard &board)
 {
     // Base cases
     // Player won
@@ -407,7 +407,7 @@ void showBoard(const GameBoard &board)
 }
 
 // Perform AI move
-void aiTurn(const std::string player, GameBoard &board, int AI_strength)
+void aiTurn(const std::string &player, GameBoard &board, int AI_strength)
 {
     // Inform the player of the game state
     std::cout << "AI turn as player " << player << "." << std::endl;
@@ -435,7 +435,7 @@ void aiTurn(const std::string player, GameBoard &board, int AI_strength)
 }
 
 // Perform player turn
-void playerTurn(const std::string player, GameBoard &board)
+void playerTurn(const std::string &player, GameBoard &board)
 {
     int row = -1;
     int col = -1;
