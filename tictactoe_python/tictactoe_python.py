@@ -4,7 +4,7 @@
 import sys
 from time import sleep
 import random
-from typing import Union, Literal, Optional
+from typing import Union, Literal, Optional, Callable
 
 
 class TicTacToe:
@@ -14,14 +14,16 @@ class TicTacToe:
         board (list[list[string]]): 2D list that contains the ticatactoe board.
         empty_indicator (str): String to indicate that a position has not been taken by either player
         ai_opponent (bool): Whether to play alone vs ai (true) or not (false). Default is False
+        ai_marker (str): Which player the AI is playing as
+        ai_function (function): Which function to use for ai turns
     """
 
     def __init__(self):
-        self.board = []
-        self.empty_indicator = "-"
-        self.ai_opponent = False
-        self.ai_marker = "X"
-        self.ai_function = self.minmax
+        self.board: list[list[str]] = []
+        self.empty_indicator: str = "-"
+        self.ai_opponent: bool = False
+        self.ai_marker: str = "X"
+        self.ai_function: Callable[[list[list[str]], str], list[int]] = self.minmax
 
     def create_board(self) -> None:
         """Initializes the board as a list of lists containting only '-'
@@ -159,7 +161,7 @@ class TicTacToe:
                 print(f"| {item} |", end="")
             print(f"\n{line_separater}")
 
-    def get_player_input(self) -> Union[Literal[False], tuple[int]]:
+    def get_player_input(self) -> Union[Literal[False], tuple[int, int]]:
         """Asks the player for input and validates it
 
         Args:
@@ -199,7 +201,7 @@ class TicTacToe:
         self.board[row][col] = player
         sleep(1)
 
-    def empty_cells(self, board: list[list[str]]) -> list[tuple[int]]:
+    def empty_cells(self, board: list[list[str]]) -> list[tuple[int, int]]:
         """Get all the empty cells on a given board
 
         Args:
@@ -215,7 +217,7 @@ class TicTacToe:
                     empty_cells.append((row, col))
         return empty_cells
 
-    def minmax(self, board: list[list[str]], player: str) -> list:
+    def minmax(self, board: list[list[str]], player: str) -> list[int]:
         """Takes a board state and returns the coordinates of the optimal move for the given player
 
         Args:
@@ -246,7 +248,7 @@ class TicTacToe:
             board[row][col] = self.empty_indicator
         return best_move
 
-    def random_move(self, board: list[list[str]], _: str) -> list:
+    def random_move(self, board: list[list[str]], _: str) -> list[int]:
         """Takes a board state and returns the coordinates of a valid random move
 
         Args:
@@ -262,7 +264,7 @@ class TicTacToe:
         cell = random.choice(empty_cells)
         return [cell[0], cell[1], 0]
 
-    def win_move(self, board: list[list[str]], player: str) -> list:
+    def win_move(self, board: list[list[str]], player: str) -> list[int]:
         """Takes a board state and returns the coordinates of either a winning or random move
 
         Args:
@@ -277,7 +279,9 @@ class TicTacToe:
             return self.random_move(board, player)
         return winning_move
 
-    def get_winning_move(self, board: list[list[str]], player: str) -> Optional[list]:
+    def get_winning_move(
+        self, board: list[list[str]], player: str
+    ) -> Optional[list[int]]:
         """Takes a board state and returns the coordinates of a winning move or None
 
         Args:
@@ -325,7 +329,7 @@ class TicTacToe:
                 return [winning_move[0], winning_move[1], 0]
         return None
 
-    def block_win_move(self, board: list[list[str]], player: str) -> list:
+    def block_win_move(self, board: list[list[str]], player: str) -> list[int]:
         """Takes a board state and returns the coordinates of either a winning, blocking or random move
 
         Args:
@@ -343,7 +347,9 @@ class TicTacToe:
             return blocking_move
         return self.random_move(board, player)
 
-    def get_blocking_move(self, board: list[list[str]], player: str) -> Optional[list]:
+    def get_blocking_move(
+        self, board: list[list[str]], player: str
+    ) -> Optional[list[int]]:
         """Takes a board state and returns the coordinates of a blocking move or None
 
         Args:
