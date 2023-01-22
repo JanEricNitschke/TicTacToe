@@ -55,6 +55,7 @@ go test -covermode=count -coverprofile=coverage.out
 go tool cover -html=coverage.out -o coverage.html
 go test -fuzz=FuzzSwapPlayer -fuzztime 30s
 go test -fuzz=FuzzGetEmptyCells -fuzztime 30s
+go test -fuzz=FuzzRandomMove -fuzztime 30s
 go test -fuzz=FuzzMinMax -fuzztime 60s
 ```
 
