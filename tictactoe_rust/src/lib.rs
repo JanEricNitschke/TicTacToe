@@ -162,7 +162,7 @@ impl TicTacToe {
         thread::sleep(Duration::from_secs(1));
     }
 
-    /// Performs an human turn on the current game state
+    /// Performs a human turn on the current game state
     /// Asks a user for input via the command line
     ///
     /// # Arguments
@@ -509,7 +509,6 @@ impl TicTacToe {
         }
         // Check if any line requires exactly one more
         // position from the player to be fulfilled
-        println!("{:?}", win_conditions);
         for value in win_conditions.values() {
             if value.len() == 1 {
                 let cell = value
