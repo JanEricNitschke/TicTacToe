@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "tictactoe_ruby"
+
+if __FILE__ == $PROGRAM_NAME
+  tictactoe = TictactoeRuby::TicTacToe.new
+  tictactoe.show_board
+end

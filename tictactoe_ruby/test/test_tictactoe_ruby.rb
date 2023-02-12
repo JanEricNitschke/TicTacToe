@@ -8,6 +8,6 @@ class TestTictactoeRuby < Minitest::Test
   end
 
   def test_it_does_something_useful
-    assert false
+    refute_nil ::TictactoeRuby::TicTacToe.new
   end
 end

@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/
 lib64/
 parts/
 sdist/
@@ -175,3 +175,4 @@ tictactoe_ruby/doc/
 tictactoe_ruby/pkg/
 tictactoe_ruby/spec/reports/
 tictactoe_ruby/tmp/
+tictactoe_ruby/*.gem
