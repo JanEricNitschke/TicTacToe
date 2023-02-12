@@ -166,3 +166,12 @@ package-lock.json
 # Haskell
 dist-newstyle/
 *.project.local*
+
+tictactoe_ruby/.bundle/
+tictactoe_ruby/.yardoc
+tictactoe_ruby/_yardoc/
+tictactoe_ruby/coverage/
+tictactoe_ruby/doc/
+tictactoe_ruby/pkg/
+tictactoe_ruby/spec/reports/
+tictactoe_ruby/tmp/
