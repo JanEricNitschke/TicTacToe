@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require "test_helper"
-
+##
+# This class tests tictactoe_ruby.
 class TestTictactoeRuby < Minitest::Test
   def test_that_it_has_a_version_number
     refute_nil ::TictactoeRuby::VERSION

@@ -59,6 +59,18 @@ go test -fuzz=FuzzRandomMove -fuzztime 30s
 go test -fuzz=FuzzMinMax -fuzztime 60s
 ```
 
+## TicTacToe-ruby
+Simple tictactoe game with HRuby
+
+To build and test run:
+```bash
+gem build tictactoe_ruby.gemspec
+bundle install
+gem install tictactoe_ruby
+bundle exec rake
+./bin/tictactoeRuby
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch
 

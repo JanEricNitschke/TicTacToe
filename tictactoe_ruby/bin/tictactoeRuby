@@ -5,5 +5,5 @@ require "tictactoe_ruby"
 
 if __FILE__ == $PROGRAM_NAME
   tictactoe = TictactoeRuby::TicTacToe.new
-  tictactoe.show_board
+  tictactoe.start_game
 end
