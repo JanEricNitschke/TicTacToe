@@ -3,44 +3,35 @@
 
 import random
 import sys
+from collections.abc import Callable
 from time import sleep
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
+Board = list[list[str]]
 
-from enum import Enum
-
-
-class AIStrength(Enum):
-    """Enum for AI strengths."""
-
-    RANDOM = 1
-    WIN = 2
-    BLOCK = 3
-    MINMAX = 4
+AIFunction = Callable[[Board, str], list[int]]
 
 
 class TicTacToe:
     """Class that contains the TicTacToe game logic.
 
     Attributes:
-        board (list[list[string]]): 2D list that contains the ticatactoe board.
+        board (Board): 2D list that contains the ticatactoe board.
         empty_indicator (str): String to indicate that a position has
             not been taken by either player
         ai_opponent (bool): Whether to play alone vs ai (true) or not (false).
             Default is False
         ai_marker (str): Which player the AI is playing as
-        ai_function (function): Which function to use for ai turns
+        ai_function (AIFunction): Which function to use for ai turns
     """
 
     def __init__(self) -> None:
         """Initialize a game of TicTacToe."""
-        self.board: list[list[str]] = []
+        self.board: Board = []
         self.empty_indicator: str = "-"
         self.ai_opponent: bool = False
         self.ai_marker: str = "X"
-        self.ai_function: Callable[[list[list[str]], str], list[int]] = self.minmax
+        self.ai_function: AIFunction = self.minmax
 
     def create_board(self) -> None:
         """Initializes the board as a list of lists containting only '-'.
@@ -87,12 +78,12 @@ class TicTacToe:
         self.board[row][col] = player
         return True
 
-    def is_row_win(self, player: str, board: list[list[str]]) -> bool:
+    def is_row_win(self, player: str, board: Board) -> bool:
         """Checks if the given player has won via row.
 
         Args:
             player (str): Player for which to check if they have won the game
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
 
         Returns:
             bool
@@ -108,12 +99,12 @@ class TicTacToe:
                 return win
         return False
 
-    def is_column_win(self, player: str, board: list[list[str]]) -> bool:
+    def is_column_win(self, player: str, board: Board) -> bool:
         """Checks if the given player has won via column.
 
         Args:
             player (str): Player for which to check if they have won the game
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
 
         Returns:
             bool
@@ -129,12 +120,12 @@ class TicTacToe:
                 return win
         return False
 
-    def is_diagonal_win(self, player: str, board: list[list[str]]) -> bool:
+    def is_diagonal_win(self, player: str, board: Board) -> bool:
         """Checks if the given player has won via diagonals.
 
         Args:
             player (str): Player for which to check if they have won the game
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
 
         Returns:
             bool
@@ -157,12 +148,12 @@ class TicTacToe:
             return win
         return False
 
-    def is_player_win(self, player: str, board: list[list[str]]) -> bool:
+    def is_player_win(self, player: str, board: Board) -> bool:
         """Checks if the given player has won the game.
 
         Args:
             player (str): Player for which to check if they have won the game
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
 
         Returns:
             bool
@@ -265,11 +256,11 @@ class TicTacToe:
         self.board[row][col] = player
         sleep(1)
 
-    def empty_cells(self, board: list[list[str]]) -> list[tuple[int, int]]:
+    def empty_cells(self, board: Board) -> list[tuple[int, int]]:
         """Get all the empty cells on a given board.
 
         Args:
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
 
         Returns:
             list of tuples of empty board coordinates
@@ -281,11 +272,11 @@ class TicTacToe:
                     empty_cells.append((row, col))
         return empty_cells
 
-    def minmax(self, board: list[list[str]], player: str) -> list[int]:
+    def minmax(self, board: Board, player: str) -> list[int]:
         """Takes a board state and return the optimal move for the given player.
 
         Args:
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
             player (str): The player whose move it currently is
 
         Returns:
@@ -312,11 +303,11 @@ class TicTacToe:
             board[row][col] = self.empty_indicator
         return best_move
 
-    def random_move(self, board: list[list[str]], _: str) -> list[int]:
+    def random_move(self, board: Board, _: str) -> list[int]:
         """Takes a board state and returns the coordinates of a valid random move.
 
         Args:
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
             _ (str): The player whose move it currently is.
                      To have a consistent signature between all
                      AI move functions
@@ -328,11 +319,11 @@ class TicTacToe:
         cell = random.choice(empty_cells)
         return [cell[0], cell[1], 0]
 
-    def win_move(self, board: list[list[str]], player: str) -> list[int]:
+    def win_move(self, board: Board, player: str) -> list[int]:
         """Take a board state and return either a winning or random move.
 
         Args:
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
             player (str): The player whose move it currently is.
 
         Returns:
@@ -343,11 +334,11 @@ class TicTacToe:
             return self.random_move(board, player)
         return winning_move
 
-    def get_winning_move(self, board: list[list[str]], player: str) -> list[int] | None:
+    def get_winning_move(self, board: Board, player: str) -> list[int] | None:
         """Takes a board state and returns the coordinates of a winning move or None.
 
         Args:
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
             player (str): The player whose move it currently is.
 
         Returns:
@@ -397,11 +388,11 @@ class TicTacToe:
                 return [winning_move[0], winning_move[1], 0]
         return None
 
-    def block_win_move(self, board: list[list[str]], player: str) -> list[int]:
+    def block_win_move(self, board: Board, player: str) -> list[int]:
         """Take a board state and return either a winning, blocking or random move.
 
         Args:
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
             player (str): The player whose move it currently is.
 
         Returns:
@@ -415,13 +406,11 @@ class TicTacToe:
             return blocking_move
         return self.random_move(board, player)
 
-    def get_blocking_move(
-        self, board: list[list[str]], player: str
-    ) -> list[int] | None:
+    def get_blocking_move(self, board: Board, player: str) -> list[int] | None:
         """Takes a board state and returns the coordinates of a blocking move or None.
 
         Args:
-            board (list[list[str]]): Board as a list of lists
+            board (Board): Board as a list of lists
             player (str): The player whose move it currently is.
 
         Returns:
@@ -495,22 +484,23 @@ class TicTacToe:
         print("2: Medium")
         print("3: Hard")
         print("4: Impossible")
-        while response not in [1, 2, 3, 4]:
+        ai_mapping_dict: dict[int, AIFunction] = {
+            1: self.random_move,
+            2: self.win_move,
+            3: self.block_win_move,
+            4: self.minmax,
+        }
+        while response not in ai_mapping_dict:
             try:
-                response = int(input("How strong should the AI be?[1-4]: "))
+                response = int(
+                    input(f"How strong should the AI be?{list(ai_mapping_dict)}: ")
+                )
             except (EOFError, KeyboardInterrupt):
                 print("Bye")
                 sys.exit()
             except (KeyError, ValueError, AttributeError):
                 print("Bad choice")
-        if response == AIStrength.RANDOM:
-            self.ai_function = self.random_move
-        elif response == AIStrength.WIN:
-            self.ai_function = self.win_move
-        elif response == AIStrength.BLOCK:
-            self.ai_function = self.block_win_move
-        else:  # 4
-            self.ai_function = self.minmax
+        self.ai_function = ai_mapping_dict[response]
 
     def start(self) -> None:
         """Starts the game and contains the main game loop.
