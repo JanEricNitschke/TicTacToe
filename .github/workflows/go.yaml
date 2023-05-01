@@ -18,9 +18,9 @@ jobs:
         working-directory: ./tictactoe_go
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-go@v3
+    - uses: actions/setup-go@v4
       with:
-        go-version: '^1.19.4' # The Go version to download (if necessary) and use.
+        go-version: 'stable'
     - name: Build
       run: go build
     - name: Test
