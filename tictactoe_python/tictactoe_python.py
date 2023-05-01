@@ -3,9 +3,22 @@
 
 import random
 import sys
-from collections.abc import Callable
 from time import sleep
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+from enum import Enum
+
+
+class AIStrength(Enum):
+    """Enum for AI strengths."""
+
+    RANDOM = 1
+    WIN = 2
+    BLOCK = 3
+    MINMAX = 4
 
 
 class TicTacToe:
@@ -13,13 +26,16 @@ class TicTacToe:
 
     Attributes:
         board (list[list[string]]): 2D list that contains the ticatactoe board.
-        empty_indicator (str): String to indicate that a position has not been taken by either player
-        ai_opponent (bool): Whether to play alone vs ai (true) or not (false). Default is False
+        empty_indicator (str): String to indicate that a position has
+            not been taken by either player
+        ai_opponent (bool): Whether to play alone vs ai (true) or not (false).
+            Default is False
         ai_marker (str): Which player the AI is playing as
         ai_function (function): Which function to use for ai turns
     """
 
     def __init__(self) -> None:
+        """Initialize a game of TicTacToe."""
         self.board: list[list[str]] = []
         self.empty_indicator: str = "-"
         self.ai_opponent: bool = False
@@ -45,7 +61,8 @@ class TicTacToe:
         """Tries to set a given position on the board to the value of the given player.
 
         Does so if possible and then returns True.
-        If the position is already taken or out of bounds then no action is taken and False is returned
+        If the position is already taken or out of bounds
+        then no action is taken and False is returned
 
         Args:
             row (int): Index of the row where the player made their move
@@ -57,19 +74,21 @@ class TicTacToe:
         """
         if row not in range(3) or col not in range(3):
             print(
-                f"Row {row+1} or column {col+1} are out of bounds. They have to be between 1 and 3 inclusive. Try again!"
+                f"Row {row+1} or column {col+1} are out of bounds."
+                " They have to be between 1 and 3 inclusive. Try again!"
             )
             return False
         if self.board[row][col] != self.empty_indicator:
             print(
-                f"The position ({row+1}, {col+1}) has already been taken by a player! Please do your move on an empty position."
+                f"The position ({row+1}, {col+1}) has already been taken by a player!"
+                " Please do your move on an empty position."
             )
             return False
         self.board[row][col] = player
         return True
 
-    def is_player_win(self, player: str, board: list[list[str]]) -> bool:
-        """Checks if the given player has won the game.
+    def is_row_win(self, player: str, board: list[list[str]]) -> bool:
+        """Checks if the given player has won via row.
 
         Args:
             player (str): Player for which to check if they have won the game
@@ -78,11 +97,7 @@ class TicTacToe:
         Returns:
             bool
         """
-        win = None
-
         n = len(board)
-
-        # checking rows
         for i in range(n):
             win = True
             for j in range(n):
@@ -91,8 +106,19 @@ class TicTacToe:
                     break
             if win:
                 return win
+        return False
 
-        # checking columns
+    def is_column_win(self, player: str, board: list[list[str]]) -> bool:
+        """Checks if the given player has won via column.
+
+        Args:
+            player (str): Player for which to check if they have won the game
+            board (list[list[str]]): Board as a list of lists
+
+        Returns:
+            bool
+        """
+        n = len(board)
         for i in range(n):
             win = True
             for j in range(n):
@@ -101,8 +127,19 @@ class TicTacToe:
                     break
             if win:
                 return win
+        return False
 
-        # checking diagonals
+    def is_diagonal_win(self, player: str, board: list[list[str]]) -> bool:
+        """Checks if the given player has won via diagonals.
+
+        Args:
+            player (str): Player for which to check if they have won the game
+            board (list[list[str]]): Board as a list of lists
+
+        Returns:
+            bool
+        """
+        n = len(board)
         win = True
         for i in range(n):
             if board[i][i] != player:
@@ -118,6 +155,27 @@ class TicTacToe:
                 break
         if win:
             return win
+        return False
+
+    def is_player_win(self, player: str, board: list[list[str]]) -> bool:
+        """Checks if the given player has won the game.
+
+        Args:
+            player (str): Player for which to check if they have won the game
+            board (list[list[str]]): Board as a list of lists
+
+        Returns:
+            bool
+        """
+        if self.is_row_win(player, board):
+            return True
+
+        if self.is_column_win(player, board):
+            return True
+
+        if self.is_diagonal_win(player, board):
+            return True
+
         return False
 
     def is_board_filled(self) -> bool:
@@ -173,16 +231,20 @@ class TicTacToe:
         """
         # taking user input
         player_input = input("Enter row and column numbers to fix spot: ").split()
-        if len(player_input) != 2:
+        if len(player_input) != 2:  # noqa: PLR2004
             print(
-                f"You entered {len(player_input)} value{'' if len(player_input) == 1 else 's'}. You need to enter exactly two integers to defined your position!"
+                f"You entered {len(player_input)} "
+                f"value{'' if len(player_input) == 1 else 's'}."
+                " You need to enter exactly two integers to defined your position!"
             )
             return False
         try:
             row, col = list(map(int, player_input))
         except ValueError:
             print(
-                f"At least one of your entered inputs of ({player_input[0]}, {player_input[1]}) could not be converted to an integer. Try again!"
+                "At least one of your entered inputs of "
+                f"({player_input[0]}, {player_input[1]}) could not be "
+                "converted to an integer. Try again!"
             )
             return False
         return (row, col)
@@ -220,7 +282,7 @@ class TicTacToe:
         return empty_cells
 
     def minmax(self, board: list[list[str]], player: str) -> list[int]:
-        """Takes a board state and returns the coordinates of the optimal move for the given player.
+        """Takes a board state and return the optimal move for the given player.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -240,7 +302,7 @@ class TicTacToe:
         if not empty_cells:
             best_move[2] = 0
             return best_move
-        if len(empty_cells) == 9:
+        if len(empty_cells) == len(board) ** 2:
             return [random.randint(0, 2), random.randint(0, 2), 0]
         for row, col in empty_cells:
             board[row][col] = player
@@ -267,7 +329,7 @@ class TicTacToe:
         return [cell[0], cell[1], 0]
 
     def win_move(self, board: list[list[str]], player: str) -> list[int]:
-        """Takes a board state and returns the coordinates of either a winning or random move.
+        """Take a board state and return either a winning or random move.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -305,17 +367,23 @@ class TicTacToe:
         for row in range(len(board)):
             for col in range(len(board[0])):
                 if board[row][col] == player:
-                    if (row, col) in win_conditions["row" + str(row)]:
-                        win_conditions["row" + str(row)].remove((row, col))
-                    if (row, col) in win_conditions["col" + str(col)]:
-                        win_conditions["col" + str(col)].remove((row, col))
-                    if row == col and (row, col) in win_conditions["diag"]:
-                        win_conditions["diag"].remove((row, col))
-                    if (
-                        row == (len(board) - 1 - col)
-                        and (row, col) in win_conditions["antidiag"]
+                    coords = (row, col)
+                    if coords in (
+                        current_condition := win_conditions["row" + str(row)]
                     ):
-                        win_conditions["antidiag"].remove((row, col))
+                        current_condition.remove(coords)
+                    if coords in (
+                        current_condition := win_conditions["col" + str(col)]
+                    ):
+                        current_condition.remove(coords)
+                    if row == col and coords in (
+                        current_condition := win_conditions["diag"]
+                    ):
+                        current_condition.remove(coords)
+                    if row == (len(board) - 1 - col) and coords in (
+                        current_condition := win_conditions["antidiag"]
+                    ):
+                        current_condition.remove(coords)
                 if board[row][col] == self.swap_player_turn(player):
                     win_conditions["row" + str(row)].clear()
                     win_conditions["col" + str(col)].clear()
@@ -330,7 +398,7 @@ class TicTacToe:
         return None
 
     def block_win_move(self, board: list[list[str]], player: str) -> list[int]:
-        """Takes a board state and returns the coordinates of either a winning, blocking or random move.
+        """Take a board state and return either a winning, blocking or random move.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -401,7 +469,7 @@ class TicTacToe:
         """Function get a yes/no response from the user.
 
         Args:
-            questions (str): The question to ask the user
+            question (str): The question to ask the user
 
         Returns:
             A boolean whether the user answered in the affirmative or not
@@ -420,9 +488,7 @@ class TicTacToe:
         return False
 
     def get_ai_strength(self) -> None:
-        """Get input from the player regarding the strength
-        of the AI opponent.
-        """
+        """Get input regarding the strength of the AI opponent."""
         response = 0
         print("AI strength settings:")
         print("1: Easy")
@@ -437,11 +503,11 @@ class TicTacToe:
                 sys.exit()
             except (KeyError, ValueError, AttributeError):
                 print("Bad choice")
-        if response == 1:
+        if response == AIStrength.RANDOM:
             self.ai_function = self.random_move
-        elif response == 2:
+        elif response == AIStrength.WIN:
             self.ai_function = self.win_move
-        elif response == 3:
+        elif response == AIStrength.BLOCK:
             self.ai_function = self.block_win_move
         else:  # 4
             self.ai_function = self.minmax
