@@ -1,14 +1,15 @@
-"""Script to play ticatactoe"""
+"""Script to play ticatactoe."""
 #!/usr/bin/env python
 
-import sys
-from time import sleep
 import random
-from typing import Union, Literal, Optional, Callable
+import sys
+from collections.abc import Callable
+from time import sleep
+from typing import Literal
 
 
 class TicTacToe:
-    """Class that contains the TicTacToe game logic
+    """Class that contains the TicTacToe game logic.
 
     Attributes:
         board (list[list[string]]): 2D list that contains the ticatactoe board.
@@ -18,7 +19,7 @@ class TicTacToe:
         ai_function (function): Which function to use for ai turns
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.board: list[list[str]] = []
         self.empty_indicator: str = "-"
         self.ai_opponent: bool = False
@@ -26,7 +27,7 @@ class TicTacToe:
         self.ai_function: Callable[[list[list[str]], str], list[int]] = self.minmax
 
     def create_board(self) -> None:
-        """Initializes the board as a list of lists containting only '-'
+        """Initializes the board as a list of lists containting only '-'.
 
         Args:
             None
@@ -68,7 +69,7 @@ class TicTacToe:
         return True
 
     def is_player_win(self, player: str, board: list[list[str]]) -> bool:
-        """Checks if the given player has won the game
+        """Checks if the given player has won the game.
 
         Args:
             player (str): Player for which to check if they have won the game
@@ -120,7 +121,7 @@ class TicTacToe:
         return False
 
     def is_board_filled(self) -> bool:
-        """Checks if the board is completely filled (indicating a tie)
+        """Checks if the board is completely filled (indicating a tie).
 
         Args:
             None
@@ -135,7 +136,7 @@ class TicTacToe:
         return True
 
     def swap_player_turn(self, player: str) -> str:
-        """Swaps the active player
+        """Swaps the active player.
 
         Args:
             player (str): String of the current player
@@ -146,7 +147,7 @@ class TicTacToe:
         return "X" if player == "O" else "O"
 
     def show_board(self) -> None:
-        """Prints out the current board
+        """Prints out the current board.
 
         Args:
             None
@@ -161,8 +162,8 @@ class TicTacToe:
                 print(f"| {item} |", end="")
             print(f"\n{line_separater}")
 
-    def get_player_input(self) -> Union[Literal[False], tuple[int, int]]:
-        """Asks the player for input and validates it
+    def get_player_input(self) -> Literal[False] | tuple[int, int]:
+        """Asks the player for input and validates it.
 
         Args:
             None
@@ -187,13 +188,14 @@ class TicTacToe:
         return (row, col)
 
     def ai_turn(self, player: str) -> None:
-        """Logic for AI taking a turn
+        """Logic for AI taking a turn.
 
         Args:
             player (str): Which side the AI is playing on
 
         Returns:
-            None"""
+            None
+        """
         print(f"AI turn as {player}.")
         self.show_board()
         print(flush=True)
@@ -202,7 +204,7 @@ class TicTacToe:
         sleep(1)
 
     def empty_cells(self, board: list[list[str]]) -> list[tuple[int, int]]:
-        """Get all the empty cells on a given board
+        """Get all the empty cells on a given board.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -218,7 +220,7 @@ class TicTacToe:
         return empty_cells
 
     def minmax(self, board: list[list[str]], player: str) -> list[int]:
-        """Takes a board state and returns the coordinates of the optimal move for the given player
+        """Takes a board state and returns the coordinates of the optimal move for the given player.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -249,7 +251,7 @@ class TicTacToe:
         return best_move
 
     def random_move(self, board: list[list[str]], _: str) -> list[int]:
-        """Takes a board state and returns the coordinates of a valid random move
+        """Takes a board state and returns the coordinates of a valid random move.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -265,7 +267,7 @@ class TicTacToe:
         return [cell[0], cell[1], 0]
 
     def win_move(self, board: list[list[str]], player: str) -> list[int]:
-        """Takes a board state and returns the coordinates of either a winning or random move
+        """Takes a board state and returns the coordinates of either a winning or random move.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -279,10 +281,8 @@ class TicTacToe:
             return self.random_move(board, player)
         return winning_move
 
-    def get_winning_move(
-        self, board: list[list[str]], player: str
-    ) -> Optional[list[int]]:
-        """Takes a board state and returns the coordinates of a winning move or None
+    def get_winning_move(self, board: list[list[str]], player: str) -> list[int] | None:
+        """Takes a board state and returns the coordinates of a winning move or None.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -330,7 +330,7 @@ class TicTacToe:
         return None
 
     def block_win_move(self, board: list[list[str]], player: str) -> list[int]:
-        """Takes a board state and returns the coordinates of either a winning, blocking or random move
+        """Takes a board state and returns the coordinates of either a winning, blocking or random move.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -349,8 +349,8 @@ class TicTacToe:
 
     def get_blocking_move(
         self, board: list[list[str]], player: str
-    ) -> Optional[list[int]]:
-        """Takes a board state and returns the coordinates of a blocking move or None
+    ) -> list[int] | None:
+        """Takes a board state and returns the coordinates of a blocking move or None.
 
         Args:
             board (list[list[str]]): Board as a list of lists
@@ -363,13 +363,14 @@ class TicTacToe:
         return self.get_winning_move(board, self.swap_player_turn(player))
 
     def player_turn(self, player: str) -> None:
-        """Logic for AI taking a turn
+        """Logic for AI taking a turn.
 
         Args:
             player (str): Which side the user is playing on
 
         Returns:
-            None"""
+            None
+        """
         valid_move = False
         while not valid_move:
             print(f"Player {player} turn")
@@ -386,11 +387,11 @@ class TicTacToe:
             valid_move = self.fix_spot(row - 1, col - 1, player)
 
     def get_player_number(self) -> None:
-        """Get input from the player(s) whether it is two real players or one vs AI"""
+        """Get input from the player(s) whether it is two real players or one vs AI."""
         self.ai_opponent = self.get_player_yes_no("Play alone vs AI?[y/n]: ")
 
     def get_ai_start(self) -> None:
-        """Get input from the player whether the AI should make the first move"""
+        """Get input from the player whether the AI should make the first move."""
         if self.get_player_yes_no("Should the AI make the first move?[y/n]: "):
             self.ai_marker = "X"
         else:
@@ -403,7 +404,8 @@ class TicTacToe:
             questions (str): The question to ask the user
 
         Returns:
-            A boolean whether the user answered in the affirmative or not"""
+            A boolean whether the user answered in the affirmative or not
+        """
         response = ""
         while response not in ["Y", "N"]:
             try:
@@ -419,7 +421,8 @@ class TicTacToe:
 
     def get_ai_strength(self) -> None:
         """Get input from the player regarding the strength
-        of the AI opponent"""
+        of the AI opponent.
+        """
         response = 0
         print("AI strength settings:")
         print("1: Easy")
@@ -444,13 +447,14 @@ class TicTacToe:
             self.ai_function = self.minmax
 
     def start(self) -> None:
-        """Starts the game and contains the main game loop
+        """Starts the game and contains the main game loop.
 
         Args:
             None
 
         Returns:
-            None"""
+            None
+        """
         self.create_board()
 
         self.get_player_number()
@@ -460,7 +464,6 @@ class TicTacToe:
 
         player = "X"
         while True:
-
             if self.ai_opponent and player == self.ai_marker:
                 self.ai_turn(player)
             else:

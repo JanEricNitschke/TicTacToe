@@ -47,4 +47,3 @@ jobs:
         with:
           name: code-coverage-report
           path: ./tictactoe_python/htmlcov/
-
