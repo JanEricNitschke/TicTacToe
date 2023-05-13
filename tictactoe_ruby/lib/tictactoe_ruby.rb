@@ -2,8 +2,69 @@
 
 require_relative "tictactoe_ruby/version"
 
+##
+# Module for playing TicTacToe
 module TictactoeRuby
   class Error < StandardError; end
+
+  ##
+  # Abstract base class for Humans and AI players
+  class Player
+    def make_move
+      raise "Only call this on a child class"
+    end
+
+    def self.swap_player(player)
+      player == :X ? :O : :X
+    end
+  end
+
+  ##
+  # Concrete class for human players
+  class HumanPlayer < Player
+    def make_move(board, marker)
+      loop do
+        puts "Player #{marker} turn"
+        board.show_board
+        puts "Enter row and column numbers to fix spot: "
+        row, col = gets.split.map(&:to_i)
+        break if board.fix_spot(row, col, marker)
+      end
+    end
+  end
+
+  ##
+  # Concrete class for AI players
+  class AIPlayer < Player
+    attr_reader :marker
+
+    def initialize(ai_strength = 1, ai_marker = :X)
+      super()
+      @strength = ai_strength
+      @marker = ai_marker
+    end
+
+    def make_move(board, marker)
+      puts "AI turn as #{marker}"
+      board.show_board
+      best_move = random_move(board)
+      # best_move = case @strength when 1
+      #                              random_move(board, marker)
+      #                            else
+      #                              random_move(board, marker)
+      #             end
+      raise "AI did an oopsie" unless board.fix_spot(best_move[0] + 1, best_move[1] + 1, marker)
+
+      sleep(1)
+    end
+
+
+    private
+
+    def random_move(board)
+      board.empty_cells.sample
+    end
+  end
 
   ##
   # This class store and handles actions on a board of tictactoe.
@@ -33,6 +94,14 @@ module TictactoeRuby
         row.each { |cell| print "| #{cell} |" }
         puts "\n#{line_separater}"
       end
+    end
+
+    def empty_cells
+      empty_cells = []
+      @board.each_with_index do |row, row_index|
+        row.each_with_index { |val, col_index| empty_cells.append([row_index, col_index]) if val == "-" }
+      end
+      empty_cells
     end
 
     def board_filled
@@ -71,7 +140,19 @@ module TictactoeRuby
       true
     end
 
+    def input_nil(row, col)
+      if row.nil? || col.nil?
+        puts "Invalid input!"
+        return true
+      end
+      false
+    end
+
     def fix_spot(row, col, player)
+      return false if input_nil(row, col)
+
+      row -= 1
+      col -= 1
       if in_bounds(row, col) && spot_open(row, col)
         @board[row][col] = player
         return true
@@ -86,6 +167,8 @@ module TictactoeRuby
     # Create the object
     def initialize
       @board = Board.new
+      @human_player = HumanPlayer.new
+      @ai_player = nil
     end
 
     def game_over(player)
@@ -100,41 +183,81 @@ module TictactoeRuby
       false
     end
 
-    def player_turn(player)
-      loop do
-        puts "Player #{player} turn"
-        @board.show_board
-        row, col = gets.split.map(&:to_i)
-        if row.nil? || col.nil?
-          puts "Invalid input"
-          next
-        end
-        break if @board.fix_spot(row - 1, col - 1, player)
-      end
-    end
-
     def flush_stdout
       old_sync = $stdout.sync
       $stdout.sync = true
       old_sync
     end
 
+    def ask_player_yes_no(question)
+      loop do
+        puts question
+        response = gets.chomp
+        return true if %w[Y y].include? response
+        return false if %w[N n].include? response
+
+        puts "Bad choice"
+      end
+    end
+
+    def ask_player_number
+      ask_player_yes_no("Play alone vs AI?[y/n]: ")
+    end
+
+    def print_ai_options
+      puts "AI strength settings:"
+      puts "1: Easy"
+      puts "2: Medium"
+      puts "3: Hard"
+      puts "4: Impossible"
+    end
+
+    def ask_ai_strength
+      print_ai_options
+      loop do
+        puts "How strong should the AI be? [1,2,3,4]"
+        response = gets.chomp.to_i
+        return response unless response.nil? || !([1, 2, 3, 4].include? response)
+
+        puts "Bad choice"
+      end
+    end
+
+    def ask_ai_configuration
+      return unless ask_player_number
+
+      @ai_player = AIPlayer.new(ask_ai_strength, ask_ai_start ? :X : :O)
+    end
+
+    def ask_ai_start
+      ask_player_yes_no("Should the AI make the first move?[y/n]: ")
+    end
+
+    def setup_game
+      @board.create_board
+      ask_ai_configuration
+      :X
+    end
+
+    def take_move(player)
+      if @ai_player.nil? || player != @ai_player.marker
+        @human_player.make_move(@board, player)
+      else
+        @ai_player.make_move(@board, player)
+      end
+    end
+
     def start_game
       old_sync = flush_stdout
-      @board.create_board
-      player = :X
+      player = setup_game
       loop do
-        player_turn(player)
+        take_move(player)
         break if game_over(player)
 
-        player = swap_player(player)
+        player = Player.swap_player(player)
       end
       @board.show_board
       $stdout.sync = old_sync
-    end
-
-    def swap_player(player)
-      player == :X ? :O : :X
     end
   end
 end
