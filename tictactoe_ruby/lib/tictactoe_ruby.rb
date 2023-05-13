@@ -58,7 +58,6 @@ module TictactoeRuby
       sleep(1)
     end
 
-
     private
 
     def random_move(board)

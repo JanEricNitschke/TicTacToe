@@ -1,5 +1,6 @@
-"""Script to play ticatactoe."""
 #!/usr/bin/env python
+"""Script to play ticatactoe."""
+
 
 import random
 import sys
