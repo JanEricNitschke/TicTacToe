@@ -242,7 +242,7 @@ module TictactoeRuby
 
     def spot_open(row, col)
       unless @board[row][col] == "-"
-        puts "The position (#{row + 1}, #{col + 1}) has already been taken by a player! "\
+        puts "The position (#{row + 1}, #{col + 1}) has already been taken by a player! " \
              "Please do your move on an empty position."
         return false
       end
