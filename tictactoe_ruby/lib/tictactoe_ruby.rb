@@ -233,8 +233,8 @@ module TictactoeRuby
     def in_bounds(row, col)
       unless (row.is_a? Integer) && (col.is_a? Integer) &&
              row.between?(0, @board.length - 1) && col.between?(0, @board[0].length - 1)
-        puts "Row #{row + 1} or column #{col + 1} are out of bounds." \
-             " They have to be between 1 and 3 inclusive. Try again!"
+        puts "Row #{row + 1} or column #{col + 1} are out of bounds. " \
+             "They have to be between 1 and 3 inclusive. Try again!"
         return false
       end
       true
@@ -242,8 +242,8 @@ module TictactoeRuby
 
     def spot_open(row, col)
       unless @board[row][col] == "-"
-        puts "The position (#{row + 1}, #{col + 1}) has already been taken by a player!"\
-             " Please do your move on an empty position."
+        puts "The position (#{row + 1}, #{col + 1}) has already been taken by a player! "\
+             "Please do your move on an empty position."
         return false
       end
       true
