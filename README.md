@@ -5,8 +5,9 @@ Collection of tictactoe games written in different langues.
 ## TicTacToe-python
 Simple tictactoe game with Python
 
-Test with:
+Rund and test with:
 ```bash
+python tictactoe_python
 coverage run -m pytest
 coverage report -m
 coverage html
@@ -20,35 +21,38 @@ Hosted [here](https://main.dwbh88xp4gd1m.amplifyapp.com/) on AWS.
 ## TicTacToe-Cpp
 Simple tictactoe game with C++
 
-To build and test run:
+To build, test and run:
 
 ```bash
 cmake -S . -B build
 cmake --build build
 cd build && ctest
+cd .. && ./bin/tictactoe
 ```
 ## TicTacToe-rust
 Simple tictactoe game with Rust
 
-To build and test run:
+To build, test and run:
 ```bash
 cargo build
 cargo test
+cargo run
 ```
 
 ## TicTacToe-haskell
 Simple tictactoe game with Haskell
 
-To build and test run:
+To build, test and run:
 ```bash
 cabal build
 cabal test --enable-coverage
+cabal run
 ```
 
 ## TicTacToe-go
 Simple tictactoe game with Go
 
-To build and test run:
+To build, test and run:
 ```bash
 go build
 go test -covermode=count -coverprofile=coverage.out
@@ -57,10 +61,11 @@ go test -fuzz=FuzzSwapPlayer -fuzztime 30s
 go test -fuzz=FuzzGetEmptyCells -fuzztime 30s
 go test -fuzz=FuzzRandomMove -fuzztime 30s
 go test -fuzz=FuzzMinMax -fuzztime 60s
+go run tictactoe_go.go
 ```
 
 ## TicTacToe-ruby
-Simple tictactoe game with HRuby
+Simple tictactoe game with Ruby
 
 To build and test run:
 ```bash
