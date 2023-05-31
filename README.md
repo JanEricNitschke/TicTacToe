@@ -64,6 +64,15 @@ go test -fuzz=FuzzMinMax -fuzztime 60s
 go run tictactoe_go.go
 ```
 
+
+## TicTacToe-Java
+Simple tictactoe game with Java
+
+To run:
+```bash
+java TicTacToeJava.java
+```
+
 ## TicTacToe-ruby
 Simple tictactoe game with Ruby
 
