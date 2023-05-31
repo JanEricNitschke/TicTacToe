@@ -1,11 +1,12 @@
 # This workflow will run the tests on the rust version of tictactoe
 
 name: rust
+
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always

@@ -1,14 +1,12 @@
 # This workflow will run the tests on the go version of tictactoe
 
 name: go
+
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
-
-env:
-  CARGO_TERM_COLOR: always
+    branches: [main]
 
 jobs:
   build:
