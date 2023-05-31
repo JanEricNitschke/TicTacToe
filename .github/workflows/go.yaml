@@ -15,8 +15,10 @@ jobs:
       run:
         working-directory: ./tictactoe_go
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v4
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Setup go
+      uses: actions/setup-go@v4
       with:
         go-version: 'stable'
     - name: Build

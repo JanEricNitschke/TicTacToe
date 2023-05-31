@@ -15,8 +15,10 @@ jobs:
       run:
         working-directory: ./tictactoe_haskell
     steps:
-    - uses: actions/checkout@v3
-    - uses: haskell/actions/setup@v2
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: CSetup haskell
+      uses: haskell/actions/setup@v2
       with:
         ghc-version: '9.4.2' # Exact version of ghc to use
     - name: Build
