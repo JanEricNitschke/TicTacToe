@@ -20,4 +20,4 @@ jobs:
       with:
         distribution: 'oracle' # See 'Supported distributions' for available options
         java-version: '20'
-    - run: java TicTacToeJava.java
+    - run: javac TicTacToeJava.java
