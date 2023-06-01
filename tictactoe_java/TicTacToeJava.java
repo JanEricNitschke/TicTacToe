@@ -1,10 +1,15 @@
 package tictactoe_java;
 
+import java.util.Scanner;
+
 import tictactoe_java.game.Board;
 import tictactoe_java.game.HumanPlayer;
 
 // Lets do it with a 1D array this time
 public class TicTacToeJava {
+
+  public static final Scanner inputScanner = new Scanner(System.in);
+
   public static char swapMarker(char marker) {
     if (marker == 'X') {
       return 'O';
