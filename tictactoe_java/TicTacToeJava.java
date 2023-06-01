@@ -2,10 +2,14 @@ package tictactoe_java;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import tictactoe_java.game.Board;
 
 // Lets do it with a 1D array this time
 class TicTacToeJava {
   public static void main(String[] args) {
+    Board myBoard = new Board();
+    myBoard.showBoard();
+
     System.out.println("This is my tictactoe package!");
 
     Scanner myScanner = new Scanner(System.in);

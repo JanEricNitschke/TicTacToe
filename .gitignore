@@ -176,3 +176,7 @@ tictactoe_ruby/pkg/
 tictactoe_ruby/spec/reports/
 tictactoe_ruby/tmp/
 tictactoe_ruby/*.gem
+
+
+# Compiled class file
+*.class

@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./tictactoe_java
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
@@ -23,4 +20,4 @@ jobs:
         distribution: 'oracle' # See 'Supported distributions' for available options
         java-version: '20'
     - name: Build
-      run: javac TicTacToeJava.java
+      run: javac tictactoe_java/TicTacToeJava.java
