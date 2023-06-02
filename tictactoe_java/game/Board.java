@@ -1,5 +1,7 @@
 package tictactoe_java.game;
 
+import java.util.ArrayList;
+
 /**
  * Class representing the game board.
  * Holds the game board as a 1D array of chars.
@@ -101,5 +103,20 @@ public class Board {
             }
         }
         return true;
+    }
+
+    /**
+     * Get a ArrayList of still open spots.
+     *
+     * @return ArrayList of open spots.
+     */
+    public ArrayList<Integer> getOpenSpots() {
+        ArrayList<Integer> openSpots = new ArrayList<Integer>();
+        for (int i=0; i < gameBoard.length; i++) {
+            if (gameBoard[i] != 'O' && gameBoard[i] != 'X') {
+                openSpots.add(i);
+            }
+        }
+        return openSpots;
     }
 }
