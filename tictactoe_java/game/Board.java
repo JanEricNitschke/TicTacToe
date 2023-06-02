@@ -1,13 +1,20 @@
 package tictactoe_java.game;
 
-import static tictactoe_java.TicTacToeJava.swapMarker;
-
+/**
+ * Class representing the game board.
+ * Holds the game board as a 1D array of chars.
+ * Also stores the wincoditions as arrays of integer index into the
+ * game board.
+ */
 public class Board {
     char[] gameBoard = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
     int[][] winConditions = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, // Rows
             { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 }, /// Cols
             { 0, 4, 8 }, { 2, 4, 6 } }; // Diagonals
 
+    /**
+     * Pretty print the current state of the game board.
+     */
     public void showBoard() {
         String lineSeparator = "---------------";
         System.out.println(lineSeparator);
@@ -19,7 +26,16 @@ public class Board {
         }
     }
 
-    public boolean fixSpot(int spot, char marker) {
+    /**
+     * Try to fix the given spot for the given marker.
+     * If the input is valid fix the spot and return true.
+     * If not give an error message and return false.
+     *
+     * @param spot Index into the board of the spot to fix.
+     * @param marker Marker to fix the spot for.
+     * @return Whether the input was valid and the spot was fixed.
+     */
+    public boolean fixSpot(int spot, Marker marker) {
         if (spot < 0 || spot > 8) {
             System.out.println("ERROR: Spot has to be in range [0-8]!");
             return false;
@@ -28,20 +44,27 @@ public class Board {
             System.out.println("ERROR: Spot " + spot + " is already occupied!");
             return false;
         }
-        gameBoard[spot] = marker;
+        gameBoard[spot] = marker.marker;
         return true;
     }
 
-    public ConditionResult checkCondition(int[] condition, char marker) {
+    /**
+     * Check how much of a win condition (row, col, diagonal) has been fulfilled.
+     *
+     * @param condition Array of indices representing the win condition to check.
+     * @param marker Marker that the condition should be checked for.
+     * @return Result of the check that contains the number of filled and empty spots.
+     */
+    public ConditionResult checkCondition(int[] condition, Marker marker) {
         ConditionResult conditionResult = new ConditionResult();
         for (int spot: condition) {
-            if (gameBoard[spot] == marker) {
+            if (gameBoard[spot] == marker.marker) {
                 conditionResult.spotsDone += 1;
             }
             // Taken spots have marker or swapMarker(marker)
             // If it is neither it is an empty spot.
             // This check is shorter to write
-            else if (gameBoard[spot] != swapMarker(marker)) {
+            else if (gameBoard[spot] != marker.swappedMarker()) {
                 conditionResult.spotsOpen.add(spot);
             }
         }
@@ -49,7 +72,13 @@ public class Board {
     }
 
 
-    public boolean playerWin(char marker) {
+    /**
+     * Check if the player has won the game.
+     *
+     * @param marker Marker to check the win for.
+     * @return Whether or not the given player has won the game.
+     */
+    public boolean playerWin(Marker marker) {
         for (int[] condition : winConditions ) {
             ConditionResult conditionResult = checkCondition(condition, marker);
             if (conditionResult.spotsDone == 3) {
@@ -59,6 +88,12 @@ public class Board {
         return false;
     }
 
+    /**
+     * Checks if the board is full.
+     * Indicates a draw if checked after player win.
+     *
+     * @return Whether the board is full.
+     */
     public boolean boardFull() {
         for (char spotMarker: gameBoard) {
             if (spotMarker != 'O' && spotMarker != 'X') {

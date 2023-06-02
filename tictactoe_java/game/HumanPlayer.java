@@ -1,10 +1,31 @@
 package tictactoe_java.game;
 
-import static tictactoe_java.TicTacToeJava.inputScanner;
+import java.util.Scanner;
 import java.util.InputMismatchException;
 
+/**
+ * Class representing a human player.
+ */
 public class HumanPlayer implements Player {
-    public void makeMove(char marker, Board board) {
+    Scanner moveScanner;
+
+    /**
+     * Constructor. Set the scanner for taking user input.
+     * @param scanner Scanner for getting user input.
+     */
+    public HumanPlayer(Scanner scanner) {
+        moveScanner = scanner;
+    }
+
+    /**
+   * Ask a user for input and make a move based on that.
+   * Move had to be valid integer in rane [0-8] that is not yet
+   * occupied.
+   *
+   * @param marker Marker that the player makes a move as.
+   * @param board Game board currently being played on.
+   */
+    public void makeMove(Marker marker, Board board) {
         System.out.println("Player " + marker + " turn.");
         board.showBoard();
         int spot;
@@ -12,13 +33,11 @@ public class HumanPlayer implements Player {
         while (!validInput) {
             try {
                 System.out.println("Where to make your next move?[0-8]");
-                spot = inputScanner.nextInt();
+                spot = moveScanner.nextInt();
                 validInput = board.fixSpot(spot, marker);
-                System.out.println("Got: " + spot);
-                System.out.println("ValidInput?: " + validInput);
             } catch (InputMismatchException exception) {
                 System.out.println("ERROR: Input must be a valid integer!");
-                inputScanner.next();
+                moveScanner.next();
             }
         }
     }
