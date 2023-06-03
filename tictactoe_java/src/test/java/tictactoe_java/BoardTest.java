@@ -1,14 +1,14 @@
-package tictactoe_java.test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+package tictactoe_java;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import tictactoe_java.game.Board;
 import tictactoe_java.game.ConditionResult;
@@ -128,14 +128,10 @@ public class BoardTest {
     public void testFixSpot() {
         Board board = new Board();
         Marker marker = new Marker();
-        assertTrue("Should be able to fix an empty spot in bounds.",
-                board.fixSpot(0, marker));
-        assertFalse("Should not be able to fix occupied spot",
-                board.fixSpot(0, marker));
-        assertFalse("Should not be able to fix spot out of bounds below.",
-                board.fixSpot(-1, marker));
-        assertFalse("Should not be able to fix spot out of bounds above.",
-                board.fixSpot(9, marker));
+        assertTrue(board.fixSpot(0, marker), "Should be able to fix an empty spot in bounds.");
+        assertFalse(board.fixSpot(0, marker), "Should not be able to fix occupied spot");
+        assertFalse(board.fixSpot(-1, marker), "Should not be able to fix spot out of bounds below.");
+        assertFalse(board.fixSpot(9, marker), "Should not be able to fix spot out of bounds above.");
     }
 
     @Test

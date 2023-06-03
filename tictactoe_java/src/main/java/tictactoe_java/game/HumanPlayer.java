@@ -11,6 +11,7 @@ public class HumanPlayer implements Player {
 
     /**
      * Constructor. Set the scanner for taking user input.
+     *
      * @param scanner Scanner for getting user input.
      */
     public HumanPlayer(Scanner scanner) {
@@ -18,13 +19,13 @@ public class HumanPlayer implements Player {
     }
 
     /**
-   * Ask a user for input and make a move based on that.
-   * Move had to be valid integer in rane [0-8] that is not yet
-   * occupied.
-   *
-   * @param marker Marker that the player makes a move as.
-   * @param board Game board currently being played on.
-   */
+     * Ask a user for input and make a move based on that.
+     * Move had to be valid integer in rane [0-8] that is not yet
+     * occupied.
+     *
+     * @param marker Marker that the player makes a move as.
+     * @param board  Game board currently being played on.
+     */
     public void makeMove(Board board, Marker marker) {
         System.out.println("Player " + marker.marker + " turn.");
         board.showBoard();

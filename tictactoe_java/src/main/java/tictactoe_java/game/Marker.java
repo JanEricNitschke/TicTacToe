@@ -1,6 +1,5 @@
 package tictactoe_java.game;
 
-
 /**
  * Class that holds the char/marker of the currently active player
  */

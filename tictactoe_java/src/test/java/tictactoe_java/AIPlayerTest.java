@@ -1,7 +1,7 @@
-package tictactoe_java.test;
+package tictactoe_java;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -125,12 +125,12 @@ public class AIPlayerTest {
         AIPlayer aiPlayer = new AIPlayer('X', 3);
         board = new Board(new char[] { 'X', 'X', '2', '3', '4', '5', 'O', 'O', '8' });
         Move winningMove = aiPlayer.getMove(board, marker);
-        assertEquals("Should prioritize win", 2, winningMove.spot);
+        assertEquals(2, winningMove.spot, "Should prioritize win");
 
         aiPlayer = new AIPlayer('X', 3);
         board = new Board(new char[] { 'X', '1', '2', '3', '4', '5', 'O', 'O', '8' });
         Move blockingMove = aiPlayer.getMove(board, marker);
-        assertEquals("Should fall back to blocking", 8, blockingMove.spot);
+        assertEquals(8, blockingMove.spot, "Should fall back to blocking");
     }
 
     @Test
@@ -142,12 +142,12 @@ public class AIPlayerTest {
         AIPlayer aiPlayer = new AIPlayer('X', 3);
         board = new Board(new char[] { 'O', '1', 'X', '3', '4', '5', 'O', '7', 'X' });
         Move winningMove = aiPlayer.getMove(board, marker.swapMarker());
-        assertEquals("Should prioritize win", 3, winningMove.spot);
+        assertEquals(3, winningMove.spot, "Should prioritize win");
 
         aiPlayer = new AIPlayer('X', 3);
-        board = new Board(new char[]  { '0', '1', 'X', '3', '4', '5', 'O', '7', 'X' });
+        board = new Board(new char[] { '0', '1', 'X', '3', '4', '5', 'O', '7', 'X' });
         Move blockingMove = aiPlayer.getMove(board, marker.swapMarker());
-        assertEquals("Should fall back to blocking", 5, blockingMove.spot);
+        assertEquals(5, blockingMove.spot, "Should fall back to blocking");
     }
 
     @Test
@@ -159,12 +159,12 @@ public class AIPlayerTest {
         AIPlayer aiPlayer = new AIPlayer('X', 3);
         board = new Board(new char[] { 'X', '1', '2', '3', '4', '5', '6', '7', 'X' });
         Move winningMove = aiPlayer.getMove(board, marker);
-        assertEquals("Should prioritize win", 4, winningMove.spot);
+        assertEquals(4, winningMove.spot, "Should prioritize win");
 
         aiPlayer = new AIPlayer('X', 3);
-        board = new Board(new char[]{ 'O', '1', '2', '3', '4', '5', '6', '7', 'O' });
+        board = new Board(new char[] { 'O', '1', '2', '3', '4', '5', '6', '7', 'O' });
         Move blockingMove = aiPlayer.getMove(board, marker);
-        assertEquals("Should fall back to blocking", 4, blockingMove.spot);
+        assertEquals(4, blockingMove.spot, "Should fall back to blocking");
     }
 
     @RepeatedTest(5)
@@ -184,21 +184,20 @@ public class AIPlayerTest {
         Marker marker = new Marker();
         AIPlayer aiPlayer = new AIPlayer('X', 4);
 
-        Board board = new Board(new char[]{ 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
+        Board board = new Board(new char[] { 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
         Move bestMove = aiPlayer.getMove(board, marker);
         assertEquals(1, bestMove.endState);
 
-        board = new Board(new char[]{ 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
+        board = new Board(new char[] { 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
         bestMove = aiPlayer.getMove(board, marker.swapMarker());
         assertEquals(-1, bestMove.endState);
 
-        board = new Board(new char[]{ 'X', 'O', 'X', 'X', 'O', 'O', 'O', 'X', 'X' });
+        board = new Board(new char[] { 'X', 'O', 'X', 'X', 'O', 'O', 'O', 'X', 'X' });
         bestMove = aiPlayer.getMove(board, marker.swapMarker());
         assertEquals(0, bestMove.endState);
         bestMove = aiPlayer.getMove(board, marker);
         assertEquals(0, bestMove.endState);
     }
-
 
     @Test
     @DisplayName("Minmax should find best move at depth 0.")
@@ -206,7 +205,7 @@ public class AIPlayerTest {
         Marker marker = new Marker();
         AIPlayer aiPlayer = new AIPlayer('X', 4);
 
-        Board board = new Board(new char[]{ 'X', 'X', '2', 'O', 'X', 'O', 'X', 'O', 'O' });
+        Board board = new Board(new char[] { 'X', 'X', '2', 'O', 'X', 'O', 'X', 'O', 'O' });
         Move bestMove = aiPlayer.getMove(board, marker);
         assertEquals(2, bestMove.spot);
         assertEquals(1, bestMove.endState);
@@ -221,7 +220,7 @@ public class AIPlayerTest {
         Marker marker = new Marker();
         AIPlayer aiPlayer = new AIPlayer('X', 4);
 
-        Board board = new Board(new char[]{ 'O', 'O', 'X', 'X', '4', 'O', '6', 'O', 'X' });
+        Board board = new Board(new char[] { 'O', 'O', 'X', 'X', '4', 'O', '6', 'O', 'X' });
         Move bestMove = aiPlayer.getMove(board, marker);
         assertEquals(4, bestMove.spot);
         assertEquals(0, bestMove.endState);
@@ -236,9 +235,10 @@ public class AIPlayerTest {
         Marker marker = new Marker();
         AIPlayer aiPlayer = new AIPlayer('X', 4);
 
-        Board board = new Board(new char[]{ 'O', '1', '2', '3', '4', '5', '6', '7', '8' });
+        Board board = new Board(new char[] { 'O', '1', '2', '3', '4', '5', '6', '7', '8' });
         Move bestMove = aiPlayer.getMove(board, marker);
         assertEquals(4, bestMove.spot);
-        assertEquals(0, bestMove.endState);;
+        assertEquals(0, bestMove.endState);
+        ;
     }
 }
