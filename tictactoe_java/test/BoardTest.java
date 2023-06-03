@@ -138,4 +138,16 @@ public class BoardTest {
                 board.fixSpot(9, marker));
     }
 
+    @Test
+    @DisplayName("Clear spot clears spot.")
+    public void testClearSpot() {
+        Board board = new Board(new char[] { 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
+        char cleared = board.clearSpot(1);
+        board.fixSpot(1, new Marker());
+        assertEquals('1', cleared);
+        cleared = board.clearSpot(8);
+        board.fixSpot(1, new Marker());
+        assertEquals('8', cleared);
+    }
+
 }

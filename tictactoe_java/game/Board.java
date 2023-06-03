@@ -142,4 +142,9 @@ public class Board {
         }
         return openSpots;
     }
+
+    public char clearSpot(int spot) {
+        gameBoard[spot] = Character.forDigit(spot, 10);
+        return gameBoard[spot];
+    }
 }

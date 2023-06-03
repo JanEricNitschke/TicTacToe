@@ -19,9 +19,9 @@ public class Marker {
     }
 
     /**
-     * Swap the marker field between 'X' and 'O'
+     * Get a marker with a swapped character.
      *
-     * @return Return the instance after swappings its marker field.
+     * @return Return the marker with the swapped character.
      */
     public Marker swapMarker() {
         return new Marker(this.swappedMarker());

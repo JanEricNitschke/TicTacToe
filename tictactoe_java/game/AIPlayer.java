@@ -88,6 +88,35 @@ public class AIPlayer implements Player {
         return randomMove(board);
     }
 
+    Move minmax(Board board, Marker marker) {
+        // Base cases if win, loss, tie
+        if (board.playerWin(marker)) {
+            return new Move(-1, 1);
+        }
+        if (board.playerWin(marker.swapMarker())) {
+            return new Move(-1, -1);
+        }
+        ArrayList<Integer> openSpots = board.getOpenSpots();
+        if (openSpots.size() == 0) {
+            return new Move(-1, 0);
+        }
+        // Skip full algorithm on empty board
+        if (openSpots.size() == 9) {
+            return randomMove(board);
+        }
+        // Actual minmaxalgorithm
+        Move bestMove = new Move(-1, -1);
+        for (int openSpot : openSpots) {
+            board.fixSpot(openSpot, marker);
+            Move currentMove = minmax(board, marker.swapMarker());
+            if (-currentMove.endState >= bestMove.endState) {
+                bestMove = new Move(openSpot, -currentMove.endState);
+            }
+            board.clearSpot(openSpot);
+        }
+        return bestMove;
+    }
+
     public Move getMove(Board board, Marker marker) {
         Move bestMove;
         switch (aiDifficulty) {
@@ -101,7 +130,7 @@ public class AIPlayer implements Player {
                 bestMove = blockWinMove(board, marker);
                 break;
             default:
-                bestMove = randomMove(board);
+                bestMove = minmax(board, marker);
         }
         return bestMove;
     }

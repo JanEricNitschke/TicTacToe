@@ -166,4 +166,79 @@ public class AIPlayerTest {
         Move blockingMove = aiPlayer.getMove(board, marker);
         assertEquals("Should fall back to blocking", 4, blockingMove.spot);
     }
+
+    @RepeatedTest(5)
+    @DisplayName("Minmax should fall back to random on full board.")
+    public void testMinmaxEmpty() {
+        Board board = new Board();
+        Marker marker = new Marker();
+
+        AIPlayer aiPlayer = new AIPlayer('X', 4);
+        Move randomMove = aiPlayer.getMove(board, marker);
+        assertTrue(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8).contains(randomMove.spot));
+    }
+
+    @Test
+    @DisplayName("Minmax should evaluate base cases.")
+    public void testMinmaxBase() {
+        Marker marker = new Marker();
+        AIPlayer aiPlayer = new AIPlayer('X', 4);
+
+        Board board = new Board(new char[]{ 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
+        Move bestMove = aiPlayer.getMove(board, marker);
+        assertEquals(1, bestMove.endState);
+
+        board = new Board(new char[]{ 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
+        bestMove = aiPlayer.getMove(board, marker.swapMarker());
+        assertEquals(-1, bestMove.endState);
+
+        board = new Board(new char[]{ 'X', 'O', 'X', 'X', 'O', 'O', 'O', 'X', 'X' });
+        bestMove = aiPlayer.getMove(board, marker.swapMarker());
+        assertEquals(0, bestMove.endState);
+        bestMove = aiPlayer.getMove(board, marker);
+        assertEquals(0, bestMove.endState);
+    }
+
+
+    @Test
+    @DisplayName("Minmax should find best move at depth 0.")
+    public void testMinmaxLevel0() {
+        Marker marker = new Marker();
+        AIPlayer aiPlayer = new AIPlayer('X', 4);
+
+        Board board = new Board(new char[]{ 'X', 'X', '2', 'O', 'X', 'O', 'X', 'O', 'O' });
+        Move bestMove = aiPlayer.getMove(board, marker);
+        assertEquals(2, bestMove.spot);
+        assertEquals(1, bestMove.endState);
+        bestMove = aiPlayer.getMove(board, marker.swapMarker());
+        assertEquals(2, bestMove.spot);
+        assertEquals(1, bestMove.endState);
+    }
+
+    @Test
+    @DisplayName("Minmax should find best move at depth 1.")
+    public void testMinmaxLevel1() {
+        Marker marker = new Marker();
+        AIPlayer aiPlayer = new AIPlayer('X', 4);
+
+        Board board = new Board(new char[]{ 'O', 'O', 'X', 'X', '4', 'O', '6', 'O', 'X' });
+        Move bestMove = aiPlayer.getMove(board, marker);
+        assertEquals(4, bestMove.spot);
+        assertEquals(0, bestMove.endState);
+        bestMove = aiPlayer.getMove(board, marker.swapMarker());
+        assertEquals(4, bestMove.spot);
+        assertEquals(1, bestMove.endState);
+    }
+
+    @Test
+    @DisplayName("Minmax should find best move at max depth.")
+    public void testMinmaxDeep() {
+        Marker marker = new Marker();
+        AIPlayer aiPlayer = new AIPlayer('X', 4);
+
+        Board board = new Board(new char[]{ 'O', '1', '2', '3', '4', '5', '6', '7', '8' });
+        Move bestMove = aiPlayer.getMove(board, marker);
+        assertEquals(4, bestMove.spot);
+        assertEquals(0, bestMove.endState);;
+    }
 }
