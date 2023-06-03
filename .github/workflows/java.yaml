@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_go
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
@@ -20,6 +23,4 @@ jobs:
         distribution: 'oracle' # See 'Supported distributions' for available options
         java-version: '20'
     - name: Build with Maven
-      with:
-        working-directory: ./tictactoe_java
       run: mvn --batch-mode --update-snapshots package
