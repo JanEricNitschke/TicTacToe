@@ -25,7 +25,7 @@ public class HumanPlayer implements Player {
    * @param marker Marker that the player makes a move as.
    * @param board Game board currently being played on.
    */
-    public void makeMove(Marker marker, Board board) {
+    public void makeMove(Board board, Marker marker) {
         System.out.println("Player " + marker.marker + " turn.");
         board.showBoard();
         int spot;

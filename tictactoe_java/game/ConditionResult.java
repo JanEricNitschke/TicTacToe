@@ -8,8 +8,8 @@ import java.util.LinkedList;
  * As well as the list of spots that are still unoccupied (neither player has claimed.)
  */
 public class ConditionResult {
-    int spotsDone;
-    LinkedList<Integer> spotsOpen;
+    public int spotsDone;
+    public LinkedList<Integer> spotsOpen;
 
     /**
      * Constructor initializing the finished spots as 0 and

@@ -9,10 +9,33 @@ import java.util.ArrayList;
  * game board.
  */
 public class Board {
-    char[] gameBoard = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
-    int[][] winConditions = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, // Rows
+    char[] gameBoard;
+    int[][] winConditions;
+
+    char[] emptyBoard = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
+    int[][] defaultConditions = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, // Rows
             { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 }, /// Cols
             { 0, 4, 8 }, { 2, 4, 6 } }; // Diagonals
+
+    public Board() {
+        gameBoard = emptyBoard;
+        winConditions = defaultConditions;
+    }
+
+    public Board(char[] board) {
+        gameBoard = board;
+        winConditions = defaultConditions;
+    }
+
+    public Board(int[][] conditions) {
+        gameBoard = emptyBoard;
+        winConditions = conditions;
+    }
+
+    public Board(char[] board, int[][] conditions) {
+        gameBoard = board;
+        winConditions = conditions;
+    }
 
     /**
      * Pretty print the current state of the game board.
@@ -33,7 +56,7 @@ public class Board {
      * If the input is valid fix the spot and return true.
      * If not give an error message and return false.
      *
-     * @param spot Index into the board of the spot to fix.
+     * @param spot   Index into the board of the spot to fix.
      * @param marker Marker to fix the spot for.
      * @return Whether the input was valid and the spot was fixed.
      */
@@ -42,7 +65,7 @@ public class Board {
             System.out.println("ERROR: Spot has to be in range [0-8]!");
             return false;
         }
-        if (gameBoard[spot] == 'O' || gameBoard[spot] == 'X' ) {
+        if (gameBoard[spot] == 'O' || gameBoard[spot] == 'X') {
             System.out.println("ERROR: Spot " + spot + " is already occupied!");
             return false;
         }
@@ -54,12 +77,13 @@ public class Board {
      * Check how much of a win condition (row, col, diagonal) has been fulfilled.
      *
      * @param condition Array of indices representing the win condition to check.
-     * @param marker Marker that the condition should be checked for.
-     * @return Result of the check that contains the number of filled and empty spots.
+     * @param marker    Marker that the condition should be checked for.
+     * @return Result of the check that contains the number of filled and empty
+     *         spots.
      */
     public ConditionResult checkCondition(int[] condition, Marker marker) {
         ConditionResult conditionResult = new ConditionResult();
-        for (int spot: condition) {
+        for (int spot : condition) {
             if (gameBoard[spot] == marker.marker) {
                 conditionResult.spotsDone += 1;
             }
@@ -73,7 +97,6 @@ public class Board {
         return conditionResult;
     }
 
-
     /**
      * Check if the player has won the game.
      *
@@ -81,7 +104,7 @@ public class Board {
      * @return Whether or not the given player has won the game.
      */
     public boolean playerWin(Marker marker) {
-        for (int[] condition : winConditions ) {
+        for (int[] condition : winConditions) {
             ConditionResult conditionResult = checkCondition(condition, marker);
             if (conditionResult.spotsDone == 3) {
                 return true;
@@ -97,7 +120,7 @@ public class Board {
      * @return Whether the board is full.
      */
     public boolean boardFull() {
-        for (char spotMarker: gameBoard) {
+        for (char spotMarker : gameBoard) {
             if (spotMarker != 'O' && spotMarker != 'X') {
                 return false;
             }
@@ -112,7 +135,7 @@ public class Board {
      */
     public ArrayList<Integer> getOpenSpots() {
         ArrayList<Integer> openSpots = new ArrayList<Integer>();
-        for (int i=0; i < gameBoard.length; i++) {
+        for (int i = 0; i < gameBoard.length; i++) {
             if (gameBoard[i] != 'O' && gameBoard[i] != 'X') {
                 openSpots.add(i);
             }

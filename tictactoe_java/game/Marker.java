@@ -14,14 +14,17 @@ public class Marker {
         marker = 'X';
     }
 
+    public Marker(char playerMarker) {
+        marker = playerMarker;
+    }
+
     /**
      * Swap the marker field between 'X' and 'O'
      *
      * @return Return the instance after swappings its marker field.
      */
     public Marker swapMarker() {
-        marker = swappedMarker();
-        return this;
+        return new Marker(this.swappedMarker());
     }
 
     /**

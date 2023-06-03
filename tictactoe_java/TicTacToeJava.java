@@ -16,16 +16,16 @@ public class TicTacToeJava {
   /**
    * Game loop of tictactoe.
    * Initializes the board, marker and players.
-   * And then lets players make their moves.
+   * And then lets players make their moves.y
    */
   void playGame(HumanPlayer humanPlayer, AIPlayer aiPlayer) {
     Board board = new Board();
     Marker marker = new Marker();
     while (true) {
       if (aiPlayer != null && aiPlayer.aiMarker == marker.marker) {
-        aiPlayer.makeMove(marker, board);
+        aiPlayer.makeMove(board, marker);
       } else {
-        humanPlayer.makeMove(marker, board);
+        humanPlayer.makeMove(board, marker);
       }
       if (gameOver(marker, board)) {
         break;
@@ -42,7 +42,7 @@ public class TicTacToeJava {
    * @param scanner  Scanner to read the user input.
    * @return Whether the user anwered in the affirmative.
    */
-  boolean getUserYesNo(String question, Scanner scanner) {
+  public boolean getUserYesNo(String question, Scanner scanner) {
     char answer;
     while (true) {
       System.out.println(question);

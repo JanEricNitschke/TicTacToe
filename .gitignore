@@ -180,3 +180,5 @@ tictactoe_ruby/*.gem
 
 # Compiled class file
 *.class
+
+*.jar
