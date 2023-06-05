@@ -9,8 +9,12 @@ procedure Tictactoe_Ada is
    subtype Rows is Board_Index range 1 .. 3;
    subtype Columns is Board_Index range 1 .. 3;
    type Board is array (Board_Index) of Array_Entry;
+   type Condition is array (1 .. 3) of Board_Index;
 
-   Game_Board : Board := ('1', '2', '3', '4', '5', '6', '7', '8', '9');
+   Game_Board     : Board := ('1', '2', '3', '4', '5', '6', '7', '8', '9');
+   Win_Conditions : constant array (1 .. 8) of Condition :=
+     ((1, 2, 3), (4, 5, 6), (7, 8, 9), (1, 4, 7), (2, 5, 8), (3, 6, 9),
+      (1, 5, 9), (3, 5, 7));
 
    procedure Show_Board (Game_Board : Board) is
       Line_Seperator : constant String := "---------------------";
@@ -72,12 +76,64 @@ procedure Tictactoe_Ada is
       end loop;
    end Player_Turn;
 
+   function Board_Full (Game_Board : Board) return Boolean is
+   begin
+      for Content of Game_Board loop
+         if Content not in Player_Char then
+            return False;
+         end if;
+      end loop;
+      return True;
+   end Board_Full;
+
+   function Check_Condition
+     (Win_Condition : Condition; Player : Player_Char; Game_Board : Board)
+      return Boolean
+   is
+   begin
+      for Spot of Win_Condition loop
+         if Game_Board (Spot) /= Player then
+            return False;
+         end if;
+      end loop;
+      return True;
+   end Check_Condition;
+
+   function Player_Win
+     (Player : Player_Char; Game_Board : Board) return Boolean
+   is
+   begin
+      for Win_Condition of Win_Conditions loop
+         if Check_Condition (Win_Condition, Player, Game_Board) then
+            return True;
+         end if;
+      end loop;
+      return False;
+   end Player_Win;
+
+   function Game_Over (Player : Player_Char; Game_Board : Board) return Boolean
+   is
+   begin
+      if Player_Win (Player, Game_Board) then
+         Put_Line
+           ("Player " & Player_Char'Image (Player) & " has won the game!");
+         return True;
+      end if;
+      if Board_Full (Game_Board) then
+         Put_Line ("Match Drawn!");
+         return True;
+      end if;
+      return False;
+   end Game_Over;
+
 begin
    Ada.Text_IO.Put_Line ("Hello Ada World!");
    Ada.Text_IO.Put_Line (Player_Char'Image (Player));
    Ada.Text_IO.Put_Line (Player_Char'Image (Swap_Player (Player)));
    loop
       Player_Turn (Player, Game_Board);
+      exit when Game_Over (Player, Game_Board);
       Player := Swap_Player (Player);
    end loop;
+   Show_Board (Game_Board);
 end Tictactoe_Ada;

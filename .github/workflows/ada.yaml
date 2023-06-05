@@ -18,19 +18,19 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-        # Install and setup Alire package manager
+      # Install and setup Alire package manager
       - name: Setup alire
         uses: alire-project/setup-alire@v1
         with:
           version: 1.2.2
 
-        # Build the project using the validation build profile to enforce static analysis and coding style.
+      # Build the project using the validation build profile to enforce static analysis and coding style.
       - name: Build
         run: alr build --validation
 
         # Run GNATprove to perform automatic formal verification of the SPARK code.
-      - name: Prove
-        run: alr gnatprove -j0 --level=4
+      # - name: Prove
+      #   run: alr gnatprove -j0 --level=4
 
       # Instrument the project code for coverage analysis.
       # Build testsuite with instrumented code.

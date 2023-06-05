@@ -7,3 +7,5 @@ maintainers = ["janericnitschke@gmail.com"]
 maintainers-logins = ["JanEricNitschke"]
 
 executables = ["tictactoe_ada"]
+[[depends-on]]
+gnatprove = "^12.1.1"
