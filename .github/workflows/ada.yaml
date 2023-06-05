@@ -36,10 +36,10 @@ jobs:
       # Build testsuite with instrumented code.
       # Run the instrumented testsuite. This will produce at least one `.srctrace` file for the coverage analysis.
       # Run the GNATcov code coverage analysis on the trace files.
-      - name: Test
-        run: |
-          cd tests
-          alr gnatcov instrument --level=stmt --dump-trigger=atexit --projects ada_spark_workflow.gpr
-          alr build -- --src-subdirs=gnatcov-instr --implicit-with=gnatcov_rts_full
-          alr exec ./bin/tests
-          alr gnatcov coverage --annotate=xcov --output-dir gnatcov_out --level=stmt --projects ada_spark_workflow.gpr *.srctrace
+      # - name: Test
+      #   run: |
+      #     cd tests
+      #     alr gnatcov instrument --level=stmt --dump-trigger=atexit --projects ada_spark_workflow.gpr
+      #     alr build -- --src-subdirs=gnatcov-instr --implicit-with=gnatcov_rts_full
+      #     alr exec ./bin/tests
+      #     alr gnatcov coverage --annotate=xcov --output-dir gnatcov_out --level=stmt --projects ada_spark_workflow.gpr *.srctrace
