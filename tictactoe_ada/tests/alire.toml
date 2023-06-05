@@ -1,0 +1,17 @@
+name = "tests"
+description = "Tests for tictactoe in ada"
+version = "0.1.0-dev"
+
+authors = ["Jan-Eric"]
+maintainers = ["janericnitschke@gmail.com"]
+maintainers-logins = ["JanEricNitschke"]
+
+executables = ["tests"]
+[[depends-on]]
+tictactoe_ada = "~0.1.0-dev"
+[[pins]]
+tictactoe_ada = { path='..' }
+[[depends-on]]
+aunit = "^23.0.0"
+[[depends-on]]
+gnatcov = "^22.0.1"

@@ -1,0 +1,45 @@
+# This workflow will run the tests on the ada version of tictactoe
+
+name: ada
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_ada
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+        # Install and setup Alire package manager
+      - name: Setup alire
+        uses: alire-project/setup-alire@v1
+        with:
+          version: 1.2.2
+
+        # Build the project using the validation build profile to enforce static analysis and coding style.
+      - name: Build
+        run: alr build --validation
+
+        # Run GNATprove to perform automatic formal verification of the SPARK code.
+      - name: Prove
+        run: alr gnatprove -j0 --level=4
+
+      # Instrument the project code for coverage analysis.
+      # Build testsuite with instrumented code.
+      # Run the instrumented testsuite. This will produce at least one `.srctrace` file for the coverage analysis.
+      # Run the GNATcov code coverage analysis on the trace files.
+      - name: Test
+        run: |
+          cd tests
+          alr gnatcov instrument --level=stmt --dump-trigger=atexit --projects ada_spark_workflow.gpr
+          alr build -- --src-subdirs=gnatcov-instr --implicit-with=gnatcov_rts_full
+          alr exec ./bin/tests
+          alr gnatcov coverage --annotate=xcov --output-dir gnatcov_out --level=stmt --projects ada_spark_workflow.gpr *.srctrace

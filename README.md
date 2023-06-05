@@ -68,9 +68,11 @@ go run tictactoe_go.go
 ## TicTacToe-Java
 Simple tictactoe game with Java
 
-To run:
+To install, test and run:
 ```bash
-java TicTacToeJava.java
+mvn package
+mvn test
+java -jar target/tictactoe_java-0.1.0.jar
 ```
 
 ## TicTacToe-ruby

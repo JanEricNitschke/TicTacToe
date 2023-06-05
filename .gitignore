@@ -182,3 +182,8 @@ tictactoe_ruby/*.gem
 *.class
 
 *.jar
+
+tictactoe_ada/obj/
+tictactoe_ada/bin/
+tictactoe_ada/alire/
+tictactoe_ada/config/
