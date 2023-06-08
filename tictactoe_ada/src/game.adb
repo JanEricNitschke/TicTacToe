@@ -41,6 +41,11 @@ package body Game is
       Game_Board (Spot) := Player;
    end Fix_Spot;
 
+   procedure Clear_Spot (Spot : Board_Index; Game_Board : in out Board) is
+   begin
+      Game_Board (Spot) := Array_Entry'Val (Spot - 1);
+   end Clear_Spot;
+
    function Board_Full (Game_Board : Board) return Boolean is
    begin
       for Content of Game_Board loop
@@ -250,11 +255,37 @@ package body Game is
       return Random_Move (Game_Board);
    end Blocking_Winning_Move;
 
-   --  function Minmax (Player : Player_Char; Game_Board :
-   --  Board) return Move is
-   --  begin
-   --     return (1, -1);
-   --  end Minmax;
+   function Minmax
+     (Player : Player_Char; Game_Board : in out Board) return Move
+   is
+      Best_Move    : Move;
+      Current_Move : Move;
+      Free_Spots   : Vector;
+   begin
+      if Player_Win (Player, Game_Board) then
+         return (1, 1);
+      end if;
+      if Player_Win (Swap_Player (Player), Game_Board) then
+         return (1, -1);
+      end if;
+      Free_Spots := Open_Spots (Game_Board);
+      if Integer (Free_Spots.Length) = 1 then
+         return (1, 0);
+      end if;
+      if Integer (Free_Spots.Length) = 9 then
+         return Random_Move (Game_Board);
+      end if;
+
+      for Spot of Free_Spots loop
+         Game_Board (Spot) := Player;
+         Current_Move      := Minmax (Swap_Player (Player), Game_Board);
+         if -Current_Move.End_State >= Best_Move.End_State then
+            Best_Move := (Spot, -Current_Move.End_State);
+         end if;
+         Clear_Spot (Spot, Game_Board);
+      end loop;
+      return Best_Move;
+   end Minmax;
 
    procedure AI_Turn
      (Player : Player_Char; Game_Board : in out Board; AI_Strength : Strength)
@@ -262,7 +293,6 @@ package body Game is
       Best_Move : Move;
    begin
       Put_Line ("AI turn as " & Player_Char'Image (Player));
-      Put_Line ("AI Turn with strength " & Strength'Image (AI_Strength) & "!");
       Show_Board (Game_Board);
       case AI_Strength is
          when 1 =>
@@ -271,10 +301,8 @@ package body Game is
             Best_Move := Winning_Move (Player, Game_Board);
          when 3 =>
             Best_Move := Blocking_Winning_Move (Player, Game_Board);
-            --  when 4 =>
-            --     Best_Move := Minmax (Player, Game_Board);
-         when others =>
-            Best_Move := Random_Move (Game_Board);
+         when 4 =>
+            Best_Move := Minmax (Player, Game_Board);
       end case;
       Fix_Spot (Player, Best_Move.Spot, Game_Board);
       delay 1.0;

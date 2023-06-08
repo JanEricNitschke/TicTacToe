@@ -2,7 +2,7 @@ with Ada.Containers.Vectors;
 with Ada.Containers; use Ada.Containers;
 
 package Game is
-   type Array_Entry is ('X', 'O', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+   type Array_Entry is ('1', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'O');
    subtype Player_Char is Array_Entry range 'X' .. 'O';
    subtype Board_Index is Integer range 1 .. 9;
    subtype Rows is Board_Index range 1 .. 3;
@@ -31,6 +31,7 @@ package Game is
    function Swap_Player (Player : Player_Char) return Player_Char;
    procedure Fix_Spot
      (Player : Player_Char; Spot : Board_Index; Game_Board : in out Board);
+   procedure Clear_Spot (Spot : Board_Index; Game_Board : in out Board);
    function Board_Full (Game_Board : Board) return Boolean;
    function Check_Condition
      (Win_Condition : Condition; Player : Player_Char; Game_Board : Board)
@@ -50,9 +51,10 @@ package Game is
      (Player : Player_Char; Game_Board : Board) return Move;
    function Winning_Move
      (Player : Player_Char; Game_Board : Board) return Move;
-  --   function Blocking_Winning_Move
-  --     (Player : Player_Char; Game_Board : Board) return Move;
-  --   function Minmax (Player : Player_Char; Game_Board : Board) return Move;
+   function Blocking_Winning_Move
+     (Player : Player_Char; Game_Board : Board) return Move;
+   function Minmax
+     (Player : Player_Char; Game_Board : in out Board) return Move;
 
    procedure Player_Turn (Player : Player_Char; Game_Board : in out Board);
    procedure AI_Turn
