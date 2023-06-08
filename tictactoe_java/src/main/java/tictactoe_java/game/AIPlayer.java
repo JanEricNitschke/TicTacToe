@@ -17,9 +17,9 @@ public class AIPlayer implements Player {
      *                   turn.
      * @param difficulty The strength of the AI. From 1 (weak) to 4 (impossible)
      */
-    public AIPlayer(char marker, int difficulty) {
-        aiMarker = marker;
-        aiDifficulty = difficulty;
+    public AIPlayer(char aiMarker, int aiDifficulty) {
+        this.aiMarker = aiMarker;
+        this.aiDifficulty = aiDifficulty;
     }
 
     /**

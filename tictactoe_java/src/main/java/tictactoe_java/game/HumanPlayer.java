@@ -15,7 +15,7 @@ public class HumanPlayer implements Player {
      * @param scanner Scanner for getting user input.
      */
     public HumanPlayer(Scanner scanner) {
-        moveScanner = scanner;
+        this.moveScanner = scanner;
     }
 
     /**

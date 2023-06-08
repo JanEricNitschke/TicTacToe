@@ -18,7 +18,7 @@ public class ConditionResult {
      * the open spots and an empty linked list.
      */
     public ConditionResult() {
-        spotsDone = 0;
-        spotsOpen = new LinkedList<Integer>();
+        this.spotsDone = 0;
+        this.spotsOpen = new LinkedList<Integer>();
     }
 }

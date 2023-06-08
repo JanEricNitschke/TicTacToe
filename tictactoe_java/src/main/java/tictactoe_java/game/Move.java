@@ -8,8 +8,8 @@ public class Move {
     public int spot;
     public int endState;
 
-    public Move(int moveSpot, int moveEndstate) {
-        spot = moveSpot;
-        endState = moveEndstate;
+    public Move(int spot, int endState) {
+        this.spot = spot;
+        this.endState = endState;
     }
 }

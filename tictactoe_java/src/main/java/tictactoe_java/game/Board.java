@@ -18,23 +18,23 @@ public class Board {
             { 0, 4, 8 }, { 2, 4, 6 } }; // Diagonals
 
     public Board() {
-        gameBoard = emptyBoard;
-        winConditions = defaultConditions;
+        this.gameBoard = emptyBoard;
+        this.winConditions = defaultConditions;
     }
 
-    public Board(char[] board) {
-        gameBoard = board;
-        winConditions = defaultConditions;
+    public Board(char[] gameBoard) {
+        this.gameBoard = gameBoard;
+        this.winConditions = defaultConditions;
     }
 
-    public Board(int[][] conditions) {
-        gameBoard = emptyBoard;
-        winConditions = conditions;
+    public Board(int[][] winConditions) {
+        this.gameBoard = emptyBoard;
+        this.winConditions = winConditions;
     }
 
-    public Board(char[] board, int[][] conditions) {
-        gameBoard = board;
-        winConditions = conditions;
+    public Board(char[] gameBoard, int[][] winConditions) {
+        this.gameBoard = gameBoard;
+        this.winConditions = winConditions;
     }
 
     /**

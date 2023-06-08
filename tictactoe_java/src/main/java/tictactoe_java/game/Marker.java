@@ -10,11 +10,11 @@ public class Marker {
      * Constructor. Marker always starts as 'X'.
      */
     public Marker() {
-        marker = 'X';
+        this.marker = 'X';
     }
 
     public Marker(char playerMarker) {
-        marker = playerMarker;
+        this.marker = playerMarker;
     }
 
     /**
