@@ -208,25 +208,47 @@ package body Game is
       end;
    end Random_Move;
 
-   function Winning_Move (Player : Player_Char; Game_Board : Board) return Move
+   function Get_Winning_Move
+     (Player : Player_Char; Game_Board : Board) return Move
    is
       Status : Condition_Status;
    begin
       for Win_Condition of Win_Conditions loop
          Status := Check_Condition (Win_Condition, Player, Game_Board);
          if Status.Spots_Taken = 2 and then Status.Spots_Open.Length = 1 then
-            return (Status.Spots_Open.First_Element, -1);
+            return (Status.Spots_Open.First_Element, 1);
          end if;
       end loop;
+      return (1, -1);
+   end Get_Winning_Move;
+
+   function Winning_Move (Player : Player_Char; Game_Board : Board) return Move
+   is
+      Winning_Move : Move;
+   begin
+      Winning_Move := Get_Winning_Move (Player, Game_Board);
+      if Winning_Move.End_State = 1 then
+         return Winning_Move;
+      end if;
       return Random_Move (Game_Board);
    end Winning_Move;
 
-   --  function Blocking_Winning_Move
-   --    (Player : Player_Char; Game_Board : Board) return Move
-   --  is
-   --  begin
-   --     return (1, -1);
-   --  end Blocking_Winning_Move;
+   function Blocking_Winning_Move
+     (Player : Player_Char; Game_Board : Board) return Move
+   is
+      Best_Move : Move;
+   begin
+      Best_Move := Get_Winning_Move (Player, Game_Board);
+      if Best_Move.End_State = 1 then
+         return Best_Move;
+      end if;
+      Best_Move := Get_Winning_Move (Swap_Player (Player), Game_Board);
+      --  Blocking move
+      if Best_Move.End_State = 1 then
+         return Best_Move;
+      end if;
+      return Random_Move (Game_Board);
+   end Blocking_Winning_Move;
 
    --  function Minmax (Player : Player_Char; Game_Board :
    --  Board) return Move is
@@ -247,8 +269,8 @@ package body Game is
             Best_Move := Random_Move (Game_Board);
          when 2 =>
             Best_Move := Winning_Move (Player, Game_Board);
-            --  when 3 =>
-            --     Best_Move := Blocking_Winning_Move (Player, Game_Board);
+         when 3 =>
+            Best_Move := Blocking_Winning_Move (Player, Game_Board);
             --  when 4 =>
             --     Best_Move := Minmax (Player, Game_Board);
          when others =>

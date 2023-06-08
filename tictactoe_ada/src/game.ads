@@ -46,6 +46,8 @@ package Game is
    function Get_AI_Opponent_Strength return Strength;
 
    function Random_Move (Game_Board : Board) return Move;
+   function Get_Winning_Move
+     (Player : Player_Char; Game_Board : Board) return Move;
    function Winning_Move
      (Player : Player_Char; Game_Board : Board) return Move;
   --   function Blocking_Winning_Move
