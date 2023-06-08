@@ -87,6 +87,15 @@ bundle exec rake
 ./bin/tictactoeRuby
 ```
 
+## TicTacToe-ada
+Simple tictactoe game with ada
+
+To build and run:
+```bash
+alr build --validation
+./bin/tictactoe_ada.exe
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch
 
