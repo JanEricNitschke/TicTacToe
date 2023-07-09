@@ -7,7 +7,7 @@
 
 int main()
 {
-    srand((unsigned int)time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
     GameBoard board = createBoard();
     std::string player = "X";
     bool singlePlayer = getPlayerNumber();

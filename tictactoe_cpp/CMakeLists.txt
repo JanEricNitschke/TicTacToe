@@ -11,7 +11,11 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pedantic -Wall -Wextra -Wcast-align \
+-Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self \
+-Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast \
+-Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo \
+-Wstrict-null-sentinel -Wstrict-overflow=5 -Werror -Wfloat-equal")
 
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp ${PROJECT_SOURCE_DIR}/src/tictactoe.cpp)
 
