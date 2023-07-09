@@ -339,19 +339,19 @@ class TestTicTacToe:
         """Tests get_winning_move."""
         # Finds win on row
         board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
-        assert self.tictactoe.get_winning_move(board, "X") == [2, 2, 0]
+        assert self.tictactoe._get_winning_move(board, "X") == [2, 2, 0]
         # Finds win on col
         board = [["O", "X", "-"], ["-", "O", "-"], ["O", "X", "X"]]
-        assert self.tictactoe.get_winning_move(board, "O") == [1, 0, 0]
+        assert self.tictactoe._get_winning_move(board, "O") == [1, 0, 0]
         # Finds win on diagonal
         board = [["O", "-", "-"], ["-", "O", "-"], ["-", "-", "-"]]
-        assert self.tictactoe.get_winning_move(board, "O") == [2, 2, 0]
+        assert self.tictactoe._get_winning_move(board, "O") == [2, 2, 0]
         # Finds win on antidiagonal
         board = [["-", "-", "-"], ["-", "X", "-"], ["X", "-", "-"]]
-        assert self.tictactoe.get_winning_move(board, "X") == [0, 2, 0]
+        assert self.tictactoe._get_winning_move(board, "X") == [0, 2, 0]
         # Finds no win
         board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
-        assert self.tictactoe.get_winning_move(board, "X") is None
+        assert self.tictactoe._get_winning_move(board, "X") is None
 
     @patch("tictactoe_python.TicTacToe.get_winning_move")
     @patch("tictactoe_python.TicTacToe.get_blocking_move")
@@ -383,16 +383,16 @@ class TestTicTacToe:
         """Tests get_blocking_move."""
         # Finds block on row
         board = [["O", "X", "O"], ["X", "O", "-"], ["X", "X", "-"]]
-        assert self.tictactoe.get_blocking_move(board, "O") == [2, 2, 0]
+        assert self.tictactoe._get_blocking_move(board, "O") == [2, 2, 0]
         # Finds block on col
         board = [["O", "-", "-"], ["-", "-", "-"], ["O", "X", "X"]]
-        assert self.tictactoe.get_blocking_move(board, "X") == [1, 0, 0]
+        assert self.tictactoe._get_blocking_move(board, "X") == [1, 0, 0]
         # Finds block on diagonal
         board = [["O", "-", "-"], ["-", "O", "-"], ["-", "-", "-"]]
-        assert self.tictactoe.get_blocking_move(board, "X") == [2, 2, 0]
+        assert self.tictactoe._get_blocking_move(board, "X") == [2, 2, 0]
         # Finds block on antidiagonal
         board = [["-", "-", "-"], ["-", "X", "-"], ["X", "-", "-"]]
-        assert self.tictactoe.get_blocking_move(board, "O") == [0, 2, 0]
+        assert self.tictactoe._get_blocking_move(board, "O") == [0, 2, 0]
         # Finds no block
         board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
-        assert self.tictactoe.get_blocking_move(board, "O") is None
+        assert self.tictactoe._get_blocking_move(board, "O") is None

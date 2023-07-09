@@ -2,6 +2,7 @@
 """Script to play ticatactoe."""
 
 
+import itertools
 import random
 import sys
 from collections.abc import Callable
@@ -44,9 +45,7 @@ class TicTacToe:
         """
         self.board = []
         for _ in range(3):
-            row = []
-            for _ in range(3):
-                row.append(self.empty_indicator)
+            row = [self.empty_indicator for _ in range(3)]
             self.board.append(row)
 
     def fix_spot(self, row: int, col: int, player: str) -> bool:
@@ -79,7 +78,7 @@ class TicTacToe:
         self.board[row][col] = player
         return True
 
-    def is_row_win(self, player: str, board: Board) -> bool:
+    def _is_row_win(self, player: str, board: Board) -> bool:
         """Checks if the given player has won via row.
 
         Args:
@@ -89,18 +88,13 @@ class TicTacToe:
         Returns:
             bool
         """
-        n = len(board)
-        for i in range(n):
-            win = True
-            for j in range(n):
-                if board[i][j] != player:
-                    win = False
-                    break
-            if win:
+        board_length = len(board)
+        for i in range(board_length):
+            if win := all(board[i][j] == player for j in range(board_length)):
                 return win
         return False
 
-    def is_column_win(self, player: str, board: Board) -> bool:
+    def _is_column_win(self, player: str, board: Board) -> bool:
         """Checks if the given player has won via column.
 
         Args:
@@ -110,18 +104,13 @@ class TicTacToe:
         Returns:
             bool
         """
-        n = len(board)
-        for i in range(n):
-            win = True
-            for j in range(n):
-                if board[j][i] != player:
-                    win = False
-                    break
-            if win:
+        board_length = len(board)
+        for i in range(board_length):
+            if win := all(board[j][i] == player for j in range(board_length)):
                 return win
         return False
 
-    def is_diagonal_win(self, player: str, board: Board) -> bool:
+    def _is_diagonal_win(self, player: str, board: Board) -> bool:
         """Checks if the given player has won via diagonals.
 
         Args:
@@ -131,21 +120,13 @@ class TicTacToe:
         Returns:
             bool
         """
-        n = len(board)
-        win = True
-        for i in range(n):
-            if board[i][i] != player:
-                win = False
-                break
-        if win:
+        board_length = len(board)
+        if win := all(board[i][i] == player for i in range(board_length)):
             return win
 
-        win = True
-        for i in range(n):
-            if board[i][n - 1 - i] != player:
-                win = False
-                break
-        if win:
+        if win := all(
+            board[i][board_length - 1 - i] == player for i in range(board_length)
+        ):
             return win
         return False
 
@@ -159,16 +140,13 @@ class TicTacToe:
         Returns:
             bool
         """
-        if self.is_row_win(player, board):
+        if self._is_row_win(player, board):
             return True
 
-        if self.is_column_win(player, board):
+        if self._is_column_win(player, board):
             return True
 
-        if self.is_diagonal_win(player, board):
-            return True
-
-        return False
+        return self._is_diagonal_win(player, board)
 
     def is_board_filled(self) -> bool:
         """Checks if the board is completely filled (indicating a tie).
@@ -266,12 +244,11 @@ class TicTacToe:
         Returns:
             list of tuples of empty board coordinates
         """
-        empty_cells = []
-        for row in range(len(board)):
-            for col in range(len(board[0])):
-                if board[row][col] == self.empty_indicator:
-                    empty_cells.append((row, col))
-        return empty_cells
+        return [
+            (row, col)
+            for row, col in itertools.product(range(len(board)), range(len(board[0])))
+            if board[row][col] == self.empty_indicator
+        ]
 
     def minmax(self, board: Board, player: str) -> list[int]:
         """Takes a board state and return the optimal move for the given player.
@@ -310,8 +287,8 @@ class TicTacToe:
         Args:
             board (Board): Board as a list of lists
             _ (str): The player whose move it currently is.
-                     To have a consistent signature between all
-                     AI move functions
+                To have a consistent signature between all
+                AI move functions
 
         Returns:
             list of [row, col, value] of a random valid move
@@ -330,12 +307,12 @@ class TicTacToe:
         Returns:
             list of [row, col, value] of best move
         """
-        winning_move = self.get_winning_move(board, player)
+        winning_move = self._get_winning_move(board, player)
         if winning_move is None:
             return self.random_move(board, player)
         return winning_move
 
-    def get_winning_move(self, board: Board, player: str) -> list[int] | None:
+    def _get_winning_move(self, board: Board, player: str) -> list[int] | None:
         """Takes a board state and returns the coordinates of a winning move or None.
 
         Args:
@@ -356,32 +333,32 @@ class TicTacToe:
             "diag": {(0, 0), (1, 1), (2, 2)},
             "antidiag": {(0, 2), (1, 1), (2, 0)},
         }
-        for row in range(len(board)):
-            for col in range(len(board[0])):
-                if board[row][col] == player:
-                    coords = (row, col)
+        for row_id, row in enumerate(board):
+            for col_id, value in enumerate(row):
+                if value == player:
+                    coords = (row_id, col_id)
                     if coords in (
-                        current_condition := win_conditions["row" + str(row)]
+                        current_condition := win_conditions[f"row{row_id!s}"]
                     ):
                         current_condition.remove(coords)
                     if coords in (
-                        current_condition := win_conditions["col" + str(col)]
+                        current_condition := win_conditions[f"col{col_id!s}"]
                     ):
                         current_condition.remove(coords)
-                    if row == col and coords in (
+                    if row_id == col_id and coords in (
                         current_condition := win_conditions["diag"]
                     ):
                         current_condition.remove(coords)
-                    if row == (len(board) - 1 - col) and coords in (
+                    if row_id == (len(board) - 1 - col_id) and coords in (
                         current_condition := win_conditions["antidiag"]
                     ):
                         current_condition.remove(coords)
-                if board[row][col] == self.swap_player_turn(player):
-                    win_conditions["row" + str(row)].clear()
-                    win_conditions["col" + str(col)].clear()
-                    if row == col:
+                if value == self.swap_player_turn(player):
+                    win_conditions[f"row{row_id!s}"].clear()
+                    win_conditions[f"col{col_id!s}"].clear()
+                    if row_id == col_id:
                         win_conditions["diag"].clear()
-                    if row == (len(board) - 1 - col):
+                    if row_id == (len(board) - 1 - col_id):
                         win_conditions["antidiag"].clear()
         for moves in win_conditions.values():
             if len(moves) == 1:
@@ -399,15 +376,15 @@ class TicTacToe:
         Returns:
             list of [row, col, value] of best move
         """
-        winning_move = self.get_winning_move(board, player)
+        winning_move = self._get_winning_move(board, player)
         if winning_move is not None:
             return winning_move
-        blocking_move = self.get_blocking_move(board, player)
+        blocking_move = self._get_blocking_move(board, player)
         if blocking_move is not None:
             return blocking_move
         return self.random_move(board, player)
 
-    def get_blocking_move(self, board: Board, player: str) -> list[int] | None:
+    def _get_blocking_move(self, board: Board, player: str) -> list[int] | None:
         """Takes a board state and returns the coordinates of a blocking move or None.
 
         Args:
@@ -418,7 +395,7 @@ class TicTacToe:
             list of [row, col, value] of a blocking move
             or None if there is none.
         """
-        return self.get_winning_move(board, self.swap_player_turn(player))
+        return self._get_winning_move(board, self.swap_player_turn(player))
 
     def player_turn(self, player: str) -> None:
         """Logic for AI taking a turn.
@@ -473,9 +450,7 @@ class TicTacToe:
                 sys.exit()
             except (KeyError, ValueError, AttributeError):
                 print("Bad choice")
-        if response == "Y":
-            return True
-        return False
+        return response == "Y"
 
     def get_ai_strength(self) -> None:
         """Get input regarding the strength of the AI opponent."""
