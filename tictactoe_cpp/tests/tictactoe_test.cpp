@@ -245,7 +245,7 @@ TEST(getBlockingMove, none)
 TEST(randomMove, emptyBoard)
 {
     GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
-    Move result = randomMove("X", refBoard);
+    Move result = randomMove(refBoard);
     EXPECT_TRUE(result[0] >= 0 && result[0] < 3);
     EXPECT_TRUE(result[1] >= 0 && result[1] < 3);
     EXPECT_TRUE(result[2] == 0);
@@ -255,7 +255,7 @@ TEST(randomMove, oneOption)
 {
     GameBoard refBoard = {{{"X", "X", "-"}, {"O", "X", "O"}, {"X", "O", "O"}}};
     Move expectedResult = {{0, 2, 0}};
-    EXPECT_THAT(expectedResult, randomMove("X", refBoard));
+    EXPECT_THAT(expectedResult, randomMove(refBoard));
 }
 
 TEST(winMove, prioritizesWin)
