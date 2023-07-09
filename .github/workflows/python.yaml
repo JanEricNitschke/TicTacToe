@@ -38,6 +38,7 @@ jobs:
         uses: jakebailey/pyright-action@v1
         with:
           version: 1.1.316
+          working-directory: ./tictactoe_python
       - name: Thorough check with pylint
         run: pylint tictactoe_python.py
       - name: Test with pytest
