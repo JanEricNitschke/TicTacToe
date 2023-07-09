@@ -27,6 +27,7 @@ jobs:
           pip install pytest
           pip install pytest-cov
           pip install pyright
+          pip install pylint
           pip install -r requirements.txt
       - name: Check formatting with black
         uses: psf/black@stable
