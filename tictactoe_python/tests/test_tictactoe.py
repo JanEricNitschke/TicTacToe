@@ -322,7 +322,7 @@ class TestTicTacToe:
             "X",
         ) == [0, 2, 0]
 
-    @patch("tictactoe_python.TicTacToe.get_winning_move")
+    @patch("tictactoe_python.TicTacToe._get_winning_move")
     @patch("tictactoe_python.TicTacToe.random_move")
     def test_win_move(self, random_move_mock: MagicMock, winning_move_mock: MagicMock):
         """Tests win_move."""
@@ -353,8 +353,8 @@ class TestTicTacToe:
         board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
         assert self.tictactoe._get_winning_move(board, "X") is None
 
-    @patch("tictactoe_python.TicTacToe.get_winning_move")
-    @patch("tictactoe_python.TicTacToe.get_blocking_move")
+    @patch("tictactoe_python.TicTacToe._get_winning_move")
+    @patch("tictactoe_python.TicTacToe._get_blocking_move")
     @patch("tictactoe_python.TicTacToe.random_move")
     def test_block_win_move(
         self,
