@@ -47,7 +47,7 @@ module TictactoeRuby
         board.show_board
         puts "Enter row (1-3) and column (1-3) numbers to fix spot: "
         row, col = gets.split.map(&:to_i)
-        break if board.fix_spot(row, col, marker)
+        break if board.fix_spot?(row, col, marker)
       end
     end
   end
@@ -67,7 +67,7 @@ module TictactoeRuby
       puts "AI turn as #{marker}"
       board.show_board
       move = ai_move(board, marker)
-      raise "AI did an oopsie" unless board.fix_spot(move.row + 1, move.col + 1, marker)
+      raise "AI did an oopsie" unless board.fix_spot?(move.row + 1, move.col + 1, marker)
 
       sleep(1)
     end
@@ -120,7 +120,7 @@ module TictactoeRuby
     def minmax_recursive_case(board, player)
       best_move = Move.new(-1, -1, -1)
       board.empty_cells.each do |row, col|
-        board.fix_spot(row + 1, col + 1, player)
+        board.fix_spot?(row + 1, col + 1, player)
         current_move = minmax(board, Player.swap_player(player))
         best_move = Move.new(row, col, -current_move.end_state) if -current_move.end_state >= best_move.end_state
         board.clear_spot(row, col)
@@ -129,8 +129,8 @@ module TictactoeRuby
     end
 
     def minmax_base_cases(board, player)
-      if board.player_win(player) then return Move.new(-1, -1, 1)
-      elsif board.player_win(Player.swap_player(player)) then return Move.new(-1, -1, -1) end
+      if board.player_win?(player) then return Move.new(-1, -1, 1)
+      elsif board.player_win?(Player.swap_player(player)) then return Move.new(-1, -1, -1) end
 
       empty_cells = board.empty_cells
       if empty_cells.empty? then return Move.new(-1, -1, 0)
@@ -179,14 +179,14 @@ module TictactoeRuby
       empty_cells
     end
 
-    def board_filled
+    def board_filled?
       @board.each do |row|
         row.each { |cell| return false if cell == "-" }
       end
       true
     end
 
-    def player_win(player)
+    def player_win?(player)
       @win_conditions.each do |winning_line|
         won = true
         winning_line.each do |row, col|
@@ -197,10 +197,10 @@ module TictactoeRuby
       false
     end
 
-    def fix_spot(row, col, player)
-      return false if input_nil(row, col)
+    def fix_spot?(row, col, player)
+      return false if input_nil?(row, col)
 
-      if in_bounds(row - 1, col - 1) && spot_open(row - 1, col - 1)
+      if in_bounds?(row - 1, col - 1) && spot_open?(row - 1, col - 1)
         @board[row - 1][col - 1] = player
         return true
       end
@@ -208,7 +208,7 @@ module TictactoeRuby
     end
 
     def clear_spot(row, col)
-      if !input_nil(row, col) && in_bounds(row, col)
+      if !input_nil?(row, col) && in_bounds?(row, col)
         @board[row][col] = "-"
         return true
       end
@@ -230,7 +230,7 @@ module TictactoeRuby
 
     private
 
-    def in_bounds(row, col)
+    def in_bounds?(row, col)
       unless (row.is_a? Integer) && (col.is_a? Integer) &&
              row.between?(0, @board.length - 1) && col.between?(0, @board[0].length - 1)
         puts "Row #{row + 1} or column #{col + 1} are out of bounds. " \
@@ -240,7 +240,7 @@ module TictactoeRuby
       true
     end
 
-    def spot_open(row, col)
+    def spot_open?(row, col)
       unless @board[row][col] == "-"
         puts "The position (#{row + 1}, #{col + 1}) has already been taken by a player! " \
              "Please do your move on an empty position."
@@ -249,7 +249,7 @@ module TictactoeRuby
       true
     end
 
-    def input_nil(row, col)
+    def input_nil?(row, col)
       if row.nil? || col.nil?
         puts "Invalid input!"
         return true
@@ -268,12 +268,12 @@ module TictactoeRuby
       @ai_player = nil
     end
 
-    def game_over(player)
-      if @board.player_win(player)
+    def game_over?(player)
+      if @board.player_win?(player)
         puts "Player #{player} wins the game!"
         return true
       end
-      if @board.board_filled
+      if @board.board_filled?
         puts "Match Draw!"
         return true
       end
@@ -349,7 +349,7 @@ module TictactoeRuby
       player = setup_game
       loop do
         take_move(player)
-        break if game_over(player)
+        break if game_over?(player)
 
         player = Player.swap_player(player)
       end

@@ -47,55 +47,55 @@ class TestBoard < Minitest::Test
     assert_equal([[1, 0], [2, 0], [2, 2]], board.empty_cells)
   end
 
-  def test_board_filles
+  def test_board_filled
     board = Board.new([%i[X X X], ["-", :X, :X], ["-", :X, "-"]])
-    refute board.board_filled
+    refute board.board_filled?
     board = Board.new([%i[X X X], %i[O X X], %i[O X O]])
-    assert board.board_filled
+    assert board.board_filled?
   end
 
   def test_player_win_rows
     board = Board.new([%i[X X X], ["-", "-", "-"], ["-", "-", "-"]])
-    assert board.player_win(:X)
-    refute board.player_win(:O)
+    assert board.player_win?(:X)
+    refute board.player_win?(:O)
     board = Board.new([["-", "-", "-"], %i[X X X], ["-", "-", "-"]])
-    assert board.player_win(:X)
-    refute board.player_win(:O)
+    assert board.player_win?(:X)
+    refute board.player_win?(:O)
     board = Board.new([["-", "-", "-"], ["-", "-", "-"], %i[O O O]])
-    assert board.player_win(:O)
-    refute board.player_win(:X)
+    assert board.player_win?(:O)
+    refute board.player_win?(:X)
   end
 
   def test_player_win_cols
     board = Board.new([["-", :X, "-"], ["-", :X, "-"], ["-", :X, "-"]])
-    assert board.player_win(:X)
-    refute board.player_win(:O)
+    assert board.player_win?(:X)
+    refute board.player_win?(:O)
     board = Board.new([[:X, "-", "-"], [:X, "-", "-"], [:X, "-", "-"]])
-    assert board.player_win(:X)
-    refute board.player_win(:O)
+    assert board.player_win?(:X)
+    refute board.player_win?(:O)
     board = Board.new([["-", "-", :O], ["-", "-", :O], ["-", "-", :O]])
-    assert board.player_win(:O)
-    refute board.player_win(:X)
+    assert board.player_win?(:O)
+    refute board.player_win?(:X)
   end
 
   def test_player_win_diags
     board = Board.new([[:X, "-", "-"], ["-", :X, "-"], ["-", "-", :X]])
-    assert board.player_win(:X)
-    refute board.player_win(:O)
+    assert board.player_win?(:X)
+    refute board.player_win?(:O)
     board = Board.new([["-", "-", :O], ["-", :O, "-"], [:O, "-", "-"]])
-    assert board.player_win(:O)
-    refute board.player_win(:X)
+    assert board.player_win?(:O)
+    refute board.player_win?(:X)
   end
 
   def test_fix_spot
     board = Board.new
     board.create_board
-    assert board.fix_spot(1, 1, :X)
+    assert board.fix_spot?(1, 1, :X)
     assert_equal([[:X, "-", "-"], ["-", "-", "-"], ["-", "-", "-"]], board.board)
-    refute board.fix_spot(1, 1, :X)
-    refute board.fix_spot(-1, 1, :O)
-    refute board.fix_spot(0, nil, :O)
-    refute board.fix_spot(0, 16, :O)
+    refute board.fix_spot?(1, 1, :X)
+    refute board.fix_spot?(-1, 1, :O)
+    refute board.fix_spot?(0, nil, :O)
+    refute board.fix_spot?(0, 16, :O)
   end
 
   def test_clear_spot
@@ -103,9 +103,9 @@ class TestBoard < Minitest::Test
     assert board.clear_spot(0, 0)
     assert_equal([["-", "-", "-"], ["-", "-", "-"], ["-", "-", "-"]], board.board)
     assert board.clear_spot(0, 0)
-    refute board.fix_spot(-1, 1, :O)
-    refute board.fix_spot(0, nil, :O)
-    refute board.fix_spot(0, 16, :O)
+    refute board.fix_spot?(-1, 1, :O)
+    refute board.fix_spot?(0, nil, :O)
+    refute board.fix_spot?(0, 16, :O)
   end
 
   def test_check_wincondition
