@@ -1,9 +1,9 @@
 # TicTacToe
-Collection of tictactoe games written in different langues.
+Collection of tictactoe games written in different languages.
 
 
 ## TicTacToe-python
-Simple tictactoe game with Python
+Simple tictactoe game with [Python](https://www.python.org/).
 
 Rund and test with:
 ```bash
@@ -14,12 +14,12 @@ coverage html
 ```
 
 ## TicTacToe-javascript
-Simple tictactoe game with Javascript
+Simple tictactoe game with [Javascript](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/).
 
 Hosted [here](https://main.dwbh88xp4gd1m.amplifyapp.com/) on AWS.
 
 ## TicTacToe-Cpp
-Simple tictactoe game with C++
+Simple tictactoe game with [C++](https://isocpp.org/std/the-standard).
 
 To build, test and run:
 
@@ -30,7 +30,7 @@ cd build && ctest
 cd .. && ./bin/tictactoe
 ```
 ## TicTacToe-rust
-Simple tictactoe game with Rust
+Simple tictactoe game with [Rust](https://www.rust-lang.org/).
 
 To build, test and run:
 ```bash
@@ -40,7 +40,7 @@ cargo run
 ```
 
 ## TicTacToe-haskell
-Simple tictactoe game with Haskell
+Simple tictactoe game with [Haskell](https://www.haskell.org/).
 
 To build, test and run:
 ```bash
@@ -50,7 +50,7 @@ cabal run
 ```
 
 ## TicTacToe-go
-Simple tictactoe game with Go
+Simple tictactoe game with [Go](https://go.dev/).
 
 To build, test and run:
 ```bash
@@ -66,7 +66,7 @@ go run tictactoe_go.go
 
 
 ## TicTacToe-Java
-Simple tictactoe game with Java
+Simple tictactoe game with [Java](https://www.java.com/).
 
 To install, test and run:
 ```bash
@@ -76,7 +76,7 @@ java -jar target/tictactoe_java-0.1.0.jar
 ```
 
 ## TicTacToe-ruby
-Simple tictactoe game with Ruby
+Simple tictactoe game with [Ruby](https://www.ruby-lang.org/).
 
 To build and test run:
 ```bash
@@ -88,12 +88,21 @@ bundle exec rake
 ```
 
 ## TicTacToe-ada
-Simple tictactoe game with ada
+Simple tictactoe game with [Ada](https://ada-lang.io/).
 
 To build and run:
 ```bash
 alr build --validation
 ./bin/tictactoe_ada.exe
+```
+
+## TicTacToe-generic
+
+Simple two player tictactoe game with [generic](https://github.com/JanEricNitschke/generic-lang).
+
+To run:
+```bash
+generic tictactoe_generic.gen
 ```
 
 ## TicTacToe-scratch
