@@ -7,6 +7,13 @@ class ConditionResult {
     }
 }
 
+class Move {
+    init(spot, end_state) {
+        this.spot = spot;
+        this.end_state = end_state;
+    }
+}
+
 class TicTacToe {
     init() {
         this.board = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
@@ -49,7 +56,7 @@ class TicTacToe {
             if this.board[spot] == player {
                 result.spots_done += 1;
             }
-            if this.player_markers.contains(this.board[spot]) {
+            unless this.player_markers.contains(this.board[spot]) {
                 result.spots_open.append(spot);
             }
         }
@@ -82,7 +89,7 @@ class TicTacToe {
             return false;
         }
         if this.player_markers.contains(this.board[spot]) {
-            print("ERROR: Spot " + spot + " is already occupied!");
+            print("ERROR: Spot " + str(spot) + " is already occupied!");
             return false;
         }
         this.board[spot] = player;
@@ -108,15 +115,168 @@ class TicTacToe {
         }
     }
 
+    get_empty_cells() {
+        var empty_cells = [];
+        for (var spot = 0; spot < len(this.board); spot += 1) {
+            unless this.player_markers.contains(this.board[spot]) {
+                empty_cells.append(spot);
+            }
+        }
+        return empty_cells;
+    }
+
+    random_move() {
+        var empty_cells = this.get_empty_cells();
+
+        var chosen_index = rng(0, len(empty_cells));
+
+        return Move(empty_cells[chosen_index], 0);
+    }
+
+    get_winning_move(player) {
+        var result;
+        var condition;
+        for (var i = 0; i < len(this.win_conditions); i += 1) {
+            condition = this.win_conditions[i];
+            result = this.check_win_condition(player, condition);
+            if (result.spots_done == 2 and len(result.spots_open) == 1) {
+                return Move(result.spots_open[0], 1);
+            }
+        }
+        return nil;
+    }
+
+    win_move(player) {
+        var winning_move = this.get_winning_move(player);
+        if winning_move == nil {
+            return this.random_move();
+        }
+        return winning_move;
+    }
+
+    block_win_move(player) {
+        var winning_move = this.get_winning_move(player);
+        unless winning_move == nil {
+            return winning_move;
+        }
+        var blocking_move = this.get_winning_move(this.swap_player(player));
+        unless blocking_move == nil {
+            return blocking_move;
+        }
+        return this.random_move();
+    }
+
+    minmax(player) {
+        # Game already won
+        if this.is_player_win(player) {
+            return Move(-1, 1);
+        }
+
+        # Game already lost
+        if this.is_player_win(this.swap_player(player)) {
+            return Move(-1, -1);
+        }
+
+        var empty_cells = this.get_empty_cells();
+        # Game already drawn
+        if len(empty_cells) == 0 {
+            return Move(-1, 0);
+        }
+
+        # New game, just do random move
+        if len(empty_cells) == 9 {
+            return this.random_move();
+        }
+
+        var current_spot;
+        var current_move;
+        var best_move = Move(-1, -1);
+        for (var i = 0; i < len(empty_cells); i += 1) {
+            current_spot = empty_cells[i];
+            this.board[current_spot] = player;
+            current_move = this.minmax(this.swap_player(player));
+            if -current_move.end_state >= best_move.end_state {
+                best_move = Move(current_spot, -current_move.end_state);
+            }
+            this.board[current_spot] = str(current_spot);
+        }
+        return best_move;
+    }
+
+    ai_turn(player) {
+        print("AI turn as " + player + ".");
+        this.show_board();
+        var ai_move;
+        switch this.ai_strength {
+            case 1:
+                ai_move = this.random_move();
+            case 2:
+                ai_move = this.win_move(player);
+            case 3:
+                ai_move = this.block_win_move(player);
+            default:  # 4
+                ai_move = this.minmax(player);
+        }
+        this.board[ai_move.spot] = player;
+        sleep(1);
+    }
+
+    get_yes_no(question) {
+        var response;
+        var valid_answers = ["Y", "y", "N", "n"];
+        until valid_answers.contains(response) {
+            response = input(question);
+        }
+        return ["Y", "y"].contains(response);
+    }
+
+    get_ai_opponent() {
+        this.ai_opponent = this.get_yes_no("Play alone vs AI? [y/n]");
+    }
+
+    get_ai_start() {
+        if this.get_yes_no("Should the AI make the first move? [y/n]") {
+            this.ai_marker = "X";
+        } else {
+            this.ai_marker = "O";
+        }
+    }
+
+    get_ai_strength() {
+        var strength;
+        var response;
+        print("AI strength settings:");
+        print("1: Easy");
+        print("2: Medium");
+        print("3: Hard");
+        print("4: Impossible");
+        until [1, 2, 3, 4].contains(strength) {
+            response = input("How strong should the AI be? [1 - 4]");
+            unless is_int(response) {
+                print("Bad choice");
+            }
+            strength = int(response);
+        }
+        this.ai_strength = strength;
+    }
+
     initialize_game() {
-        return;
+        this.get_ai_opponent();
+        if this.ai_opponent {
+            this.get_ai_start();
+            this.get_ai_strength();
+        }
     }
 
     play() {
         var player = "X";
 
         while true {
-            this.player_turn(player);
+            if this.ai_opponent and player == this.ai_marker {
+                this.ai_turn(player);
+            } else {
+                this.player_turn(player);
+            }
 
             if this.is_player_win(player) {
                 print("Player " + player + " wins the game!");
