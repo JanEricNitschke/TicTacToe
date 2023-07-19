@@ -183,12 +183,12 @@ class TicTacToe:
         Returns:
             None
         """
-        line_separater = "---------------"
-        print(line_separater)
+        line_separator = "---------------"
+        print(line_separator)
         for row in self.board:
             for item in row:
                 print(f"| {item} |", end="")
-            print(f"\n{line_separater}")
+            print(f"\n{line_separator}")
 
     def get_player_input(self) -> Literal[False] | tuple[int, int]:
         """Asks the player for input and validates it.
