@@ -1,0 +1,31 @@
+# This workflow will run the tests on the generic version of tictactoe
+
+name: generic
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: main/tictactoe_generic
+    steps:
+    - name: Checkout generic
+      uses: actions/checkout@v3
+      with:
+        repository: JanEricNitschke/generic-lang
+        path: generic-lang
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        path: main
+    - name: Install generic
+      run: cargo install --path .
+      working-directory: generic-lang
+    - name: Test
+      run: generic tests/test_tictactoe.gen

@@ -5,7 +5,7 @@ Collection of tictactoe games written in different languages.
 ## TicTacToe-python
 Simple tictactoe game with [Python](https://www.python.org/).
 
-Rund and test with:
+Run and test with:
 ```bash
 python tictactoe_python
 coverage run -m pytest
@@ -22,7 +22,6 @@ Hosted [here](https://main.dwbh88xp4gd1m.amplifyapp.com/) on AWS.
 Simple tictactoe game with [C++](https://isocpp.org/std/the-standard).
 
 To build, test and run:
-
 ```bash
 cmake -S . -B build
 cmake --build build
@@ -100,9 +99,10 @@ alr build --validation
 
 Simple two player tictactoe game with [generic](https://github.com/JanEricNitschke/generic-lang).
 
-To run:
+To run and test:
 ```bash
 generic tictactoe_generic.gen
+generic tests/test_tictactoe.gen
 ```
 
 ## TicTacToe-scratch
