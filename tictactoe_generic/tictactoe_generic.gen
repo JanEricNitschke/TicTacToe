@@ -296,7 +296,8 @@ class TicTacToe {
 
 }
 
-
-var tictactoe = TicTacToe();
-tictactoe.initialize_game();
-tictactoe.play();
+if __name__ == "<script>" {
+    var tictactoe = TicTacToe();
+    tictactoe.initialize_game();
+    tictactoe.play();
+}

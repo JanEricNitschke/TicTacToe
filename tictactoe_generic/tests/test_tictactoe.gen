@@ -1,0 +1,285 @@
+import "../tictactoe_generic.gen";
+
+
+fun test_fix_spot() {
+    var tictactoe = TicTacToe();
+    unless !tictactoe.fix_spot(-1, "X") {
+        return false;
+    }
+    unless !tictactoe.fix_spot(10, "X") {
+        return false;
+    }
+    unless tictactoe.fix_spot(2, "X") {
+        return false;
+    }
+    unless tictactoe.board[2] == "X" {
+        return false;
+    }
+    unless !tictactoe.fix_spot(2, "X") {
+        return false;
+    }
+    return true;
+}
+
+fun test_is_player_win() {
+    var tictactoe = TicTacToe();
+    # Row win X
+    tictactoe.board = ["X", "X", "X", "-", "-", "-", "-", "-", "-"];
+    unless tictactoe.is_player_win("X") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("O") {
+        return false;
+    }
+    # Row no win
+    tictactoe.board = ["X", "X", "O", "-", "-", "-", "-", "-", "-"];
+    unless !tictactoe.is_player_win("X") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("O") {
+        return false;
+    }
+    # Col win X
+    tictactoe.board = ["X", "O", "O", "X", "-", "-", "X", "-", "-"];
+    unless tictactoe.is_player_win("X") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("O") {
+        return false;
+    }
+    # Col no win
+    tictactoe.board = ["X", "O", "O", "X", "-", "-", "O", "-", "-"];
+    unless !tictactoe.is_player_win("X") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("O") {
+        return false;
+    }
+    # Diagonal win O
+    tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "-", "O"];
+    unless tictactoe.is_player_win("O") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("X") {
+        return false;
+    }
+    # Diagonal no win
+    tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
+    unless !tictactoe.is_player_win("O") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("X") {
+        return false;
+    }
+    # Antidiagonal win O
+    tictactoe.board = ["O", "X", "O", "X", "O", "-", "O", "O", "-"];
+    unless tictactoe.is_player_win("O") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("X") {
+        return false;
+    }
+    # Antidiagonal no win
+    tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
+    unless !tictactoe.is_player_win("O") {
+        return false;
+    }
+    unless !tictactoe.is_player_win("X") {
+        return false;
+    }
+    return true;
+}
+
+fun test_board_filled() {
+    var tictactoe = TicTacToe();
+    tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "X"];
+    unless tictactoe.board_filled() {
+        return false;
+    }
+    tictactoe.board = ["-", "X", "X", "X", "X", "X", "X", "X", "X"];
+    unless !tictactoe.board_filled() {
+        return false;
+    }
+    tictactoe.board = ["-", "X", "X", "X", "X", "X", "X", "X", "X"];
+    unless !tictactoe.board_filled() {
+        return false;
+    }
+    tictactoe.board = ["X", "X", "X", "X", "-", "X", "X", "X", "X"];
+    unless !tictactoe.board_filled() {
+        return false;
+    }
+    tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "-"];
+    unless !tictactoe.board_filled() {
+        return false;
+    }
+    return true;
+}
+
+fun test_swap_player() {
+    var tictactoe = TicTacToe();
+    unless tictactoe.swap_player("X") == "O" {
+        return false;
+    }
+    unless tictactoe.swap_player("O") == "X" {
+        return false;
+    }
+    return true;
+}
+
+
+fun test_get_empty_cells() {
+    var tictactoe = TicTacToe();
+    tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "X"];
+    unless tictactoe.get_empty_cells() == [] {
+        return false;
+    }
+    tictactoe.board = ["X", "O", "-", "O", "-", "X", "-", "X", "X"];
+    unless tictactoe.get_empty_cells() == [2, 4, 6] {
+        return false;
+    }
+    return true;
+}
+
+
+fun test_minmax() {
+    var tictactoe = TicTacToe();
+    tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "X"];
+    unless tictactoe.minmax("X").end_state == 1 {
+        return false;
+    }
+    unless tictactoe.minmax("O").end_state == -1 {
+        return false;
+    }
+
+    tictactoe.board = ["X", "X", "-", "O", "X", "O", "X", "O", "O"];
+    var move;
+    move = tictactoe.minmax("X");
+    unless move.end_state == 1 and move.spot == 2 {
+        return false;
+    }
+    move = tictactoe.minmax("O");
+    unless move.end_state == 1 and move.spot == 2 {
+        return false;
+    }
+    tictactoe.board = ["O", "O", "X", "X", "-", "O", "-", "O", "X"];
+    move = tictactoe.minmax("X");
+    unless move.end_state == 0 and move.spot == 4 {
+        return false;
+    }
+    tictactoe.board = ["O", "O", "X", "X", "-", "-", "-", "O", "X"];
+    move = tictactoe.minmax("O");
+    unless move.end_state == 1 and move.spot == 4 {
+        return false;
+    }
+    tictactoe.board = ["O", "-", "-", "-", "-", "-", "-", "-", "-", ];
+    move = tictactoe.minmax("X");
+    unless move.end_state == 0 and move.spot == 4 {
+        return false;
+    }
+    return true;
+}
+
+fun test_random_move() {
+    var tictactoe = TicTacToe();
+    var random_move = tictactoe.random_move();
+    unless random_move.spot >= 0 and random_move.spot <= 8 {
+        return false;
+    }
+    tictactoe.board = ["X", "X", "-", "O", "X", "O", "X", "O", "O"];
+    random_move = tictactoe.random_move();
+    unless random_move.spot == 2 {
+        return false;
+    }
+    return true;
+}
+
+
+fun test_get_winning_move() {
+    var tictactoe = TicTacToe();
+    # Finds win on row
+    tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
+    unless tictactoe.get_winning_move("X").spot == 8 {
+        return false;
+    }
+    # Finds win on col
+    tictactoe.board = ["O", "X", "-", "-", "O", "-", "O", "X", "X"];
+    unless tictactoe.get_winning_move("O").spot == 3 {
+        return false;
+    }
+    # Finds win on diagonal
+    tictactoe.board = ["O", "-", "-", "-", "O", "-", "-", "-", "-"];
+    unless tictactoe.get_winning_move("O").spot == 8 {
+        return false;
+    }
+    # Finds win on antidiagonal
+    tictactoe.board = ["-", "-", "-", "-", "X", "-", "X", "-", "-"];
+    unless tictactoe.get_winning_move("X").spot == 2 {
+        return false;
+    }
+    # Finds no win
+    tictactoe.board = ["O", "X", "X", "-", "O", "-", "O", "X", "-"];
+    unless tictactoe.get_winning_move("X") == nil {
+        return false;
+    }
+    return true;
+}
+
+fun test_block_win_move() {
+    var tictactoe = TicTacToe();
+    # Finds block on row
+    tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
+    unless tictactoe.block_win_move("O").spot == 8 {
+        return false;
+    }
+    # Finds block on col
+    tictactoe.board = ["O", "-", "-", "-", "-", "-", "O", "X", "X"];
+    unless tictactoe.block_win_move("X").spot == 3 {
+        return false;
+    }
+    # Finds block on diagonal
+    tictactoe.board = ["O", "-", "-", "-", "O", "-", "-", "-", "-"];
+    unless tictactoe.block_win_move("X").spot == 8 {
+        return false;
+    }
+    # Finds block on antidiagonal
+    tictactoe.board = ["-", "-", "-", "-", "X", "-", "X", "-", "-"];
+    unless tictactoe.block_win_move("O").spot == 2 {
+        return false;
+    }
+    return true;
+}
+
+
+var failed = 0;
+var passed = 0;
+
+fun report(test_function) {
+    print("Test " + str(test_function), "");
+    if test_function() {
+        print(" successfull.");
+        passed += 1;
+    } else {
+        print(" failed.");
+        failed += 1;
+    }
+}
+
+report(test_fix_spot);
+report(test_is_player_win);
+report(test_board_filled);
+report(test_swap_player);
+report(test_get_empty_cells);
+report(test_minmax);
+report(test_random_move);
+report(test_get_winning_move);
+report(test_block_win_move);
+
+var test_result;
+if failed == 0 {
+    test_result = "ok";
+} else {
+    test_result = "failed";
+}
+
+print("Test result: " + test_result + ". " + str(passed) + " passed; " + str(failed) + " failed.");
+assert(failed == 0);

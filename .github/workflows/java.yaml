@@ -24,3 +24,5 @@ jobs:
         java-version: '20'
     - name: Build with Maven
       run: mvn --batch-mode --update-snapshots package
+    - name: Test
+      run: mvn test
