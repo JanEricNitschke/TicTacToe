@@ -74,6 +74,7 @@ fun GameBoard(
                             contentColor = if (spot in Game.winningSpots) Color(0xFFFF0000) else textColor
                         ),
                         onClick = onClick(spot),
+                        enabled = Game.gameState.value != GameState.Waiting,
                         modifier = modifier
                             .weight(1f)
                             .aspectRatio(1f)
