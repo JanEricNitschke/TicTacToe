@@ -171,7 +171,7 @@ fun test_minmax() {
     unless move.end_state == 1 and move.spot == 4 {
         return false;
     }
-    tictactoe.board = ["O", "-", "-", "-", "-", "-", "-", "-", "-", ];
+    tictactoe.board = ["O", "-", "-", "-", "-", "-", "-", "-", "-"];
     move = tictactoe.minmax("X");
     unless move.end_state == 0 and move.spot == 4 {
         return false;

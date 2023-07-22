@@ -97,12 +97,23 @@ alr build --validation
 
 ## TicTacToe-generic
 
-Simple two player tictactoe game with [generic](https://github.com/JanEricNitschke/generic-lang).
+Simple two player tictactoe game with [Generic](https://github.com/JanEricNitschke/generic-lang).
 
 To run and test:
 ```bash
 generic tictactoe_generic.gen
 generic tests/test_tictactoe.gen
+```
+
+## TicTacToe-kotlin
+
+Simple tictactoe app with [Kotlin](https://kotlinlang.org/).
+
+To run and test:
+```bash
+./gradlew build
+./gradlew test
+./gradlew connectedCheck
 ```
 
 ## TicTacToe-scratch

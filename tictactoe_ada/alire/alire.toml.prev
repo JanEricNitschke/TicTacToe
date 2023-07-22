@@ -1,0 +1,9 @@
+name = "tictactoe_ada"
+description = "TicTacToe in ada"
+version = "0.1.0-dev"
+
+authors = ["Jan-Eric"]
+maintainers = ["janericnitschke@gmail.com"]
+maintainers-logins = ["JanEricNitschke"]
+
+executables = ["tictactoe_ada"]

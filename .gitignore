@@ -181,9 +181,7 @@ tictactoe_ruby/*.gem
 # Compiled class file
 *.class
 
-*.jar
+tictactoe_java/*.jar
 
 tictactoe_ada/obj/
 tictactoe_ada/bin/
-tictactoe_ada/alire/
-tictactoe_ada/config/
