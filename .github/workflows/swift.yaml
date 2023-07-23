@@ -1,0 +1,29 @@
+# This workflow will run the tests on the swift version of tictactoe
+
+name: swift
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_swift
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "5.8"
+    - name: Build
+      run: swift build
+    - name: Test
+      run: swift test

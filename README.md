@@ -116,6 +116,16 @@ To run and test:
 ./gradlew connectedCheck
 ```
 
+## TicTacToe-swift
+
+Simple two player tictactoe game with [Swift](https://www.swift.org/)
+
+To build and test:
+```bash
+swift build
+swift test
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch
 
