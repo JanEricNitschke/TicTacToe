@@ -50,9 +50,8 @@ class TicTacToe {
 
     check_win_condition(player, win_condition) {
         var result = ConditionResult();
-        var spot;
         for (var i = 0; i < len(win_condition); i += 1) {
-            spot = win_condition[i];
+            const spot = win_condition[i];
             if this.board[spot] == player {
                 result.spots_done += 1;
             }
@@ -64,9 +63,8 @@ class TicTacToe {
     }
 
     is_player_win(player) {
-        var result;
         for (var i = 0; i < len(this.win_conditions); i += 1) {
-            result = this.check_win_condition(player, this.win_conditions[i]);
+            const result = this.check_win_condition(player, this.win_conditions[i]);
             if result.spots_done == 3 {
                 return true;
             }
@@ -100,11 +98,9 @@ class TicTacToe {
         print("Player " + player + " turn.");
         this.show_board();
 
-        var spot;
         var valid_input = false;
-        var user_input;
         until valid_input {
-            user_input = input("Where to make your next move? [0-8]");
+            const user_input = input("Where to make your next move? [0-8]");
             unless is_int(user_input) {
                 print("ERROR: Input must be a valid integer!");
                 continue;
@@ -134,11 +130,9 @@ class TicTacToe {
     }
 
     get_winning_move(player) {
-        var result;
-        var condition;
         for (var i = 0; i < len(this.win_conditions); i += 1) {
-            condition = this.win_conditions[i];
-            result = this.check_win_condition(player, condition);
+            const condition = this.win_conditions[i];
+            const result = this.check_win_condition(player, condition);
             if (result.spots_done == 2 and len(result.spots_open) == 1) {
                 return Move(result.spots_open[0], 1);
             }
@@ -244,14 +238,13 @@ class TicTacToe {
 
     get_ai_strength() {
         var strength;
-        var response;
         print("AI strength settings:");
         print("1: Easy");
         print("2: Medium");
         print("3: Hard");
         print("4: Impossible");
         until [1, 2, 3, 4].contains(strength) {
-            response = input("How strong should the AI be? [1 - 4]");
+            const response = input("How strong should the AI be? [1 - 4]");
             unless is_int(response) {
                 print("Bad choice");
             }

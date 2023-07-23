@@ -181,6 +181,8 @@ tictactoe_ruby/*.gem
 # Compiled class file
 *.class
 
+/fibonacci
+
 tictactoe_java/*.jar
 
 tictactoe_ada/obj/
