@@ -182,6 +182,7 @@ tictactoe_ruby/*.gem
 *.class
 
 /fibonacci
+luaunit.lua
 
 tictactoe_java/*.jar
 

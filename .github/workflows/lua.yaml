@@ -1,0 +1,34 @@
+# This workflow will run the tests on the lua version of tictactoe
+
+name: lua
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_lua
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+      with:
+        repository: bluebird75/luaunit
+        path: luaunit
+        clean: false
+        sparse-checkout: |
+          luaunit.lua
+        sparse-checkout-cone-mode: false
+    - uses: leafo/gh-actions-lua@v10
+      with:
+        luaVersion: "5.4"
+    - name: Test
+      run: |
+        mv ../luaunit/luaunit.lua .
+        lua tests/test_tictactoe.lua
