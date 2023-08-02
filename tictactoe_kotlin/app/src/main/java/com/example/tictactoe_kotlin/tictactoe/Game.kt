@@ -148,7 +148,7 @@ object Game {
                 return bestMove
             }
         }
-        return if (bestMove.endState >= 0) bestMove else winMove(currentPlayer)
+        return if (bestMove.endState >= 0) bestMove else winBlockMove(currentPlayer)
     }
 
     fun aiMove() {
