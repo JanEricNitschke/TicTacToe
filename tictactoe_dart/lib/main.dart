@@ -23,7 +23,6 @@ enum EndState {
     return EndState.draw;
   }
 
-
   bool operator <(EndState other) {
     return index < other.index;
   }
@@ -41,7 +40,6 @@ enum EndState {
   }
 }
 
-
 enum Player {
   X,
   O;
@@ -54,7 +52,7 @@ enum Player {
   }
 }
 
-extension InverColor on Color {
+extension InvertColor on Color {
   Color invert() {
     final r = 255 - red;
     final g = 255 - green;
@@ -114,8 +112,8 @@ class GameState extends ChangeNotifier {
     [0, 4, 8],
     [2, 4, 6]
   ];
-  var gameMode = GameMode.singlePlayer;
-  var winningSpots = <int>[];
+  var gameMode = GameMode.twoPlayer;
+  var winningSpots = <int>{};
   void adjustDifficulty(Difficulty? value) {
     difficulty = value!;
     notifyListeners();
@@ -163,7 +161,7 @@ class GameState extends ChangeNotifier {
     return false;
   }
 
-  ({int spot, EndState endState})? winningMove(Player player) {
+  ({int spot, EndState endState})? _winningMove(Player player) {
     for (final condition in winConditions) {
       final status = checkWincondition(condition, player);
       if (status.done.length == 2 && status.open.length == 1) {
@@ -174,11 +172,11 @@ class GameState extends ChangeNotifier {
   }
 
   ({int spot, EndState endState}) winMove(Player player) {
-    return winningMove(player) ?? randomMove();
+    return _winningMove(player) ?? randomMove();
   }
 
   ({int spot, EndState endState}) winBlockMove(Player player) {
-    return winningMove(player) ?? winningMove(player.swap()) ?? randomMove();
+    return _winningMove(player) ?? _winningMove(player.swap()) ?? randomMove();
   }
 
   ({int spot, EndState endState}) minMax(Player player) {
@@ -216,7 +214,9 @@ class GameState extends ChangeNotifier {
         return bestMove;
       }
     }
-    return (bestMove.endState >= EndState.draw) ? bestMove : winBlockMove(player);
+    return (bestMove.endState >= EndState.draw)
+        ? bestMove
+        : winBlockMove(player);
   }
 
   void aiMove() {
@@ -251,8 +251,8 @@ class GameState extends ChangeNotifier {
     return status;
   }
 
-  List<int> winningFields() {
-    var winningFields = <int>[];
+  Set<int> winningFields() {
+    var winningFields = <int>{};
     for (final condition in winConditions) {
       var filledFields = checkWincondition(condition, player);
       if (filledFields.done.length == 3) {
@@ -428,8 +428,6 @@ class GameBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<GameState>();
-    final theme = Theme.of(context);
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -437,53 +435,70 @@ class GameBoard extends StatelessWidget {
           return Flexible(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
               children: List.generate(gameSize, (col) {
                 var spot = 3 * row + col;
-                var buttonColor = appState.winningSpots.contains(spot)
-                    ? theme.colorScheme.primary.invert()
-                    : theme.colorScheme.primary;
-                void Function()? buttonFunction;
-                if (appState.playState == PlayState.gameModeSelection) {
-                  buttonFunction = null;
-                } else if (appState.playState == PlayState.win ||
-                    appState.playState == PlayState.draw) {
-                  buttonFunction = () {};
-                } else {
-                  // Waiting or playing
-                  buttonFunction = () {
-                    appState.makeMove(spot);
-                  };
-                }
-                return Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: ElevatedButton(
-                        onPressed: buttonFunction,
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          appState.board[spot],
-                          style: theme.textTheme.displayLarge!.copyWith(
-                            color: buttonColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
+                return BoardTile(spot: spot);
               }),
             ),
           );
         }),
+      ),
+    );
+  }
+}
+
+class BoardTile extends StatelessWidget {
+  const BoardTile({
+    super.key,
+    required this.spot,
+  });
+
+  final int spot;
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<GameState>();
+    final theme = Theme.of(context);
+
+    var buttonColor = appState.winningSpots.contains(spot)
+        ? theme.colorScheme.primary.invert()
+        : theme.colorScheme.primary;
+
+    void Function()? buttonFunction;
+    if (appState.playState == PlayState.gameModeSelection) {
+      buttonFunction = null;
+    } else if (appState.playState == PlayState.win ||
+        appState.playState == PlayState.draw) {
+      buttonFunction = () {};
+    } else {
+      // Waiting or playing
+      buttonFunction = () {
+        appState.makeMove(spot);
+      };
+    }
+
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: ElevatedButton(
+            onPressed: buttonFunction,
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+            ),
+            child: Text(
+              appState.board[spot],
+              style: theme.textTheme.displayLarge!.copyWith(
+                color: buttonColor,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
