@@ -118,12 +118,23 @@ To run and test:
 
 ## TicTacToe-swift
 
-Simple two player tictactoe game with [Swift](https://www.swift.org/)
+Simple tictactoe game with [Swift](https://www.swift.org/)
 
 To build and test:
 ```bash
 swift build
 swift test
+```
+
+## TicTacToe-dart
+
+Simple tictactoe app with [Dart](https://dart.dev/) using [Flutter](https://flutter.dev/).
+Targeted towards Windows.
+
+To build and test:
+```bash
+flutter build windows
+flutter test
 ```
 
 ## TicTacToe-scratch

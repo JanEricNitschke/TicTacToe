@@ -17,20 +17,26 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
-    - name: Setup java
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'oracle' # See 'Supported distributions' for available options
-        java-version: '20'
-        cache: 'gradle'
     - uses: subosito/flutter-action@v2
       with:
         cache: true
         channel: 'stable' # or: 'beta', 'dev' or 'master'
-    - run: flutter pub get
-    - run: flutter build apk
-    - run: flutter build appbundle
-    - run: flutter build web
-    - run: flutter config --enable-windows-desktop
-    - run: flutter build windows
-    - run: flutter test
+    - name: Setup flutter dependencies
+      run: |
+        flutter --version
+        flutter doctor --verbose
+        flutter pub get
+    - name: Build for windows
+      run: |
+        flutter config --enable-windows-desktop
+        flutter build windows
+    - name: Test
+      run: |
+        choco install lcov
+        flutter test --coverage
+        perl C:\ProgramData\chocolatey\lib\lcov\tools\bin\genhtml -o coverage\html coverage\lcov.info
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage-report
+        path: ./tictactoe_dart/coverage/html/

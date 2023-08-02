@@ -331,10 +331,9 @@ class DifficultySelection extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
       children: [
-        ElevatedButton(
-          onPressed: () {},
-          child: Text("Choose an AI difficulty:"),
-        ),
+        Text("Choose an AI difficulty:", style: theme.textTheme.bodyMedium!.copyWith(
+        color: theme.colorScheme.onPrimaryContainer,
+      ),),
         DropdownButton<Difficulty>(
           value: appState.difficulty,
           icon: const Icon(Icons.arrow_downward),
