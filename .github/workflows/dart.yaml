@@ -30,6 +30,9 @@ jobs:
       run: |
         flutter config --enable-windows-desktop
         flutter build windows
+    - name: Lint
+      run: |
+        flutter analyze
     - name: Test
       run: |
         choco install lcov

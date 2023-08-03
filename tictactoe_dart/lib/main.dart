@@ -63,7 +63,7 @@ extension InvertColor on Color {
 }
 
 void main() {
-  runApp(TicTacToeApp());
+  runApp(const TicTacToeApp());
 }
 
 class TicTacToeApp extends StatelessWidget {
@@ -82,7 +82,7 @@ class TicTacToeApp extends StatelessWidget {
             brightness: Brightness.light,
           ),
         ),
-        home: GamePage(),
+        home: const GamePage(),
       ),
     );
   }
@@ -286,6 +286,7 @@ class GameState extends ChangeNotifier {
 }
 
 class GamePage extends StatefulWidget {
+  const GamePage({super.key});
   @override
   State<GamePage> createState() => _GamePageState();
 }
@@ -297,7 +298,7 @@ class _GamePageState extends State<GamePage> {
       return Scaffold(
         body: Container(
           color: Theme.of(context).colorScheme.inversePrimary,
-          child: Center(
+          child: const Center(
             child: IntrinsicWidth(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -331,9 +332,12 @@ class DifficultySelection extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Text("Choose an AI difficulty:", style: theme.textTheme.bodyMedium!.copyWith(
-        color: theme.colorScheme.onPrimaryContainer,
-      ),),
+        Text(
+          "Choose an AI difficulty:",
+          style: theme.textTheme.bodyMedium!.copyWith(
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
         DropdownButton<Difficulty>(
           value: appState.difficulty,
           icon: const Icon(Icons.arrow_downward),

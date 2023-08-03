@@ -13,7 +13,7 @@ import 'package:tictactoe_dart/main.dart';
 void main() {
   testWidgets('TitleWidget has title', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(Directionality(
+    await tester.pumpWidget(const Directionality(
       textDirection: TextDirection.ltr,
       child: MediaQuery(
         data: MediaQueryData(),

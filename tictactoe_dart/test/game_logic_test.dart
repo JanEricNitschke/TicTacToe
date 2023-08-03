@@ -54,8 +54,8 @@ void main() {
 
   group("Color", () {
     test("Invert works", () {
-      expect(Color.fromARGB(255, 255, 255, 255).invert(),
-          Color.fromARGB(255, 0, 0, 0));
+      expect(const Color.fromARGB(255, 255, 255, 255).invert(),
+          const Color.fromARGB(255, 0, 0, 0));
     });
   });
 
