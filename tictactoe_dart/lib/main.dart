@@ -3,12 +3,24 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 import "dart:math";
 
+/// Describes AI strength.
+///
+/// Used to determine which algorithm to use
+/// when making an aiMove.
 enum Difficulty { easy, medium, hard, impossible }
 
+/// Describes the state of the game.
+///
+/// Used to determine whether game board is clickable,
+/// description text and control button text and functionality.
 enum PlayState { gameModeSelection, waitingForFirstMove, playing, draw, win }
 
+/// Describes game mode.
+///
+/// Used to determine whether ai should act after human move.
 enum GameMode { singlePlayer, twoPlayer }
 
+/// Describes end state of the game for minMax algorithm.
 enum EndState {
   loss,
   draw,
@@ -88,17 +100,30 @@ class TicTacToeApp extends StatelessWidget {
   }
 }
 
+/// Handles the whole state of the TicTacToe game.
 class GameState extends ChangeNotifier {
+  /// Tracks ai strength.
   var difficulty = Difficulty.easy;
+
+  /// State that the game is currently in.
   var _playState = PlayState.gameModeSelection;
+
+  /// Sets state and notifies listeners.
   PlayState get playState => _playState;
   set playState(PlayState state) {
     _playState = state;
     notifyListeners();
   }
 
+  /// Tracks the board of the TicTacToe game.
+  ///
+  /// "" indicates unoccupied spots.
   var board = List.filled(9, "");
+
+  /// Player whose turn it currently is.
   var player = Player.X;
+
+  /// List of index lists that a player has to occupy to win.
   var winConditions = [
     // Rows
     [0, 1, 2],
@@ -113,12 +138,21 @@ class GameState extends ChangeNotifier {
     [2, 4, 6]
   ];
   var gameMode = GameMode.twoPlayer;
+
+  /// If a player has won, this stores the spots that caused the win.
   var winningSpots = <int>{};
   void adjustDifficulty(Difficulty? value) {
     difficulty = value!;
     notifyListeners();
   }
 
+  /// Occupy [spot] for [player] and check if game is over.
+  ///
+  /// Called when the player clicks a tile of the board.
+  /// Returns if [spot] is already occupied.
+  /// If not: Captures it for the player and checks if the game is over.
+  /// If the game is not over the active [player] is swapped.
+  /// Afterwards performs an [aiMove] if [gameMode] is [GameMode.singlePlayer].
   void makeMove(int spot) {
     playState = PlayState.playing;
     if (board[spot] == "") {
@@ -133,6 +167,7 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Performs a random valid move on the [board].
   ({int spot, EndState endState}) randomMove() {
     final empties = emptyCells();
     return (
@@ -141,6 +176,7 @@ class GameState extends ChangeNotifier {
     );
   }
 
+  /// Returns a list of all empty cells in [board].
   List<int> emptyCells() {
     var empties = <int>[];
     for (final (index, value) in board.indexed) {
@@ -151,6 +187,7 @@ class GameState extends ChangeNotifier {
     return empties;
   }
 
+  /// Checks if [player] has won the game on the current [board].
   bool isPlayerWin(player) {
     for (final condition in winConditions) {
       final result = checkWincondition(condition, player);
@@ -161,6 +198,7 @@ class GameState extends ChangeNotifier {
     return false;
   }
 
+  /// Tries to find a winning move for [player] on the current [board].
   ({int spot, EndState endState})? _winningMove(Player player) {
     for (final condition in winConditions) {
       final status = checkWincondition(condition, player);
@@ -171,14 +209,17 @@ class GameState extends ChangeNotifier {
     return null;
   }
 
+  /// Returns a winning or random move for [player] on the current [board].
   ({int spot, EndState endState}) winMove(Player player) {
     return _winningMove(player) ?? randomMove();
   }
 
+  /// Returns a winning, blocking or random move for [player] on the currnet [board].
   ({int spot, EndState endState}) winBlockMove(Player player) {
     return _winningMove(player) ?? _winningMove(player.swap()) ?? randomMove();
   }
 
+  /// Returns an optimal move for [player] on the current [board].
   ({int spot, EndState endState}) minMax(Player player) {
     // Game already won
     if (isPlayerWin(player)) {
@@ -219,6 +260,9 @@ class GameState extends ChangeNotifier {
         : winBlockMove(player);
   }
 
+  /// Performs an aiMove with the algorithm determined by [difficulty].
+  ///
+  /// If the game is not over after the move then [player] is swapped.
   void aiMove() {
     var bestMove = switch (difficulty) {
       Difficulty.easy => randomMove(),
@@ -233,10 +277,17 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Checks if all spots on [board] are occupied.
   bool boardFilled() {
     return !board.any((value) => value == "");
   }
 
+  /// Returns the occupied and open spots for a [condition] and [player].
+  ///
+  /// Returns the [board] indices in [condition] that are occupied by
+  /// [player] as well as those that are unoccupied.
+  /// Used to determine winning and blocking moves as well as
+  /// highlight winning tiles.
   ({List<int> done, List<int> open}) checkWincondition(
       List<int> condition, Player player) {
     var status = (done: <int>[], open: <int>[]);
@@ -251,6 +302,7 @@ class GameState extends ChangeNotifier {
     return status;
   }
 
+  /// Finds the winning fields for the current [player].
   Set<int> winningFields() {
     var winningFields = <int>{};
     for (final condition in winConditions) {
@@ -263,6 +315,7 @@ class GameState extends ChangeNotifier {
     return winningFields;
   }
 
+  /// Checks if the game is over by win or draw.
   bool gameOver() {
     var doneFields = winningFields();
     if (doneFields.isNotEmpty) {
@@ -277,6 +330,7 @@ class GameState extends ChangeNotifier {
     return false;
   }
 
+  /// Reset the game state to be able to start a new game.
   void restartGame() {
     board = List.filled(9, "");
     winningSpots.clear();
@@ -319,6 +373,7 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
+/// Widget for chosing the strenght of the ai.
 class DifficultySelection extends StatelessWidget {
   const DifficultySelection({
     super.key,
@@ -361,6 +416,15 @@ class DifficultySelection extends StatelessWidget {
   }
 }
 
+/// Widget to control the game state.
+///
+/// Contains two buttons that modify the GameStates playState
+/// depending on its current value.
+/// If the game is in [PlayState.gameModeSelection] then they select the game mode.
+/// If the game is in [PlayState.waitingForFirstMove] and the game mode is
+/// [GameMode.singlePlayer] then the left button performs an aiMove.
+/// Otherwise the left button resets the game and the right button
+/// goes set the game back to [PlayState.gameModeSelection].
 class GameStateSelection extends StatelessWidget {
   const GameStateSelection({
     super.key,
@@ -422,6 +486,7 @@ class GameStateSelection extends StatelessWidget {
   }
 }
 
+/// Widget containing the game board of size [gameSize].
 class GameBoard extends StatelessWidget {
   const GameBoard({
     super.key,
@@ -450,6 +515,10 @@ class GameBoard extends StatelessWidget {
   }
 }
 
+/// Widget contain game tiles for each [spot].
+///
+/// During [PlayState.playing] clicking them causes the active player to make
+/// a move there.
 class BoardTile extends StatelessWidget {
   const BoardTile({
     super.key,
@@ -507,6 +576,7 @@ class BoardTile extends StatelessWidget {
   }
 }
 
+/// Simple widget displaying information about the current game state.
 class GameInfo extends StatelessWidget {
   const GameInfo({
     super.key,
@@ -534,6 +604,8 @@ class GameInfo extends StatelessWidget {
   }
 }
 
+
+/// Simple widget displaying the title of the app.
 class TitleWidget extends StatelessWidget {
   const TitleWidget({
     super.key,
