@@ -36,9 +36,9 @@ class TicTacToe {
     }
 
     show_board() {
-        var line_separator = "---------------";
+        const line_separator = "---------------";
         print(line_separator);
-        var side_length = 3;
+        const side_length = 3;
         for (var row = 0; row < side_length; row += 1) {
             for (var col = 0; col < side_length; col += 1) {
                 print("| " + str(this.board[(row * side_length) + col] + " |"), "");
@@ -122,9 +122,9 @@ class TicTacToe {
     }
 
     random_move() {
-        var empty_cells = this.get_empty_cells();
+        const empty_cells = this.get_empty_cells();
 
-        var chosen_index = rng(0, len(empty_cells));
+        const chosen_index = rng(0, len(empty_cells));
 
         return Move(empty_cells[chosen_index], 0);
     }
@@ -141,7 +141,7 @@ class TicTacToe {
     }
 
     win_move(player) {
-        var winning_move = this.get_winning_move(player);
+        const winning_move = this.get_winning_move(player);
         if winning_move == nil {
             return this.random_move();
         }
@@ -149,11 +149,11 @@ class TicTacToe {
     }
 
     block_win_move(player) {
-        var winning_move = this.get_winning_move(player);
+        const winning_move = this.get_winning_move(player);
         unless winning_move == nil {
             return winning_move;
         }
-        var blocking_move = this.get_winning_move(this.swap_player(player));
+        const blocking_move = this.get_winning_move(this.swap_player(player));
         unless blocking_move == nil {
             return blocking_move;
         }
@@ -171,7 +171,7 @@ class TicTacToe {
             return Move(-1, -1);
         }
 
-        var empty_cells = this.get_empty_cells();
+        const empty_cells = this.get_empty_cells();
         # Game already drawn
         if len(empty_cells) == 0 {
             return Move(-1, 0);
@@ -182,13 +182,11 @@ class TicTacToe {
             return this.random_move();
         }
 
-        var current_spot;
-        var current_move;
         var best_move = Move(-1, -1);
         for (var i = 0; i < len(empty_cells); i += 1) {
-            current_spot = empty_cells[i];
+            const current_spot = empty_cells[i];
             this.board[current_spot] = player;
-            current_move = this.minmax(this.swap_player(player));
+            const current_move = this.minmax(this.swap_player(player));
             if -current_move.end_state >= best_move.end_state {
                 best_move = Move(current_spot, -current_move.end_state);
             }
@@ -217,7 +215,7 @@ class TicTacToe {
 
     get_yes_no(question) {
         var response;
-        var valid_answers = ["Y", "y", "N", "n"];
+        const valid_answers = ["Y", "y", "N", "n"];
         until valid_answers.contains(response) {
             response = input(question);
         }
@@ -290,7 +288,7 @@ class TicTacToe {
 }
 
 if __name__ == "<script>" {
-    var tictactoe = TicTacToe();
+    const tictactoe = TicTacToe();
     tictactoe.initialize_game();
     tictactoe.play();
 }
