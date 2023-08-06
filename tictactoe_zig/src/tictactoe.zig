@@ -1,9 +1,4 @@
-//! Module for playing command line tictactoe.
-
-const builtin = @import("builtin");
 const std = @import("std");
-const io = std.io;
-const fmt = std.fmt;
 const ArrayList = std.ArrayList;
 
 /// Error for when the user input is too big for the buffer.
@@ -57,13 +52,13 @@ test "reverse end state" {
 
 const Move = struct { spot: usize, end_state: EndState };
 
-const AIStrength = enum { Easy, Medium, Hard, Impossible };
+pub const AIStrength = enum { Easy, Medium, Hard, Impossible };
 
 /// Enum for the open spots of the board.
 const OpenSpot = enum { Zero, One, Two, Three, Four, Five, Six, Seven, Eight };
 
 /// Enum for the two players of the game.
-const Player = enum {
+pub const Player = enum {
     X,
     O,
 
@@ -90,25 +85,24 @@ test "Swap player" {
     try std.testing.expectEqual(Player.O.swap(), Player.X);
 }
 
-const GameBoard = [9]?Player;
+pub const GameBoard = [9]?Player;
 
 /// Pretty printer for the game board.
-fn showBoard(board: *GameBoard) !void {
-    const stdout = io.getStdOut().writer();
+pub fn showBoard(board: *GameBoard, writer: anytype) !void {
     const line_separator = "---------------";
-    try stdout.print("{s}\n", .{line_separator});
+    try writer.print("{s}\n", .{line_separator});
     const side_length = 3;
     for (0..3) |row| {
         for (0..3) |col| {
             const index = (row * side_length) + col;
             if (board[index]) |player| {
-                try stdout.print("| {s} |", .{player});
+                try writer.print("| {s} |", .{player});
             } else {
-                try stdout.print("| {d} |", .{index});
+                try writer.print("| {d} |", .{index});
             }
         }
-        try stdout.print("\n", .{});
-        try stdout.print("{s}\n", .{line_separator});
+        try writer.print("\n", .{});
+        try writer.print("{s}\n", .{line_separator});
     }
 }
 
@@ -135,24 +129,22 @@ test "flush empties" {
 }
 
 /// Gets any u8 from user input.
-fn getUserInputNumber(reader: anytype) !usize {
+fn getUserInputNumber(reader: anytype, writer: anytype) !usize {
     var buf: [5]u8 = undefined;
-
-    const stdout = io.getStdOut().writer();
 
     const amt = try reader.read(buf[0..]);
     if (amt == buf.len) {
-        try stdout.print("ERROR: Input too long.\n", .{});
+        try writer.print("ERROR: Input too long.\n", .{});
         return TooMuchInputError.TooMuchInput;
     }
     const line = std.mem.trimRight(u8, buf[0..amt], "\r\n");
     const parsed = std.fmt.parseUnsigned(usize, line, 10) catch |err| switch (err) {
         error.Overflow => {
-            try stdout.print("ERROR: Input number too large!\n", .{});
+            try writer.print("ERROR: Input number too large!\n", .{});
             return err;
         },
         error.InvalidCharacter => {
-            try stdout.print("ERROR: Input must be a valid positive integer!\n", .{});
+            try writer.print("ERROR: Input must be a valid positive integer!\n", .{});
             return err;
         },
     };
@@ -163,18 +155,17 @@ fn getUserInputNumber(reader: anytype) !usize {
 /// Invalid characters, out of bounds values and trying to make a move
 /// on an occupied spot return errors (on top of the usual ones that can happen
 /// with input and output).
-fn fixSpot(reader: anytype, player: Player, board: *GameBoard) !void {
-    const stdout = io.getStdOut().writer();
-    try stdout.print("Where to make your next move? [0-8]\n", .{});
-    const parsed = try getUserInputNumber(reader);
+fn fixSpot(player: Player, board: *GameBoard, reader: anytype, writer: anytype) !void {
+    try writer.print("Where to make your next move? [0-8]\n", .{});
+    const parsed = try getUserInputNumber(reader, writer);
 
     if (parsed < 0 or board.len <= parsed) {
-        try stdout.print("ERROR: Spot has to be in range [0-8] but was {d}!\n", .{parsed});
+        try writer.print("ERROR: Spot has to be in range [0-8] but was {d}!\n", .{parsed});
         return OutOfBoundsError.OutOfBounds;
     }
 
     if (board[parsed]) |_| {
-        try stdout.print("ERROR: Spot {d} is already occupied!\n", .{parsed});
+        try writer.print("ERROR: Spot {d} is already occupied!\n", .{parsed});
         return SpotOccupiedError.SpotOccupied;
     } else {
         board[parsed] = player;
@@ -182,6 +173,7 @@ fn fixSpot(reader: anytype, player: Player, board: *GameBoard) !void {
 }
 
 test "fixSpot invalid character" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("a");
     const reader = fis.reader();
     var board = GameBoard{
@@ -196,10 +188,11 @@ test "fixSpot invalid character" {
         null,
     };
 
-    try std.testing.expectError(error.InvalidCharacter, fixSpot(reader, Player.X, &board));
+    try std.testing.expectError(error.InvalidCharacter, fixSpot(Player.X, &board, reader, stderr));
 }
 
 test "fixSpot outofbounds" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("9");
     const reader = fis.reader();
     var board = GameBoard{
@@ -213,10 +206,11 @@ test "fixSpot outofbounds" {
         null,
         null,
     };
-    try std.testing.expectError(error.OutOfBounds, fixSpot(reader, Player.X, &board));
+    try std.testing.expectError(error.OutOfBounds, fixSpot(Player.X, &board, reader, stderr));
 }
 
 test "fixSpot spot occupied" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("1");
     const reader = fis.reader();
     var board = GameBoard{
@@ -230,10 +224,11 @@ test "fixSpot spot occupied" {
         null,
         null,
     };
-    try std.testing.expectError(error.SpotOccupied, fixSpot(reader, Player.X, &board));
+    try std.testing.expectError(error.SpotOccupied, fixSpot(Player.X, &board, reader, stderr));
 }
 
 test "fixSpot input too long" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("1111111");
     const reader = fis.reader();
     var board = GameBoard{
@@ -247,10 +242,11 @@ test "fixSpot input too long" {
         null,
         null,
     };
-    try std.testing.expectError(error.TooMuchInput, fixSpot(reader, Player.X, &board));
+    try std.testing.expectError(error.TooMuchInput, fixSpot(Player.X, &board, reader, stderr));
 }
 
 test "fixSpot valid" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("2");
     const reader = fis.reader();
     var board = GameBoard{
@@ -264,7 +260,7 @@ test "fixSpot valid" {
         null,
         null,
     };
-    try fixSpot(reader, Player.X, &board);
+    try fixSpot(Player.X, &board, reader, stderr);
     try std.testing.expectEqual(Player.X, board[2].?);
 }
 
@@ -272,13 +268,12 @@ test "fixSpot valid" {
 /// Provides context of the current game state and then asks the user for
 /// input where they want to make their next move until they enter
 /// a valid value.
-fn playerTurn(reader: anytype, player: Player, board: *GameBoard) !void {
-    const stdout = io.getStdOut().writer();
-    try stdout.print("Player {s} turn.\n", .{player});
-    try showBoard(board);
+pub fn playerTurn(player: Player, board: *GameBoard, reader: anytype, writer: anytype) !void {
+    try writer.print("Player {s} turn.\n", .{player});
+    try showBoard(board, writer);
 
     while (true) {
-        fixSpot(reader, player, board) catch |err| switch (err) {
+        fixSpot(player, board, reader, writer) catch |err| switch (err) {
             error.OutOfBounds, error.SpotOccupied, error.InvalidCharacter => {
                 continue;
             },
@@ -293,6 +288,7 @@ fn playerTurn(reader: anytype, player: Player, board: *GameBoard) !void {
 }
 
 test "player turn" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("2");
     const reader = fis.reader();
     var board = GameBoard{
@@ -306,7 +302,7 @@ test "player turn" {
         null,
         null,
     };
-    try playerTurn(reader, Player.X, &board);
+    try playerTurn(Player.X, &board, reader, stderr);
     try std.testing.expectEqual(Player.X, board[2].?);
 }
 
@@ -576,21 +572,21 @@ test "board filled" {
 /// Check if the game is over.
 /// This can either happen because the player who made the last move
 /// has won the game. Or if that is not the case, because the game is drawn.
-fn isGameOver(player: Player, board: *GameBoard, allocator: std.mem.Allocator) !bool {
-    const stdout = io.getStdOut().writer();
+pub fn isGameOver(player: Player, board: *GameBoard, writer: anytype, allocator: std.mem.Allocator) !bool {
     if (try isPlayerWin(player, board, allocator)) {
-        try stdout.print("Player {s} wins the game!\n", .{player});
+        try writer.print("Player {s} wins the game!\n", .{player});
         return true;
     }
 
     if (isBoardFilled(board)) {
-        try stdout.print("Match Drawn!\n", .{});
+        try writer.print("Match Drawn!\n", .{});
         return true;
     }
     return false;
 }
 
 test "game still going" {
+    const stderr = std.io.getStdErr().writer();
     var board = GameBoard{
         null,
         null,
@@ -603,10 +599,11 @@ test "game still going" {
         null,
     };
 
-    try std.testing.expect(!try isGameOver(Player.X, &board, std.testing.allocator));
+    try std.testing.expect(!try isGameOver(Player.X, &board, stderr, std.testing.allocator));
 }
 
 test "game drawn" {
+    const stderr = std.io.getStdErr().writer();
     var board = GameBoard{
         Player.X,
         Player.O,
@@ -619,11 +616,12 @@ test "game drawn" {
         Player.X,
     };
 
-    try std.testing.expect(try isGameOver(Player.X, &board, std.testing.allocator));
-    try std.testing.expect(try isGameOver(Player.O, &board, std.testing.allocator));
+    try std.testing.expect(try isGameOver(Player.X, &board, stderr, std.testing.allocator));
+    try std.testing.expect(try isGameOver(Player.O, &board, stderr, std.testing.allocator));
 }
 
 test "game won" {
+    const stderr = std.io.getStdErr().writer();
     var board = GameBoard{
         Player.X,
         Player.X,
@@ -636,21 +634,20 @@ test "game won" {
         null,
     };
 
-    try std.testing.expect(try isGameOver(Player.X, &board, std.testing.allocator));
-    try std.testing.expect(!try isGameOver(Player.O, &board, std.testing.allocator));
+    try std.testing.expect(try isGameOver(Player.X, &board, stderr, std.testing.allocator));
+    try std.testing.expect(!try isGameOver(Player.O, &board, stderr, std.testing.allocator));
 }
 
 /// Ask the player for a yes/no answer via stdin.
-fn getPlayerYesNo(reader: anytype, question: []const u8) !bool {
-    const stdout = io.getStdOut().writer();
-    try stdout.print("{s} [y/n]\n", .{question});
+fn getPlayerYesNo(question: []const u8, reader: anytype, writer: anytype) !bool {
+    try writer.print("{s} [y/n]\n", .{question});
 
     while (true) {
         var buf: [3]u8 = undefined;
         const amt = try reader.read(buf[0..]);
 
         if (amt == buf.len) {
-            try stdout.print("ERROR: Input too long.\n", .{});
+            try writer.print("ERROR: Input too long.\n", .{});
             try flush(reader);
             continue;
         }
@@ -659,7 +656,7 @@ fn getPlayerYesNo(reader: anytype, question: []const u8) !bool {
             'Y', 'y' => return true,
             'N', 'n' => return false,
             else => {
-                try stdout.print("Please answer with 'y' or 'n'.\n", .{});
+                try writer.print("Please answer with 'y' or 'n'.\n", .{});
                 continue;
             },
         }
@@ -667,62 +664,65 @@ fn getPlayerYesNo(reader: anytype, question: []const u8) !bool {
 }
 
 test "player yes" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("y");
     var reader = fis.reader();
-    try std.testing.expect(try getPlayerYesNo(reader, "Whatever?"));
+    try std.testing.expect(try getPlayerYesNo("Whatever?", reader, stderr));
 
     fis = std.io.fixedBufferStream("Y");
     reader = fis.reader();
-    try std.testing.expect(try getPlayerYesNo(reader, "Whatever?"));
+    try std.testing.expect(try getPlayerYesNo("Whatever?", reader, stderr));
 }
 
 test "player no" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("n");
     var reader = fis.reader();
-    try std.testing.expect(!try getPlayerYesNo(reader, "Whatever?"));
+    try std.testing.expect(!try getPlayerYesNo("Whatever?", reader, stderr));
 
     fis = std.io.fixedBufferStream("N");
     reader = fis.reader();
-    try std.testing.expect(!try getPlayerYesNo(reader, "Whatever?"));
+    try std.testing.expect(!try getPlayerYesNo("Whatever?", reader, stderr));
 }
 
 /// Ask the player if they want to play alone vs AI.
-fn getSinglePlayer(reader: anytype) !bool {
-    return getPlayerYesNo(reader, "Play alone vs AI?");
+pub fn getSinglePlayer(reader: anytype, writer: anytype) !bool {
+    return getPlayerYesNo("Play alone vs AI?", reader, writer);
 }
 
 /// Ask the player if the AI should make the first move.
 /// In that case the AI plays as 'X' as 'X' makes the first move.
-fn getAIStart(reader: anytype) !Player {
-    if (try getPlayerYesNo(reader, "Should the AI make the first move?")) {
+pub fn getAIStart(reader: anytype, writer: anytype) !Player {
+    if (try getPlayerYesNo("Should the AI make the first move?", reader, writer)) {
         return Player.X;
     }
     return Player.O;
 }
 
 test "ai start yes" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("y");
     const reader = fis.reader();
-    try std.testing.expectEqual(try getAIStart(reader), Player.X);
+    try std.testing.expectEqual(try getAIStart(reader, stderr), Player.X);
 }
 
 test "ai start no" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("N");
     const reader = fis.reader();
-    try std.testing.expectEqual(try getAIStart(reader), Player.O);
+    try std.testing.expectEqual(try getAIStart(reader, stderr), Player.O);
 }
 
 /// Ask the player which strength the AI should play with.
-fn getAIStrength(reader: anytype) !AIStrength {
-    const stdout = io.getStdOut().writer();
-    try stdout.print("AI strength settings:\n", .{});
-    try stdout.print("1: Easy\n", .{});
-    try stdout.print("2: Medium\n", .{});
-    try stdout.print("3: Hard\n", .{});
-    try stdout.print("4: Impossible\n", .{});
+pub fn getAIStrength(reader: anytype, writer: anytype) !AIStrength {
+    try writer.print("AI strength settings:\n", .{});
+    try writer.print("1: Easy\n", .{});
+    try writer.print("2: Medium\n", .{});
+    try writer.print("3: Hard\n", .{});
+    try writer.print("4: Impossible\n", .{});
     while (true) {
-        try stdout.print("How strong should the AI be? [1 - 4]\n", .{});
-        const user_input = getUserInputNumber(reader) catch |err| switch (err) {
+        try writer.print("How strong should the AI be? [1 - 4]\n", .{});
+        const user_input = getUserInputNumber(reader, writer) catch |err| switch (err) {
             error.TooMuchInput => {
                 try flush(reader);
                 continue;
@@ -735,16 +735,17 @@ fn getAIStrength(reader: anytype) !AIStrength {
         switch (user_input) {
             1...4 => return @enumFromInt(user_input - 1),
             else => {
-                try stdout.print("ERROR: AIStrength has to be in range [1-4] but was {d}!\n", .{user_input});
+                try writer.print("ERROR: AIStrength has to be in range [1-4] but was {d}!\n", .{user_input});
             },
         }
     }
 }
 
 test "ai strength valid" {
+    const stderr = std.io.getStdErr().writer();
     var fis = std.io.fixedBufferStream("3");
     const reader = fis.reader();
-    try std.testing.expectEqual(try getAIStrength(reader), AIStrength.Hard);
+    try std.testing.expectEqual(try getAIStrength(reader, stderr), AIStrength.Hard);
 }
 
 fn getNEmptyCells(board: *GameBoard) u8 {
@@ -1234,10 +1235,9 @@ test "minMax finds best" {
 
 /// Have the AI perform a turn.
 /// The used algorithm is determined by `ai_strength`.
-fn aiTurn(player: Player, board: *GameBoard, ai_strength: AIStrength, allocator: std.mem.Allocator) !void {
-    const stdout = io.getStdOut().writer();
-    try stdout.print("Player {s} turn.\n", .{player});
-    try showBoard(board);
+pub fn aiTurn(player: Player, board: *GameBoard, ai_strength: AIStrength, writer: anytype, allocator: std.mem.Allocator) !void {
+    try writer.print("Player {s} turn.\n", .{player});
+    try showBoard(board, writer);
 
     const ai_move = try switch (ai_strength) {
         AIStrength.Easy => randomMove(board, allocator),
@@ -1247,53 +1247,4 @@ fn aiTurn(player: Player, board: *GameBoard, ai_strength: AIStrength, allocator:
     };
     board[ai_move.spot] = player;
     std.time.sleep(1 * std.time.ns_per_s);
-}
-
-pub fn main() !void {
-    // We only need a maximum of 72 bytes of dynamic memory.
-    // Our only dynamic memory are ArrayLists for win condition check
-    // and getting empty cells.
-    // A win condition is an array list of usize (max 8 atm) with max 3 slots.
-    // The empty cell are max 9 (board spots) of usize (8 bytes atm).
-    var buffer: [@max(9 * 8, 3 * 8)]u8 = undefined;
-    var fba = std.heap.FixedBufferAllocator.init(&buffer);
-    const fixed_allocator = fba.allocator();
-
-    const stdin = io.getStdIn();
-    var player = Player.X;
-
-    var ai_marker = Player.X;
-    var ai_strength = AIStrength.Easy;
-    const single_player = try getSinglePlayer(stdin);
-    if (single_player) {
-        ai_marker = try getAIStart(stdin);
-        ai_strength = try getAIStrength(stdin);
-    }
-
-    var board = GameBoard{
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-    };
-
-    while (true) {
-        if (single_player and player == ai_marker) {
-            try aiTurn(player, &board, ai_strength, fixed_allocator);
-        } else {
-            try playerTurn(stdin, player, &board);
-        }
-
-        if (try isGameOver(player, &board, fixed_allocator)) {
-            break;
-        }
-
-        player = player.swap();
-    }
-    try showBoard(&board);
 }
