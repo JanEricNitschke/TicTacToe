@@ -118,7 +118,7 @@ To run and test:
 
 ## TicTacToe-swift
 
-Simple tictactoe game with [Swift](https://www.swift.org/)
+Simple tictactoe game with [Swift](https://www.swift.org/).
 
 To build and test:
 ```bash
