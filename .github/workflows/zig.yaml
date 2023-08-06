@@ -1,0 +1,27 @@
+# This workflow will run the tests on the zig version of tictactoe
+
+name: zig
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_zig
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Setup zig
+      uses: goto-bus-stop/setup-zig@v2
+    - name: Build
+      run: zig build
+    - name: Test
+      run: zig test main.zig
+    - name: Check formatting
+      run: zig fmt --check src/*.zig
