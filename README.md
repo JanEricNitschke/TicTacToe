@@ -139,7 +139,7 @@ flutter test
 
 ## TicTacToe-zig
 
-Simple tictactoe game with [Zig]().
+Simple tictactoe game with [Zig](https://ziglang.org/).
 
 To build and test:
 ```bash
