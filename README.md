@@ -137,6 +137,16 @@ flutter build windows
 flutter test
 ```
 
+## TicTacToe-zig
+
+Simple tictactoe game with [Zig]().
+
+To build and test:
+```bash
+zig build install
+zig build test
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch
 
