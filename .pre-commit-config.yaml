@@ -91,3 +91,16 @@ repos:
     language: system
     types: [rust]
     pass_filenames: false
+- repo: https://github.com/cpplint/cpplint
+  rev: 1.6.1  # Use the ref you want to point at
+  hooks:
+    - id: cpplint
+      files: ^tictactoe_cpp/
+      types: [c++]
+# - repo: https://github.com/cpp-linter/cpp-linter-hooks
+#   rev: v0.2.4  # Use the ref you want to point at
+#   hooks:
+#     - id: clang-format
+#       args: [--style=Google]
+#     - id: clang-tidy
+#       args: [--checks='boost-*,bugprone-*,performance-*,readability-*,portability-*,modernize-*,clang-analyzer-*,cppcoreguidelines-*']
