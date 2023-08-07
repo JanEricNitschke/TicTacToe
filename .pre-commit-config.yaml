@@ -149,3 +149,15 @@ repos:
     rev: v1.0.5
     hooks:
       - id: csslint
+
+  # lua specific lints
+  # NONE
+
+  # ruby specific
+  - repo: https://github.com/rubocop/rubocop
+    rev: v1.55.1
+    hooks:
+      - id: rubocop
+
+  # swift specific
+  # NONE

@@ -158,19 +158,19 @@ function TicTacToe.minmax(current_player)
         return TicTacToe.random_move()
     end
     -- Recursive cases
-    local best_move = {spot = -1, end_state = -1}
+    local best_move = { spot = -1, end_state = -1 }
     for _, current_spot in ipairs(empty_cells) do
         TicTacToe.board[current_spot] = current_player
         local current_move = TicTacToe.minmax(TicTacToe.swap_player(current_player))
         if -current_move.end_state >= best_move.end_state then
-            best_move = {spot = current_spot, end_state = - current_move.end_state}
+            best_move = { spot = current_spot, end_state = -current_move.end_state }
         end
         TicTacToe.board[current_spot] = tostring(current_spot)
     end
     return best_move
 end
 
-function Sleep (a)
+function Sleep(a)
     local sec = tonumber(os.clock() + a);
     while (os.clock() < sec) do
     end

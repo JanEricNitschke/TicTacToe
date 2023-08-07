@@ -126,6 +126,16 @@ swift build
 swift test
 ```
 
+## TicTacToe-lua
+
+Simple tictactoe game with [Lua](https://www.lua.org/).
+
+To test and run:
+```
+lua54 tests/test_tictactoe.lua
+lua54 tictactoe_lua.lua
+```
+
 ## TicTacToe-dart
 
 Simple tictactoe app with [Dart](https://dart.dev/) using [Flutter](https://flutter.dev/).
