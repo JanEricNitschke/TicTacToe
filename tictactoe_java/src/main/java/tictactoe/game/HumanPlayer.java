@@ -1,4 +1,4 @@
-package tictactoe_java.game;
+package tictactoe.game;
 
 import java.util.Scanner;
 import java.util.InputMismatchException;
@@ -7,14 +7,17 @@ import java.util.InputMismatchException;
  * Class representing a human player.
  */
 public class HumanPlayer implements Player {
-    Scanner moveScanner;
+    /**
+     * Scanner to use to read in values from the user.
+     */
+    private final Scanner moveScanner;
 
     /**
      * Constructor. Set the scanner for taking user input.
      *
      * @param scanner Scanner for getting user input.
      */
-    public HumanPlayer(Scanner scanner) {
+    public HumanPlayer(final Scanner scanner) {
         this.moveScanner = scanner;
     }
 
@@ -26,8 +29,8 @@ public class HumanPlayer implements Player {
      * @param marker Marker that the player makes a move as.
      * @param board  Game board currently being played on.
      */
-    public void makeMove(Board board, Marker marker) {
-        System.out.println("Player " + marker.marker + " turn.");
+    public void makeMove(final Board board, final Marker marker) {
+        System.out.println("Player " + marker.getMarker() + " turn.");
         board.showBoard();
         int spot;
         boolean validInput = false;

@@ -1,4 +1,4 @@
-package tictactoe_java;
+package tictactoe;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,13 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 
 import java.util.Scanner;
 
-public class TicTacToeJavaTest {
+public class TicTacToeTest {
 
-    TicTacToeJava tictactoe;
+    TicTacToe tictactoe;
 
     @BeforeEach
     void setup() {
-        tictactoe = new TicTacToeJava();
+        tictactoe = new TicTacToe();
     }
 
     @Test

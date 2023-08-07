@@ -1,4 +1,4 @@
-package tictactoe_java;
+package tictactoe;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Scanner;
 
-import tictactoe_java.game.HumanPlayer;
-import tictactoe_java.game.Marker;
-import tictactoe_java.game.Board;
+import tictactoe.game.HumanPlayer;
+import tictactoe.game.Marker;
+import tictactoe.game.Board;
 
 public class HumanPlayerTest {
 

@@ -1,4 +1,4 @@
-package tictactoe_java.game;
+package tictactoe.game;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -7,19 +7,56 @@ import java.util.Random;
  * Class representing an AI player.
  */
 public class AIPlayer implements Player {
-    public char aiMarker;
-    int aiDifficulty;
+    /**
+     * Marker that the AI plays as.
+     */
+    private final char aiMarker;
+
+    /**
+     * @return the aiMarker
+     */
+    public char getAiMarker() {
+        return aiMarker;
+    }
+
+    /**
+     * Enum for storing AIDifficulty.
+     */
+    enum AIDiffulty {
+        /**
+         * Makes random move.
+         */
+        EASY,
+        /**
+         * Takes a win if there is one.
+         */
+        MEDIUM,
+        /**
+         * Wins and blocks.
+         */
+        HARD,
+        /**
+         * Plays perfectly.
+         */
+        IMPOSSIBLE
+    }
+
+    /**
+     * Keeps track of the strength of the AI.
+     */
+    private final AIDiffulty aiDifficulty;
 
     /**
      * Constructor. Set the marker and the difficulty of the AI opponent.
      *
-     * @param marker     The marker that the AI plays as. Used to check if it is its
-     *                   turn.
-     * @param difficulty The strength of the AI. From 1 (weak) to 4 (impossible)
+     * @param marker     The marker that the AI plays as.
+     *                   Used to check if it is its turn.
+     * @param difficulty The strength of the AI.
+     *                   From 1 (weak) to 4 (impossible)
      */
-    public AIPlayer(char aiMarker, int aiDifficulty) {
-        this.aiMarker = aiMarker;
-        this.aiDifficulty = aiDifficulty;
+    public AIPlayer(final char marker, final int difficulty) {
+        this.aiMarker = marker;
+        this.aiDifficulty = AIDiffulty.values()[difficulty - 1];
     }
 
     /**
@@ -28,9 +65,12 @@ public class AIPlayer implements Player {
      * @param board Board to make a move on
      * @return A random valid (in bounds and unoccupied) move on the board.
      */
-    Move randomMove(Board board) {
+    Move randomMove(final Board board) {
         ArrayList<Integer> openSpots = board.getOpenSpots();
-        return new Move(openSpots.get(new Random().nextInt(openSpots.size())), 0);
+        return new Move(
+                openSpots.get(
+                        new Random().nextInt(openSpots.size())),
+                0);
     }
 
     /**
@@ -41,11 +81,14 @@ public class AIPlayer implements Player {
      * @param marker Marker to make the move as.
      * @return A winning move on the board or null if there is none.
      */
-    Move getWinningMove(Board board, Marker marker) {
-        for (int[] condition : board.winConditions) {
-            ConditionResult conditionResult = board.checkCondition(condition, marker);
-            if (conditionResult.spotsDone == 2 && conditionResult.spotsOpen.size() == 1) {
-                return new Move(conditionResult.spotsOpen.getFirst(), 0);
+    Move getWinningMove(final Board board, final Marker marker) {
+        for (int[] condition : board.getWinConditions()) {
+            ConditionResult conditionResult = board.checkCondition(
+                    condition, marker);
+            if (conditionResult.getSpotsDone() == 2
+                    && conditionResult.getSpotsOpen().size() == 1) {
+                return new Move(
+                        conditionResult.getSpotsOpen().getFirst(), 0);
             }
         }
         return null;
@@ -58,7 +101,7 @@ public class AIPlayer implements Player {
      * @param marker Marker to make the move as.
      * @return A winning or random move.
      */
-    Move winMove(Board board, Marker marker) {
+    Move winMove(final Board board, final Marker marker) {
         Move winningMove = getWinningMove(board, marker);
         if (winningMove == null) {
             return randomMove(board);
@@ -76,7 +119,7 @@ public class AIPlayer implements Player {
      * @param marker Marker to mave the move as.
      * @return A winning, blocking or random move.
      */
-    Move blockWinMove(Board board, Marker marker) {
+    Move blockWinMove(final Board board, final Marker marker) {
         Move winningMove = getWinningMove(board, marker);
         if (winningMove != null) {
             return winningMove;
@@ -88,7 +131,15 @@ public class AIPlayer implements Player {
         return randomMove(board);
     }
 
-    Move minmax(Board board, Marker marker) {
+    /**
+     * Get the optimal move for the player on the board via the
+     * minmax algorithm.
+     *
+     * @param board  Board to make the move on.
+     * @param marker Marker to mave the move as.
+     * @return Optimal move.
+     */
+    Move minmax(final Board board, final Marker marker) {
         // Base cases if win, loss, tie
         if (board.playerWin(marker)) {
             return new Move(-1, 1);
@@ -97,11 +148,11 @@ public class AIPlayer implements Player {
             return new Move(-1, -1);
         }
         ArrayList<Integer> openSpots = board.getOpenSpots();
-        if (openSpots.size() == 0) {
+        if (openSpots.isEmpty()) {
             return new Move(-1, 0);
         }
         // Skip full algorithm on empty board
-        if (openSpots.size() == 9) {
+        if (openSpots.size() == board.getGameBoardSize()) {
             return randomMove(board);
         }
         // Actual minmaxalgorithm
@@ -109,24 +160,32 @@ public class AIPlayer implements Player {
         for (int openSpot : openSpots) {
             board.fixSpot(openSpot, marker);
             Move currentMove = minmax(board, marker.swapMarker());
-            if (-currentMove.endState >= bestMove.endState) {
-                bestMove = new Move(openSpot, -currentMove.endState);
+            if (-currentMove.getEndState() >= bestMove.getEndState()) {
+                bestMove = new Move(openSpot, -currentMove.getEndState());
             }
             board.clearSpot(openSpot);
         }
         return bestMove;
     }
 
-    public Move getMove(Board board, Marker marker) {
+    /**
+     * Get a move from the AI. Algorithm is determined
+     * by aiDifficulty.
+     *
+     * @param board  Board to make the move on.
+     * @param marker Marker to mave the move as.
+     * @return AI move.
+     */
+    public Move getMove(final Board board, final Marker marker) {
         Move bestMove;
         switch (aiDifficulty) {
-            case 1:
+            case EASY:
                 bestMove = randomMove(board);
                 break;
-            case 2:
+            case MEDIUM:
                 bestMove = winMove(board, marker);
                 break;
-            case 3:
+            case HARD:
                 bestMove = blockWinMove(board, marker);
                 break;
             default:
@@ -141,13 +200,14 @@ public class AIPlayer implements Player {
      * @param marker Marker that the AI makes a move as.
      * @param board  Game board currently being played on.
      */
-    public void makeMove(Board board, Marker marker) {
-        System.out.println("AI turn as " + marker.marker);
+    public void makeMove(final Board board, final Marker marker) {
+        System.out.println("AI turn as " + marker.getMarker());
         board.showBoard();
         Move bestMove = getMove(board, marker);
-        board.fixSpot(bestMove.spot, marker);
+        board.fixSpot(bestMove.getSpot(), marker);
         try {
-            Thread.sleep(1000);
+            final int millisPerSecond = 1000;
+            Thread.sleep(millisPerSecond);
         } catch (InterruptedException exception) {
             System.out.println("got interrupted!");
         }

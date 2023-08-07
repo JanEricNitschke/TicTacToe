@@ -1,4 +1,4 @@
-package tictactoe_java;
+package tictactoe;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 
-import tictactoe_java.game.ConditionResult;
+import tictactoe.game.ConditionResult;
 
 public class ConditionResultTest {
 
@@ -15,7 +15,7 @@ public class ConditionResultTest {
     @DisplayName("Constructor for ConditionResult should work.")
     public void testConditionResult() {
         ConditionResult conditionResult = new ConditionResult();
-        assertEquals(0, conditionResult.spotsDone);
-        assertEquals(new LinkedList<Integer>(), conditionResult.spotsOpen);
+        assertEquals(0, conditionResult.getSpotsDone());
+        assertEquals(new LinkedList<Integer>(), conditionResult.getSpotsOpen());
     }
 }

@@ -1,4 +1,4 @@
-package tictactoe_java;
+package tictactoe;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import tictactoe_java.game.Board;
-import tictactoe_java.game.ConditionResult;
-import tictactoe_java.game.Marker;
+import tictactoe.game.Board;
+import tictactoe.game.ConditionResult;
+import tictactoe.game.Marker;
 
 public class BoardTest {
 
@@ -112,15 +112,15 @@ public class BoardTest {
         int expectedSpotsDone = 0;
         LinkedList<Integer> expectedSpotsOpen = new LinkedList<Integer>(Arrays.asList(0, 1, 2));
         ConditionResult conditionResult = board.checkCondition(new int[] { 0, 1, 2 }, marker);
-        assertEquals(expectedSpotsDone, conditionResult.spotsDone);
-        assertEquals(expectedSpotsOpen, conditionResult.spotsOpen);
+        assertEquals(expectedSpotsDone, conditionResult.getSpotsDone());
+        assertEquals(expectedSpotsOpen, conditionResult.getSpotsOpen());
 
         board = new Board(new char[] { '0', 'O', '2', '3', '4', '5', '6', 'O', '8' });
         conditionResult = board.checkCondition(new int[] { 1, 7, 8 }, marker.swapMarker());
         expectedSpotsDone = 2;
         expectedSpotsOpen = new LinkedList<Integer>(Arrays.asList(8));
-        assertEquals(expectedSpotsDone, conditionResult.spotsDone);
-        assertEquals(expectedSpotsOpen, conditionResult.spotsOpen);
+        assertEquals(expectedSpotsDone, conditionResult.getSpotsDone());
+        assertEquals(expectedSpotsOpen, conditionResult.getSpotsOpen());
     }
 
     @Test

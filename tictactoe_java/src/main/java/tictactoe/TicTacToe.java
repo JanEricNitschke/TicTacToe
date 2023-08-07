@@ -1,28 +1,31 @@
-package tictactoe_java;
+package tictactoe;
 
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
-import tictactoe_java.game.Board;
-import tictactoe_java.game.HumanPlayer;
-import tictactoe_java.game.AIPlayer;
-import tictactoe_java.game.Marker;
+import tictactoe.game.Board;
+import tictactoe.game.HumanPlayer;
+import tictactoe.game.AIPlayer;
+import tictactoe.game.Marker;
 
 /**
  * Class for playing TicTacToe.
  */
-public class TicTacToeJava {
+public class TicTacToe {
 
   /**
    * Game loop of tictactoe.
    * Initializes the board, marker and players.
    * And then lets players make their moves.y
+   *
+   * @param humanPlayer Human player playing the game.s
+   * @param aiPlayer    Optional AI player as an opponent.
    */
-  void playGame(HumanPlayer humanPlayer, AIPlayer aiPlayer) {
+  void playGame(final HumanPlayer humanPlayer, final AIPlayer aiPlayer) {
     Board board = new Board();
     Marker marker = new Marker();
     while (true) {
-      if (aiPlayer != null && aiPlayer.aiMarker == marker.marker) {
+      if (aiPlayer != null && aiPlayer.getAiMarker() == marker.getMarker()) {
         aiPlayer.makeMove(board, marker);
       } else {
         humanPlayer.makeMove(board, marker);
@@ -42,7 +45,7 @@ public class TicTacToeJava {
    * @param scanner  Scanner to read the user input.
    * @return Whether the user anwered in the affirmative.
    */
-  public boolean getUserYesNo(String question, Scanner scanner) {
+  public boolean getUserYesNo(final String question, final Scanner scanner) {
     char answer;
     while (true) {
       System.out.println(question);
@@ -62,7 +65,7 @@ public class TicTacToeJava {
    * @param scanner Scanner to read the user input.
    * @return Whether the user will play vs an AI.
    */
-  boolean getAIOpponentExists(Scanner scanner) {
+  boolean getAIOpponentExists(final Scanner scanner) {
     return getUserYesNo("Play alone vs AI?[y/n]", scanner);
   }
 
@@ -72,16 +75,23 @@ public class TicTacToeJava {
    * @param scanner Scanner to read the user input.
    * @return Character that the AI will play as.
    */
-  char getAIOpponentStart(Scanner scanner) {
+  char getAIOpponentStart(final Scanner scanner) {
     if (getUserYesNo("Should the AI make the first move?[y/n]", scanner)) {
       return 'X';
     }
     return 'O';
   }
 
-  int getAIOpponentDifficulty(Scanner scanner) {
+  /**
+   * Get the strength of the ai from the player.
+   *
+   * @param scanner Scanner to use to get input from player.
+   * @return Chosen strength of the AI.
+   */
+  int getAIOpponentDifficulty(final Scanner scanner) {
     int difficulty;
-    String failureString = "ERROR: Input must be a valid integer in range [1-4]!";
+    String failureString = "ERROR: Input must be a"
+        + " valid integer in range [1-4]!";
     System.out.println("AI strength settings:");
     System.out.println("1: Easy");
     System.out.println("2: Medium");
@@ -112,9 +122,9 @@ public class TicTacToeJava {
    * @param board  Game board currently being played on.
    * @return Whether the game is over or not.
    */
-  boolean gameOver(Marker marker, Board board) {
+  boolean gameOver(final Marker marker, final Board board) {
     if (board.playerWin(marker)) {
-      System.out.println("Player " + marker.marker + " wins the game!");
+      System.out.println("Player " + marker.getMarker() + " wins the game!");
       return true;
     }
     if (board.boardFull()) {
@@ -129,8 +139,8 @@ public class TicTacToeJava {
    *
    * @param args CL arguments. Not used.
    */
-  public static void main(String[] args) {
-    TicTacToeJava tictactoe = new TicTacToeJava();
+  public static void main(final String[] args) {
+    TicTacToe tictactoe = new TicTacToe();
     Scanner inputScanner = new Scanner(System.in);
     HumanPlayer humanPlayer = new HumanPlayer(inputScanner);
     AIPlayer aiPlayer = null;

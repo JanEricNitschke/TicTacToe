@@ -1,11 +1,11 @@
-package tictactoe_java;
+package tictactoe;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import tictactoe_java.game.Move;
+import tictactoe.game.Move;
 
 public class MoveTest {
 
@@ -15,7 +15,7 @@ public class MoveTest {
         int moveSpot = 2;
         int moveEndstate = 3;
         Move move = new Move(moveSpot, moveEndstate);
-        assertEquals(moveSpot, move.spot);
-        assertEquals(moveEndstate, move.endState);
+        assertEquals(moveSpot, move.getSpot());
+        assertEquals(moveEndstate, move.getEndState());
     }
 }

@@ -71,7 +71,7 @@ To install, test and run:
 ```bash
 mvn package
 mvn test
-java -jar target/tictactoe_java-0.1.0.jar
+java -jar target/tictactoe-0.1.0.jar
 ```
 
 ## TicTacToe-ruby
