@@ -5,19 +5,19 @@
 #include <tictactoe.h>
 
 // Demonstrate some basic assertions.
-TEST(createBoardTest, createBoard) {
+TEST(createBoardTest /*unused*/, createBoard /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   GameBoard producedBoard = createBoard();
   EXPECT_EQ(refBoard, producedBoard);
 }
 
-TEST(isPlayerWin, emptyBoard) {
+TEST(isPlayerWin /*unused*/, emptyBoard /*unused*/) {
   // empty board
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   EXPECT_FALSE(isPlayerWin("X", refBoard));
 }
 
-TEST(isPlayerWin, rows) {
+TEST(isPlayerWin /*unused*/, rows /*unused*/) {
   // check rows
   GameBoard refBoard = {{{"X", "X", "X"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   EXPECT_TRUE(isPlayerWin("X", refBoard));
@@ -26,7 +26,7 @@ TEST(isPlayerWin, rows) {
   EXPECT_FALSE(isPlayerWin("X", refBoard));
 }
 
-TEST(isPlayerWin, cols) {
+TEST(isPlayerWin /*unused*/, cols /*unused*/) {
   // check cols
   GameBoard refBoard = {{{"X", "O", "X"}, {"X", "-", "-"}, {"X", "-", "-"}}};
   EXPECT_TRUE(isPlayerWin("X", refBoard));
@@ -35,7 +35,7 @@ TEST(isPlayerWin, cols) {
   EXPECT_FALSE(isPlayerWin("X", refBoard));
 }
 
-TEST(isPlayerWin, diagonals) {
+TEST(isPlayerWin /*unused*/, diagonals /*unused*/) {
   // check diagonal
   GameBoard refBoard = {{{"O", "O", "X"}, {"X", "O", "-"}, {"X", "-", "O"}}};
   EXPECT_TRUE(isPlayerWin("O", refBoard));
@@ -51,13 +51,13 @@ TEST(isPlayerWin, diagonals) {
   EXPECT_FALSE(isPlayerWin("O", refBoard));
 }
 
-TEST(isBoardFilled, emptyBoard) {
+TEST(isBoardFilled /*unused*/, emptyBoard /*unused*/) {
   // empty board
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   EXPECT_FALSE(isBoardFilled(refBoard));
 }
 
-TEST(isBoardFilled, filledBoards) {
+TEST(isBoardFilled /*unused*/, filledBoards /*unused*/) {
   // empty board
   GameBoard refBoard = {{{"X", "X", "X"}, {"X", "X", "X"}, {"X", "X", "X"}}};
   EXPECT_TRUE(isBoardFilled(refBoard));
@@ -69,7 +69,7 @@ TEST(isBoardFilled, filledBoards) {
   EXPECT_TRUE(isBoardFilled(refBoard));
 }
 
-TEST(isBoardFilled, nonFilledBoards) {
+TEST(isBoardFilled /*unused*/, nonFilledBoards /*unused*/) {
   // empty board
   GameBoard refBoard = {{{"-", "X", "X"}, {"X", "X", "X"}, {"X", "X", "X"}}};
   EXPECT_FALSE(isBoardFilled(refBoard));
@@ -81,12 +81,12 @@ TEST(isBoardFilled, nonFilledBoards) {
   EXPECT_FALSE(isBoardFilled(refBoard));
 }
 
-TEST(swapPlayer, swappingPlayers) {
+TEST(swapPlayer /*unused*/, swappingPlayers /*unused*/) {
   EXPECT_EQ("X", swapPlayer("O"));
   EXPECT_EQ("O", swapPlayer("X"));
 }
 
-TEST(getEmptyCells, emptyBoard) {
+TEST(getEmptyCells /*unused*/, emptyBoard /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   std::vector<std::array<int, 2>> expectedCells = {
       {0, 0}, {0, 1}, {0, 2}, {2, 0}, {2, 1}, {2, 2}, {1, 0}, {1, 1}, {1, 2}};
@@ -94,7 +94,7 @@ TEST(getEmptyCells, emptyBoard) {
               ::testing::UnorderedElementsAreArray(expectedCells));
 }
 
-TEST(getEmptyCells, someEmptyCells) {
+TEST(getEmptyCells /*unused*/, someEmptyCells /*unused*/) {
   GameBoard refBoard = {{{"X", "-", "X"}, {"O", "O", "O"}, {"-", "O", "-"}}};
   std::vector<std::array<int, 2>> expectedCells = {{0, 1}, {2, 0}, {2, 2}};
   EXPECT_THAT(getEmptyCells(refBoard),
@@ -105,14 +105,14 @@ TEST(getEmptyCells, someEmptyCells) {
               ::testing::UnorderedElementsAreArray(expectedCells));
 }
 
-TEST(getEmptyCells, fullBoard) {
+TEST(getEmptyCells /*unused*/, fullBoard /*unused*/) {
   GameBoard refBoard = {{{"X", "O", "X"}, {"O", "X", "O"}, {"X", "O", "X"}}};
   std::vector<std::array<int, 2>> expectedCells = {};
   EXPECT_THAT(getEmptyCells(refBoard),
               ::testing::UnorderedElementsAreArray(expectedCells));
 }
 
-TEST(minmax, emptyBoard) {
+TEST(minmax /*unused*/, emptyBoard /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   std::vector<std::array<int, 3>> possibleResults = {{
       {0, 0, 0},
@@ -128,7 +128,7 @@ TEST(minmax, emptyBoard) {
   EXPECT_THAT(possibleResults, ::testing::Contains(minmax("X", &refBoard)));
 }
 
-TEST(minmax, fullBoard) {
+TEST(minmax /*unused*/, fullBoard /*unused*/) {
   GameBoard refBoard = {{{"X", "X", "X"}, {"X", "X", "X"}, {"X", "X", "X"}}};
   std::array<int, 3> expectedResult = {
       {-1, -1, 1},
@@ -140,7 +140,7 @@ TEST(minmax, fullBoard) {
   EXPECT_THAT(expectedResult, minmax("O", &refBoard));
 }
 
-TEST(minmax, partialBoards) {
+TEST(minmax /*unused*/, partialBoards /*unused*/) {
   GameBoard refBoard = {{{"X", "X", "-"}, {"O", "X", "O"}, {"X", "O", "O"}}};
   std::array<int, 3> expectedResult = {
       {0, 2, 1},
@@ -164,67 +164,67 @@ TEST(minmax, partialBoards) {
   EXPECT_THAT(expectedResult, minmax("X", &refBoard));
 }
 
-TEST(getWinningMove, row) {
+TEST(getWinningMove /*unused*/, row /*unused*/) {
   GameBoard refBoard = {{{"O", "X", "O"}, {"X", "O", "-"}, {"X", "X", "-"}}};
   Move expectedResult = {{2, 2, 0}};
   EXPECT_THAT(expectedResult, getWinningMove("X", refBoard));
 }
 
-TEST(getWinningMove, col) {
+TEST(getWinningMove /*unused*/, col /*unused*/) {
   GameBoard refBoard = {{{"O", "-", "-"}, {"-", "-", "-"}, {"O", "X", "X"}}};
   Move expectedResult = {{1, 0, 0}};
   EXPECT_THAT(expectedResult, getWinningMove("O", refBoard));
 }
 
-TEST(getWinningMove, diagonal) {
+TEST(getWinningMove /*unused*/, diagonal /*unused*/) {
   GameBoard refBoard = {{{"O", "-", "-"}, {"-", "O", "-"}, {"-", "-", "-"}}};
   Move expectedResult = {{2, 2, 0}};
   EXPECT_THAT(expectedResult, getWinningMove("O", refBoard));
 }
 
-TEST(getWinningMove, antidiagonal) {
+TEST(getWinningMove /*unused*/, antidiagonal /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "X", "-"}, {"X", "-", "-"}}};
   Move expectedResult = {{0, 2, 0}};
   EXPECT_THAT(expectedResult, getWinningMove("X", refBoard));
 }
 
-TEST(getWinningMove, none) {
+TEST(getWinningMove /*unused*/, none /*unused*/) {
   GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
   Move expectedResult = {{-1, -1, -1}};
   EXPECT_THAT(expectedResult, getWinningMove("X", refBoard));
 }
 
-TEST(getBlockingMove, row) {
+TEST(getBlockingMove /*unused*/, row /*unused*/) {
   GameBoard refBoard = {{{"O", "X", "O"}, {"X", "O", "-"}, {"X", "X", "-"}}};
   Move expectedResult = {{2, 2, 0}};
   EXPECT_THAT(expectedResult, getBlockingMove("O", refBoard));
 }
 
-TEST(getBlockingMove, col) {
+TEST(getBlockingMove /*unused*/, col /*unused*/) {
   GameBoard refBoard = {{{"O", "-", "-"}, {"-", "-", "-"}, {"O", "X", "X"}}};
   Move expectedResult = {{1, 0, 0}};
   EXPECT_THAT(expectedResult, getBlockingMove("X", refBoard));
 }
 
-TEST(getBlockingMove, diagonal) {
+TEST(getBlockingMove /*unused*/, diagonal /*unused*/) {
   GameBoard refBoard = {{{"O", "-", "-"}, {"-", "O", "-"}, {"-", "-", "-"}}};
   Move expectedResult = {{2, 2, 0}};
   EXPECT_THAT(expectedResult, getBlockingMove("X", refBoard));
 }
 
-TEST(getBlockingMove, antidiagonal) {
+TEST(getBlockingMove /*unused*/, antidiagonal /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "X", "-"}, {"X", "-", "-"}}};
   Move expectedResult = {{0, 2, 0}};
   EXPECT_THAT(expectedResult, getBlockingMove("O", refBoard));
 }
 
-TEST(getBlockingMove, none) {
+TEST(getBlockingMove /*unused*/, none /*unused*/) {
   GameBoard refBoard = {{{"O", "X", "X"}, {"-", "O", "-"}, {"O", "X", "-"}}};
   Move expectedResult = {{-1, -1, -1}};
   EXPECT_THAT(expectedResult, getBlockingMove("O", refBoard));
 }
 
-TEST(randomMove, emptyBoard) {
+TEST(randomMove /*unused*/, emptyBoard /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   Move result = randomMove(refBoard);
   EXPECT_TRUE(result[0] >= 0 && result[0] < 3);
@@ -232,19 +232,19 @@ TEST(randomMove, emptyBoard) {
   EXPECT_EQ(result[2], 0);
 }
 
-TEST(randomMove, oneOption) {
+TEST(randomMove /*unused*/, oneOption /*unused*/) {
   GameBoard refBoard = {{{"X", "X", "-"}, {"O", "X", "O"}, {"X", "O", "O"}}};
   Move expectedResult = {{0, 2, 0}};
   EXPECT_THAT(expectedResult, randomMove(refBoard));
 }
 
-TEST(winMove, prioritizesWin) {
+TEST(winMove /*unused*/, prioritizesWin /*unused*/) {
   GameBoard refBoard = {{{"O", "-", "X"}, {"-", "-", "-"}, {"O", "X", "X"}}};
   Move expectedResult = {{1, 0, 0}};
   EXPECT_THAT(expectedResult, winMove("O", refBoard));
 }
 
-TEST(winMove, worksWithoutWin) {
+TEST(winMove /*unused*/, worksWithoutWin /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   Move result = winMove("X", refBoard);
   EXPECT_TRUE(result[0] >= 0 && result[0] < 3);
@@ -252,19 +252,19 @@ TEST(winMove, worksWithoutWin) {
   EXPECT_EQ(result[2], 0);
 }
 
-TEST(blockWinMove, prioritizesWin) {
+TEST(blockWinMove /*unused*/, prioritizesWin /*unused*/) {
   GameBoard refBoard = {{{"X", "-", "O"}, {"-", "-", "-"}, {"X", "-", "O"}}};
   Move expectedResult = {{1, 0, 0}};
   EXPECT_THAT(expectedResult, blockWinMove("X", refBoard));
 }
 
-TEST(blockWinMove, blocksIfNoWin) {
+TEST(blockWinMove /*unused*/, blocksIfNoWin /*unused*/) {
   GameBoard refBoard = {{{"X", "-", "O"}, {"-", "-", "-"}, {"-", "-", "O"}}};
   Move expectedResult = {{1, 2, 0}};
   EXPECT_THAT(expectedResult, blockWinMove("X", refBoard));
 }
 
-TEST(blockWinMove, worksWithoutBlockWin) {
+TEST(blockWinMove /*unused*/, worksWithoutBlockWin /*unused*/) {
   GameBoard refBoard = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   Move result = blockWinMove("X", refBoard);
   EXPECT_TRUE(result[0] >= 0 && result[0] < 3);

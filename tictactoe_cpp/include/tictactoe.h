@@ -5,7 +5,10 @@
 
 #include <array>
 #include <iostream>
+#include <set>
 #include <string>
+#include <tuple>
+#include <unordered_map>
 #include <vector>
 
 // // Define aliases for the data structures
@@ -56,6 +59,12 @@ std::vector<std::array<int, 2>> getEmptyCells(const GameBoard &board);
 // Performs any random valid move
 Move randomMove(const GameBoard &board);
 
+// Adjust wincondition requirements according to board state.
+void checkWinconditions(
+    const std::string &player, const GameBoard &board,
+    std::unordered_map<std::string, std::set<std::tuple<int, int>>>
+        *win_conditions);
+
 // Tries to find a move where the given player wins on the
 // given board. So any line that contains the player twice
 // and an empty cell as the last slot
@@ -80,7 +89,7 @@ Move minmax(const std::string &player, GameBoard *board);
 void showBoard(const GameBoard &board);
 
 // Perform AI move
-void aiTurn(const std::string &player, GameBoard *board, int AI_strength);
+void aiTurn(const std::string &player, GameBoard *board, int ai_strength);
 
 // Perform player turn
 void playerTurn(const std::string &player, GameBoard *board);

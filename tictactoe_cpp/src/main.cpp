@@ -2,7 +2,7 @@
 
 #include <tictactoe.h>
 
-int main() {
+auto main() -> int {
   srand(static_cast<unsigned int>(time(NULL)));
   GameBoard board = createBoard();
   std::string player = "X";
