@@ -9,15 +9,17 @@ import (
 )
 
 func TestGetEmptyCells(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	want := [][2]int{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}}
 	is := tictactoe.getEmptyCells()
 	less := func(i int, j int) bool {
-		if want[i][0] < want[j][0] {
+		switch {
+		case want[i][0] < want[j][0]:
 			return true
-		} else if want[i][0] == want[j][0] && want[i][1] < want[j][1] {
+		case want[i][0] == want[j][0] && want[i][1] < want[j][1]:
 			return true
-		} else {
+		default:
 			return false
 		}
 	}
@@ -48,7 +50,10 @@ func FuzzGetEmptyCells(f *testing.F) {
 	f.Add('O', 'O', 'X', 'X', '-', '-', '-', 'O', 'X', 'X')
 	f.Add('-', '-', '-', '-', '-', '-', '-', '-', '-', '-')
 	f.Add('O', 'O', 'X', 'X', 'X', 'X', 'O', 'O', 'X', 'O')
-	f.Fuzz(func(t *testing.T, aa int32, ab int32, ac int32, ba int32, bb int32, bc int32, ca int32, cb int32, cc int32, player rune) {
+	f.Fuzz(func(t *testing.T, aa int32, ab int32, ac int32,
+		ba int32, bb int32, bc int32,
+		ca int32, cb int32, cc int32,
+		player rune) {
 		tictactoe := TicTacToe{Board{{aa, ab, ac}, {ba, bb, bc}, {ca, cb, cc}}, false, player, 4}
 		emptyCells := tictactoe.getEmptyCells()
 		if len(emptyCells) > 9 {
@@ -58,6 +63,7 @@ func FuzzGetEmptyCells(f *testing.F) {
 }
 
 func TestGetWinningMoveFindsWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'O', 'X', 'O'}, {'X', 'O', '-'}, {'X', 'X', '-'}}
 	want := Move{0, 2, 2}
@@ -86,6 +92,7 @@ func TestGetWinningMoveFindsWin(t *testing.T) {
 }
 
 func TestGetWinningMoveNoWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'O', 'X', 'X'}, {'-', 'O', '-'}, {'O', 'X', '-'}}
 	want := Move{-99, -99, -99}
@@ -96,6 +103,7 @@ func TestGetWinningMoveNoWin(t *testing.T) {
 }
 
 func TestWinMovePrioritizesWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'O', '-', '-'}, {'-', '-', '-'}, {'O', 'X', 'X'}}
 	want := Move{0, 1, 0}
@@ -106,6 +114,7 @@ func TestWinMovePrioritizesWin(t *testing.T) {
 }
 
 func TestWinMoveWorksWithoutWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', '-', '-'}, {'-', 'O', '-'}, {'-', '-', 'X'}}
 	resultingMove := tictactoe.winMove('X')
@@ -119,11 +128,13 @@ func TestWinMoveWorksWithoutWin(t *testing.T) {
 		t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
 	}
 	if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
-		t.Errorf("RandomMove should always be made on an empty cell containing '-' but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
+		t.Errorf("RandomMove should always be made on an empty cell containing '-'"+
+			" but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
 	}
 }
 
 func TestGetBlockingMoveFindsWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'O', 'X', 'O'}, {'X', 'O', '-'}, {'X', 'X', '-'}}
 	want := Move{0, 2, 2}
@@ -152,6 +163,7 @@ func TestGetBlockingMoveFindsWin(t *testing.T) {
 }
 
 func TestGetBlockingMoveNoBlock(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'O', 'X', 'X'}, {'-', 'O', '-'}, {'O', 'X', '-'}}
 	want := Move{-99, -99, -99}
@@ -162,6 +174,7 @@ func TestGetBlockingMoveNoBlock(t *testing.T) {
 }
 
 func TestBlockWinMovePrioritizesWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', '-', 'O'}, {'-', '-', '-'}, {'X', '-', 'O'}}
 	want := Move{0, 1, 0}
@@ -172,6 +185,7 @@ func TestBlockWinMovePrioritizesWin(t *testing.T) {
 }
 
 func TestBlockWinMoveBlocksIfNoWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'-', '-', 'O'}, {'-', '-', '-'}, {'X', '-', 'O'}}
 	want := Move{0, 1, 2}
@@ -182,6 +196,7 @@ func TestBlockWinMoveBlocksIfNoWin(t *testing.T) {
 }
 
 func TestBlockWinMoveWorksWithoutWin(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', '-', '-'}, {'-', 'O', '-'}, {'-', '-', 'X'}}
 	resultingMove := tictactoe.blockWinMove('X')
@@ -195,11 +210,13 @@ func TestBlockWinMoveWorksWithoutWin(t *testing.T) {
 		t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
 	}
 	if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
-		t.Errorf("RandomMove should always be made on an empty cell containing '-' but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
+		t.Errorf("RandomMove should always be made on an empty cell containing '-'"+
+			" but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
 	}
 }
 
 func TestRandomMove(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', 'X', '-'}, {'O', 'X', 'O'}, {'X', 'O', 'O'}}
 	want := Move{0, 0, 2}
@@ -228,13 +245,15 @@ func FuzzRandomMove(f *testing.F) {
 				t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
 			}
 			if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
-				t.Errorf("RandomMove should always be made on an empty cell containing '-' but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
+				t.Errorf("RandomMove should always be made on an empty cell containing '-'"+
+					" but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
 			}
 		}
 	})
 }
 
 func TestMinmaxEmptyDraws(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	want := 0
 	is := tictactoe.minmax('X').endState
@@ -244,6 +263,7 @@ func TestMinmaxEmptyDraws(t *testing.T) {
 }
 
 func TestMinmaxCorrectBaseCase(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', 'O', 'X'}, {'O', 'X', 'O'}, {'O', 'X', 'O'}}
 	want := Move{0, -1, -1}
@@ -259,6 +279,7 @@ func TestMinmaxCorrectBaseCase(t *testing.T) {
 }
 
 func TestMinmaxBestMove(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', 'X', '-'}, {'O', 'X', 'O'}, {'X', 'O', 'O'}}
 	want := Move{1, 0, 2}
@@ -310,7 +331,10 @@ func FuzzMinMax(f *testing.F) {
 	f.Add('O', 'O', 'X', 'X', '-', '-', '-', 'O', 'X', 'X')
 	f.Add('-', '-', '-', '-', '-', '-', '-', '-', '-', '-')
 	f.Add('O', 'O', 'X', 'X', 'X', 'X', 'O', 'O', 'X', 'O')
-	f.Fuzz(func(t *testing.T, aa int32, ab int32, ac int32, ba int32, bb int32, bc int32, ca int32, cb int32, cc int32, player rune) {
+	f.Fuzz(func(t *testing.T, aa int32, ab int32, ac int32,
+		ba int32, bb int32, bc int32,
+		ca int32, cb int32, cc int32,
+		player rune) {
 		tictactoe := TicTacToe{Board{{aa, ab, ac}, {ba, bb, bc}, {ca, cb, cc}}, false, player, 4}
 		bestMove := tictactoe.minmax(player)
 		if !slices.Contains([]int{-1, 0, 1}, bestMove.endState) {
@@ -326,6 +350,7 @@ func FuzzMinMax(f *testing.F) {
 }
 
 func TestFixSpotFixesOnce(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	if !tictactoe.fixSpot('X', 0, 0) {
 		t.Errorf("Fix spot should work first time")
@@ -339,6 +364,7 @@ func TestFixSpotFixesOnce(t *testing.T) {
 }
 
 func TestFixSpotRejectsInvalid(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	if tictactoe.fixSpot('X', 7, 1) {
 		t.Errorf("Fix spot should reject out of bounds: Row: %v, Col: %v", 7, 1)
@@ -349,6 +375,7 @@ func TestFixSpotRejectsInvalid(t *testing.T) {
 }
 
 func TestIsPlayerWinRecognizesNoWinner(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	if tictactoe.isPlayerWin('X') {
 		t.Errorf("Empty board should have no winner 'X'!")
@@ -359,6 +386,7 @@ func TestIsPlayerWinRecognizesNoWinner(t *testing.T) {
 }
 
 func TestIsPlayerWinAcceptsRow(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', 'X', 'X'}, {'-', '-', '-'}, {'-', '-', '-'}}
 	if !tictactoe.isPlayerWin('X') {
@@ -370,6 +398,7 @@ func TestIsPlayerWinAcceptsRow(t *testing.T) {
 }
 
 func TestIsPlayerWinAcceptsColumn(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'O', '-', '-'}, {'O', '-', '-'}, {'O', '-', '-'}}
 	if !tictactoe.isPlayerWin('O') {
@@ -381,6 +410,7 @@ func TestIsPlayerWinAcceptsColumn(t *testing.T) {
 }
 
 func TestIsPlayerWinAcceptsDiagonals(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', '-', '-'}, {'-', 'X', '-'}, {'O', '-', 'X'}}
 	if !tictactoe.isPlayerWin('X') {
@@ -406,6 +436,7 @@ func TestIsPlayerWinAcceptsDiagonals(t *testing.T) {
 }
 
 func TestIsBoardFilledRecognizesEmptyBoard(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	if tictactoe.isBoardFilled() {
 		t.Errorf("Empty board is not full!")
@@ -413,6 +444,7 @@ func TestIsBoardFilledRecognizesEmptyBoard(t *testing.T) {
 }
 
 func TestIsBoardFilledRecognizesPartialBoard(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', '-', '-'}, {'-', 'X', '-'}, {'O', '-', 'X'}}
 	if tictactoe.isBoardFilled() {
@@ -425,6 +457,7 @@ func TestIsBoardFilledRecognizesPartialBoard(t *testing.T) {
 }
 
 func TestIsBoardFilledRecognizesFullBoard(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	tictactoe.board = Board{{'X', 'X', 'X'}, {'X', 'X', 'X'}, {'O', 'X', 'X'}}
 	if !tictactoe.isBoardFilled() {
@@ -437,6 +470,7 @@ func TestIsBoardFilledRecognizesFullBoard(t *testing.T) {
 }
 
 func TestSwapPlayer(t *testing.T) {
+	t.Parallel()
 	tictactoe := NewTicTacToe()
 	want := 'X'
 	is := tictactoe.swapPlayer('O')

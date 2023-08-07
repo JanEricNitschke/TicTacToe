@@ -27,7 +27,21 @@ func main() {
 }
 
 // Board is as an alias for the 3x3 array of runes used to represent game board.
-type Board = [3][3]rune
+const boardDimension = 3
+
+type Board = [boardDimension][boardDimension]rune
+
+const unexpectedNewLine = "unexpected newline"
+
+var errNoBlockingMove = errors.New("no blocking move found")
+var errNoWinningMove = errors.New("no winning move found")
+
+const (
+	Easy       = 1
+	Medium     = 2
+	Hard       = 3
+	Impossible = 4
+)
 
 // A TicTacToe represents a game of tictactoe
 // with a board as well as settings regarding an
@@ -61,8 +75,9 @@ func (tictactoe *TicTacToe) showBoard() {
 	var strLine = "---------------"
 
 	fmt.Println(strLine)
-	for row := 0; row < int(len(tictactoe.board)); row++ {
-		for col := 0; col < int(len(tictactoe.board[0])); col++ {
+
+	for row := 0; row < len(tictactoe.board); row++ {
+		for col := 0; col < len(tictactoe.board[0]); col++ {
 			fmt.Printf("| %c |", tictactoe.board[row][col])
 		}
 		fmt.Printf("\n%s\n", strLine)
@@ -70,9 +85,10 @@ func (tictactoe *TicTacToe) showBoard() {
 }
 
 // GetSettings acquires settings related to the AI
-// opponent from the user via stdin
+// opponent from the user via stdin.
 func (tictactoe *TicTacToe) GetSettings() {
 	tictactoe.getAiOpponentExists()
+
 	if tictactoe.aiOpponent {
 		tictactoe.getAiOpponentStart()
 		tictactoe.getAiDifficulty()
@@ -101,26 +117,31 @@ func (tictactoe *TicTacToe) getAiDifficulty() {
 	fmt.Println("2: Medium")
 	fmt.Println("3: Hard")
 	fmt.Println("4: Impossible")
+
 	var strength int
+
 	for {
 		fmt.Print("How strong should the AI be?[1-4]: ")
 		// Get user input
 		_, err := fmt.Scanln(&strength)
 		if err != nil {
-			if err.Error() != "unexpected newline" {
-				bufio.NewReader(os.Stdin).ReadString('\n')
+			if err.Error() != unexpectedNewLine {
+				_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 			}
+
 			continue
 		}
+
 		if strength > 0 && strength < 5 {
 			tictactoe.aiDifficulty = strength
+
 			break
 		}
 	}
 }
 
 // getPlayerYesNo queries the user for a y/n
-// response to a given question
+// response to a given question.
 func (tictactoe *TicTacToe) getPlayerYesNo(question string) bool {
 	for {
 		// Will hold the user input
@@ -128,8 +149,8 @@ func (tictactoe *TicTacToe) getPlayerYesNo(question string) bool {
 		fmt.Print(question)
 		_, err := fmt.Scanln(&opponent)
 		if err != nil {
-			if err.Error() != "unexpected newline" {
-				bufio.NewReader(os.Stdin).ReadString('\n')
+			if err.Error() != unexpectedNewLine {
+				_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 			}
 			continue
 		}
@@ -168,17 +189,17 @@ func (tictactoe *TicTacToe) Play() {
 	tictactoe.showBoard()
 }
 
-// Functionality for performing an AI turn
+// Functionality for performing an AI turn.
 func (tictactoe *TicTacToe) aiTurn(player rune) {
 	fmt.Printf("AI turn as %c.\n", player)
 	tictactoe.showBoard()
 	var bestMove Move
 	switch tictactoe.aiDifficulty {
-	case 1:
+	case Easy:
 		bestMove = tictactoe.randomMove()
-	case 2:
+	case Medium:
 		bestMove = tictactoe.winMove(player)
-	case 3:
+	case Hard:
 		bestMove = tictactoe.blockWinMove(player)
 	default:
 		bestMove = tictactoe.minmax(player)
@@ -191,8 +212,8 @@ func (tictactoe *TicTacToe) aiTurn(player rune) {
 // and collects the indices of all empty cells.
 func (tictactoe *TicTacToe) getEmptyCells() [][2]int {
 	emptyCells := [][2]int{}
-	for row := 0; row < int(len(tictactoe.board)); row++ {
-		for col := 0; col < int(len(tictactoe.board[0])); col++ {
+	for row := 0; row < len(tictactoe.board); row++ {
+		for col := 0; col < len(tictactoe.board[0]); col++ {
 			if tictactoe.board[row][col] == '-' {
 				emptyCells = append(emptyCells, [2]int{row, col})
 			}
@@ -201,7 +222,7 @@ func (tictactoe *TicTacToe) getEmptyCells() [][2]int {
 	return emptyCells
 }
 
-// Do a random valid move
+// Do a random valid move.
 func (tictactoe *TicTacToe) randomMove() Move {
 	var emptyCells = tictactoe.getEmptyCells()
 	// This should never be reached in normal game operation
@@ -214,7 +235,7 @@ func (tictactoe *TicTacToe) randomMove() Move {
 }
 
 // Try to do a winning move.
-// If none exists do a random one instead
+// If none exists do a random one instead.
 func (tictactoe *TicTacToe) winMove(player rune) Move {
 	winningMove, err := tictactoe.getWinningMove(player)
 	if err == nil {
@@ -224,7 +245,7 @@ func (tictactoe *TicTacToe) winMove(player rune) Move {
 }
 
 // Try to do a winning or blocking move.
-// If neither exists do a raondom one instead
+// If neither exists do a raondom one instead.
 func (tictactoe *TicTacToe) blockWinMove(player rune) Move {
 	winningMove, err := tictactoe.getWinningMove(player)
 	if err == nil {
@@ -237,7 +258,7 @@ func (tictactoe *TicTacToe) blockWinMove(player rune) Move {
 	return tictactoe.randomMove()
 }
 
-// Try to find a blocking move
+// Try to find a blocking move.
 func (tictactoe *TicTacToe) getBlockingMove(player rune) (Move, error) {
 	// A blocking move is one that prevents the opponent from winning
 	// So just look for a move that would make the opponent win
@@ -246,13 +267,19 @@ func (tictactoe *TicTacToe) getBlockingMove(player rune) (Move, error) {
 	if err == nil {
 		return blockingMove, nil
 	}
-	return Move{-99, -99, -99}, errors.New("no blocking move found")
+	return Move{-99, -99, -99}, errNoBlockingMove
 }
 
-// Try to find a winning move
+// Try to find a winning move.
 func (tictactoe *TicTacToe) getWinningMove(player rune) (Move, error) {
 	// Build a list containing all winning lines
-	winConditions := [8][3][2]int{{{0, 0}, {0, 1}, {0, 2}}, {{1, 0}, {1, 1}, {1, 2}}, {{2, 0}, {2, 1}, {2, 2}}, {{0, 0}, {1, 0}, {2, 0}}, {{0, 1}, {1, 1}, {2, 1}}, {{0, 2}, {1, 2}, {2, 2}}, {{0, 0}, {1, 1}, {2, 2}}, {{0, 2}, {1, 1}, {2, 0}}}
+	winConditions := [8][3][2]int{{
+		// Rows
+		{0, 0}, {0, 1}, {0, 2}}, {{1, 0}, {1, 1}, {1, 2}}, {{2, 0}, {2, 1}, {2, 2}},
+		// Cols
+		{{0, 0}, {1, 0}, {2, 0}}, {{0, 1}, {1, 1}, {2, 1}}, {{0, 2}, {1, 2}, {2, 2}},
+		// Diags
+		{{0, 0}, {1, 1}, {2, 2}}, {{0, 2}, {1, 1}, {2, 0}}}
 	var done int
 	var open [][2]int
 	// For each winning line check:
@@ -263,7 +290,7 @@ func (tictactoe *TicTacToe) getWinningMove(player rune) (Move, error) {
 		// and which indices remain open
 		for _, indices := range winCondition {
 			if tictactoe.board[indices[0]][indices[1]] == player {
-				done += 1
+				done++
 			} else if tictactoe.board[indices[0]][indices[1]] == '-' {
 				open = append(open, indices)
 			}
@@ -276,7 +303,7 @@ func (tictactoe *TicTacToe) getWinningMove(player rune) (Move, error) {
 		}
 	}
 	// If no winning line has a winning move return a default with an error
-	return Move{-99, -99, -99}, errors.New("no winning move found")
+	return Move{-99, -99, -99}, errNoWinningMove
 }
 
 // Minmax determines the best possible move for
@@ -319,11 +346,11 @@ func (tictactoe *TicTacToe) minmax(player rune) Move {
 	// The game quality is also not hurt
 	// as the AI will always play a game to a
 	// draw at worst.
-	if len(emptyCells) == 9 {
+	if len(emptyCells) == boardDimension*boardDimension {
 		bestMove = Move{
 			endState: 0,
-			row:      rand.Intn(3),
-			col:      rand.Intn(3),
+			row:      rand.Intn(boardDimension),
+			col:      rand.Intn(boardDimension),
 		}
 		return bestMove
 	}
@@ -348,9 +375,7 @@ func (tictactoe *TicTacToe) minmax(player rune) Move {
 
 // Logic for a real player's turn.
 func (tictactoe *TicTacToe) playerTurn(player rune) {
-
 	fmt.Printf("Player %c turn.\n", player)
-
 	tictactoe.showBoard()
 	var row, col int
 	for {
@@ -358,8 +383,8 @@ func (tictactoe *TicTacToe) playerTurn(player rune) {
 		// Get user input
 		_, err := fmt.Scanln(&row, &col)
 		if err != nil {
-			if err.Error() != "unexpected newline" {
-				bufio.NewReader(os.Stdin).ReadString('\n')
+			if err.Error() != unexpectedNewLine {
+				_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 			}
 			continue
 		}
@@ -377,11 +402,13 @@ func (tictactoe *TicTacToe) playerTurn(player rune) {
 // and true is returned.
 func (tictactoe *TicTacToe) fixSpot(player rune, row int, col int) bool {
 	if row >= 3 || row < 0 || col >= 3 || col < 0 {
-		fmt.Printf("Row %d or column %d are out of bounds. They have to be between 1 and 3 inclusive. Try again!\n", row+1, col+1)
+		fmt.Printf("Row %d or column %d are out of bounds."+
+			" They have to be between 1 and 3 inclusive. Try again!\n", row+1, col+1)
 		return false
 	}
 	if tictactoe.board[row][col] != '-' {
-		fmt.Printf("The position (%d, %d) has already been taken by a player! Please do your move on an empty position.\n", row+1, col+1)
+		fmt.Printf("The position (%d, %d) has already been taken by a player!"+
+			" Please do your move on an empty position.\n", row+1, col+1)
 		return false
 	}
 	tictactoe.board[row][col] = player
@@ -416,32 +443,32 @@ func (tictactoe *TicTacToe) isPlayerWin(player rune) bool {
 		for col := range tictactoe.board[0] {
 			if tictactoe.board[row][col] == player {
 				// Player shows up +1 time in this row
-				rowsMap[row] += 1
-				colsMap[col] += 1
+				rowsMap[row]++
+				colsMap[col]++
 				if row == col {
-					diagsMap[0] += 1
+					diagsMap[0]++
 				}
 				if row == (len(tictactoe.board) - col - 1) {
-					diagsMap[1] += 1
+					diagsMap[1]++
 				}
 			}
 		}
 	}
 	// Check if the player has 3 entries in any row
 	for _, value := range rowsMap {
-		if value == 3 {
+		if value == boardDimension {
 			return true
 		}
 	}
 	// or column
 	for _, value := range colsMap {
-		if value == 3 {
+		if value == boardDimension {
 			return true
 		}
 	}
 	// or diagonal
 	for _, value := range diagsMap {
-		if value == 3 {
+		if value == boardDimension {
 			return true
 		}
 	}

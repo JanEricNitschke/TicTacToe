@@ -10,7 +10,6 @@ linters:
     - decorder
     - depguard
     - dogsled
-    - dupl   # Probably useful in principle. But did not find an easy way.
     - dupword
     - durationcheck
     - errcheck
@@ -21,10 +20,8 @@ linters:
     - exhaustive
     - exhaustruct   # Should be useful in the future. No time now
     - exportloopref
-    - forbidigo
     - forcetypeassert
     - funlen  # Should be usefull in the future. No time atm
-    - gci  # Broken for me
     - ginkgolinter
     - gocheckcompilerdirectives
     - gochecknoglobals
@@ -36,10 +33,7 @@ linters:
     - godot
     - godox
     - goerr113
-    - gofmt
-    - gofumpt
     - goheader
-    - goimports
     - gomnd
     - gomoddirectives
     - gomodguard
@@ -62,7 +56,6 @@ linters:
     - nestif
     - nilerr
     - nilnil
-    - nlreturn
     - noctx
     - nolintlint
     - nonamedreturns
@@ -89,23 +82,30 @@ linters:
     - varnamelen  # Usefull for the future
     - whitespace
     - wrapcheck
-    - wsl
     - zerologlint
-  # disable:
-  #   - cyclop
-  #   - depguard
-  #   - dupl   # Probably useful in principle. But did not find an easy way.
-  #   - exhaustruct   # Should be useful in the future. No time now
-  #   - funlen  # Should be usefull in the future. No time atm
-  #   - gci  # Broken for me
-  #   - gocognit  # Similar to cyclop. Could be usefull
-  #   - gocyclo
-  #   # - gofmt
-  #   - gofumpt
-  #   - goimports
-  #   - gomnd
-  #   - maintidx  # Probably super usefull in the future
-  #   - nestif
-  #   - tagliatelle
-  #   - varnamelen  # Usefull for the future
-  #   - wsl
+  disable:
+    - gci  # Broken for me
+    - gofmt
+    - gofumpt
+    - goimports
+    - forbidigo
+    - dupl
+    - wsl
+    - nlreturn
+
+linters-settings:
+  gosec:
+    # Available rules: https://github.com/securego/gosec#available-rules
+    excludes:
+      - G404
+  cyclop:
+    # The maximal code complexity to report.
+    # Default: 10
+    max-complexity: 12
+    # The maximal average package complexity.
+    # If it's higher than 0.0 (float) the check is enabled
+    # Default: 0.0
+    package-average: 0.0
+  varnamelen:
+    ignore-names:
+      - is
