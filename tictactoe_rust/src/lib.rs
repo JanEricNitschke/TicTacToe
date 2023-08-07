@@ -58,9 +58,9 @@ impl Not for EndState {
     /// Define logical negation of the `EndState`
     fn not(self) -> Self::Output {
         match self {
-            EndState::Draw => EndState::Draw,
-            EndState::Loss => EndState::Win,
-            EndState::Win => EndState::Loss,
+            Self::Draw => Self::Draw,
+            Self::Loss => Self::Win,
+            Self::Win => Self::Loss,
         }
     }
 }
@@ -92,7 +92,7 @@ pub struct TicTacToe {
 /// # Arguments
 ///
 /// * `player` - A char of the current player
-fn swap_player(player: char) -> char {
+const fn swap_player(player: char) -> char {
     if player == 'X' {
         return 'O';
     }
@@ -130,8 +130,8 @@ impl TicTacToe {
     /// let tictactoe = TicTacToe::new();
     /// ```
     #[must_use]
-    pub fn new() -> TicTacToe {
-        TicTacToe {
+    pub const fn new() -> Self {
+        Self {
             board: [['-'; 3]; 3],
             ai_opponent: false,
             ai_player: 'O',
@@ -563,10 +563,8 @@ impl TicTacToe {
     // Try to perform a winning move
     // If there is none return a random one instead
     fn win_move(&mut self, player: char) -> Move {
-        match self.get_winning_move(player) {
-            Some(win_move) => win_move,
-            None => self.random_move(),
-        }
+        self.get_winning_move(player)
+            .map_or_else(|| self.random_move(), |win_move| win_move)
     }
 
     // Tries to find a move that would block the opponent
@@ -582,10 +580,8 @@ impl TicTacToe {
         if let Some(win_move) = self.get_winning_move(player) {
             return win_move;
         }
-        match self.get_blocking_move(player) {
-            Some(block_move) => block_move,
-            None => self.random_move(),
-        }
+        self.get_blocking_move(player)
+            .map_or_else(|| self.random_move(), |block_move| block_move)
     }
 
     /// Gets the game settings from the user via the command line
