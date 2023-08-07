@@ -69,9 +69,26 @@ repos:
   hooks:
     - id: golangci-lint
       entry: bash -c 'cd tictactoe_go && golangci-lint run --new-from-rev HEAD --fix'
-- repo: https://github.com/doublify/pre-commit-rust
-  rev: v1.0
+- repo: local
   hooks:
-    - id: fmt
-    - id: cargo-check
-    - id: clippy
+  - id: fmt
+    name: fmt
+    description: Format files with cargo fmt.
+    entry: bash -c 'cd tictactoe_rust && cargo fmt'
+    language: system
+    types: [rust]
+
+  - id: cargo-check
+    name: cargo check
+    description: Check the package for errors.
+    entry: bash -c 'cd tictactoe_rust && cargo check'
+    language: system
+    types: [rust]
+    pass_filenames: false
+  - id: clippy
+    name: clippy
+    description: Lint rust sources
+    entry: bash -c 'cd tictactoe_rust && cargo clippy -- -D warnings'
+    language: system
+    types: [rust]
+    pass_filenames: false

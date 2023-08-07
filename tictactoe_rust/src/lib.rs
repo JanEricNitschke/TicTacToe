@@ -1,8 +1,8 @@
 /*!
-# tictactoe_rust
+# `tictactoe_rust`
 
 `tictactoe_rust` is a collection of utilities to
-allow you to play TicTacToe alone or with a friend.
+allow you to play `TicTacToe` alone or with a friend.
 */
 
 use rand::prelude::SliceRandom;
@@ -43,7 +43,7 @@ impl std::cmp::PartialEq for Move {
     }
 }
 
-/// Define enum to hold game EndState possibilities
+/// Define enum to hold game `EndState` possibilities
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Copy, Clone, Default)]
 enum EndState {
     #[default]
@@ -55,7 +55,7 @@ enum EndState {
 impl Not for EndState {
     type Output = Self;
 
-    /// Define logical negation of the EndState
+    /// Define logical negation of the `EndState`
     fn not(self) -> Self::Output {
         match self {
             EndState::Draw => EndState::Draw,
@@ -68,7 +68,7 @@ impl Not for EndState {
 impl Neg for EndState {
     type Output = Self;
 
-    /// Define -EndState to be the same as !EndState
+    /// Define -`EndState` to be the same as !`EndState`
     fn neg(self) -> Self::Output {
         !self
     }
@@ -87,8 +87,41 @@ pub struct TicTacToe {
     ai_difficulty: usize,
 }
 
+/// Returns the char for the other player
+///
+/// # Arguments
+///
+/// * `player` - A char of the current player
+fn swap_player(player: char) -> char {
+    if player == 'X' {
+        return 'O';
+    }
+    'X'
+}
+
+/// Get yes/no response from a player.
+/// # Arguments
+///
+/// * `question` - The question to get the response for.
+fn get_player_yes_no(question: &str) -> bool {
+    loop {
+        let mut choice = String::new();
+        println!("{question}");
+        io::stdin()
+            .read_line(&mut choice)
+            .expect("Failed to read line");
+        choice = choice.trim().to_uppercase();
+        if choice == "Y" {
+            return true;
+        }
+        if choice == "N" {
+            return false;
+        }
+    }
+}
+
 impl TicTacToe {
-    /// Returns a TicTacToe game with an empty board
+    /// Returns a `TicTacToe` game with an empty board
     ///
     /// # Examples
     ///
@@ -96,6 +129,7 @@ impl TicTacToe {
     /// use tictactoe_rust::TicTacToe;
     /// let tictactoe = TicTacToe::new();
     /// ```
+    #[must_use]
     pub fn new() -> TicTacToe {
         TicTacToe {
             board: [['-'; 3]; 3],
@@ -118,7 +152,7 @@ impl TicTacToe {
         let mut player = 'X';
         loop {
             if self.ai_opponent && self.ai_player == player {
-                self.ai_turn(player)
+                self.ai_turn(player);
             } else {
                 self.player_turn(player);
             }
@@ -133,7 +167,7 @@ impl TicTacToe {
                 break;
             }
 
-            player = self.swap_player(player);
+            player = swap_player(player);
         }
 
         self.show_board();
@@ -184,13 +218,14 @@ impl TicTacToe {
                 // Then check if it was a valid and open spot
                 // If reading worked and input was valid exit the loop
                 // If input was invalid continue the loop
-                Ok((row, col)) => match self.fix_spot(player, row - 1, col - 1) {
-                    true => break,
-                    false => (),
-                },
+                Ok((row, col)) => {
+                    if self.fix_spot(player, row - 1, col - 1) {
+                        break;
+                    }
+                }
                 // Reading was unsuccessful
                 // Continue loop and let user enter new input
-                Err(e) => println!("Failed to parse input: {}", e),
+                Err(e) => println!("Failed to parse input: {e}"),
             }
         }
     }
@@ -265,18 +300,6 @@ impl TicTacToe {
         true
     }
 
-    /// Returns the char for the other player
-    ///
-    /// # Arguments
-    ///
-    /// * `player` - A char of the current player
-    fn swap_player(&self, player: char) -> char {
-        if player == 'X' {
-            return 'O';
-        }
-        'X'
-    }
-
     /// Prints the current game board to stdout
     ///
     /// # Examples
@@ -294,7 +317,7 @@ impl TicTacToe {
             for col in 0..self.board[0].len() {
                 print!("| {} |", self.board[row][col]);
             }
-            println!("\n{str_line}")
+            println!("\n{str_line}");
         }
     }
 
@@ -351,7 +374,7 @@ impl TicTacToe {
             best_move.end_state = EndState::Win;
             return best_move;
         }
-        if self.is_player_win(self.swap_player(player)) {
+        if self.is_player_win(swap_player(player)) {
             best_move.end_state = EndState::Loss;
             return best_move;
         }
@@ -375,7 +398,7 @@ impl TicTacToe {
                 row: _,
                 col: _,
                 end_state,
-            } = self.minmax(self.swap_player(player));
+            } = self.minmax(swap_player(player));
             if -end_state >= best_move.end_state {
                 best_move = Move {
                     row,
@@ -383,7 +406,7 @@ impl TicTacToe {
                     end_state: -end_state,
                 };
             }
-            self.board[row][col] = '-'
+            self.board[row][col] = '-';
         }
         best_move
     }
@@ -401,6 +424,75 @@ impl TicTacToe {
             row: cell[0],
             col: cell[1],
             end_state: EndState::Draw,
+        }
+    }
+
+    fn check_win_conditions(
+        &mut self,
+        player: char,
+        win_conditions: &mut std::collections::HashMap<
+            String,
+            std::collections::HashSet<(usize, usize)>,
+        >,
+    ) {
+        for row in 0..self.board.len() {
+            for col in 0..self.board[0].len() {
+                /*
+                If the given player occupies this cell
+                then that reduces the required positions
+                in that line by one
+                */
+                if self.board[row][col] == player {
+                    win_conditions
+                        .entry("row".to_owned() + &row.to_string())
+                        .and_modify(|set| {
+                            _ = set.remove(&(row, col));
+                        });
+                    win_conditions
+                        .entry("col".to_owned() + &col.to_string())
+                        .and_modify(|set| {
+                            _ = set.remove(&(row, col));
+                        });
+                    if row == col {
+                        win_conditions.entry("diag".to_string()).and_modify(|set| {
+                            _ = set.remove(&(row, col));
+                        });
+                    }
+                    if row == (self.board.len() - 1 - col) {
+                        win_conditions
+                            .entry("antidiag".to_string())
+                            .and_modify(|set| {
+                                _ = set.remove(&(row, col));
+                            });
+                    }
+                }
+                // If the opposing player occupies this cell
+                // then all lines that contain it become useless
+                if self.board[row][col] == swap_player(player) {
+                    win_conditions
+                        .entry("row".to_owned() + &row.to_string())
+                        .and_modify(|set| {
+                            set.clear();
+                        });
+                    win_conditions
+                        .entry("col".to_owned() + &col.to_string())
+                        .and_modify(|set| {
+                            set.clear();
+                        });
+                    if row == col {
+                        win_conditions.entry("diag".to_string()).and_modify(|set| {
+                            set.clear();
+                        });
+                    }
+                    if row == (self.board.len() - 1 - col) {
+                        win_conditions
+                            .entry("antidiag".to_string())
+                            .and_modify(|set| {
+                                set.clear();
+                            });
+                    }
+                }
+            }
         }
     }
 
@@ -448,65 +540,7 @@ impl TicTacToe {
                 collections::HashSet::from_iter([(0, 2), (1, 1), (2, 0)]),
             ),
         ]);
-        for row in 0..self.board.len() {
-            for col in 0..self.board[0].len() {
-                /*
-                If the given player occupies this cell
-                then that reduces the required positions
-                in that line by one
-                */
-                if self.board[row][col] == player {
-                    win_conditions
-                        .entry("row".to_owned() + &row.to_string())
-                        .and_modify(|set| {
-                            _ = set.remove(&(row, col));
-                        });
-                    win_conditions
-                        .entry("col".to_owned() + &col.to_string())
-                        .and_modify(|set| {
-                            _ = set.remove(&(row, col));
-                        });
-                    if row == col {
-                        win_conditions.entry("diag".to_string()).and_modify(|set| {
-                            _ = set.remove(&(row, col));
-                        });
-                    }
-                    if row == (self.board.len() - 1 - col) {
-                        win_conditions
-                            .entry("antidiag".to_string())
-                            .and_modify(|set| {
-                                _ = set.remove(&(row, col));
-                            });
-                    }
-                }
-                // If the opposing player occupies this cell
-                // then all lines that contain it become useless
-                if self.board[row][col] == self.swap_player(player) {
-                    win_conditions
-                        .entry("row".to_owned() + &row.to_string())
-                        .and_modify(|set| {
-                            set.clear();
-                        });
-                    win_conditions
-                        .entry("col".to_owned() + &col.to_string())
-                        .and_modify(|set| {
-                            set.clear();
-                        });
-                    if row == col {
-                        win_conditions.entry("diag".to_string()).and_modify(|set| {
-                            set.clear();
-                        });
-                    }
-                    if row == (self.board.len() - 1 - col) {
-                        win_conditions
-                            .entry("antidiag".to_string())
-                            .and_modify(|set| {
-                                set.clear();
-                            });
-                    }
-                }
-            }
-        }
+        self.check_win_conditions(player, &mut win_conditions);
         // Check if any line requires exactly one more
         // position from the player to be fulfilled
         for value in win_conditions.values() {
@@ -539,7 +573,7 @@ impl TicTacToe {
     // winning on their next move
     fn get_blocking_move(&mut self, player: char) -> Option<Move> {
         // Just find a move that would make the opponent win
-        self.get_winning_move(self.swap_player(player))
+        self.get_winning_move(swap_player(player))
     }
 
     // Try to find a winning or blocking move
@@ -567,36 +601,19 @@ impl TicTacToe {
         self.get_ai_opponent_setting();
         if self.ai_opponent {
             self.get_ai_opponent_start();
-            self.get_ai_difficulty()
-        }
-    }
-
-    fn get_player_yes_no(&mut self, question: &str) -> bool {
-        loop {
-            let mut choice = String::new();
-            println!("{}", question);
-            io::stdin()
-                .read_line(&mut choice)
-                .expect("Failed to read line");
-            choice = choice.trim().to_uppercase();
-            if choice == "Y" {
-                return true;
-            }
-            if choice == "N" {
-                return false;
-            }
+            self.get_ai_difficulty();
         }
     }
 
     /// Gets the game settings for the AI opponent
     /// So whether there should be one and if it should start first
     fn get_ai_opponent_setting(&mut self) {
-        self.ai_opponent = self.get_player_yes_no("Play alone vs AI?[y/n]");
+        self.ai_opponent = get_player_yes_no("Play alone vs AI?[y/n]");
     }
 
     /// Gets the setting whether or not the AI opponent should start first
     fn get_ai_opponent_start(&mut self) {
-        if self.get_player_yes_no("Should the AI make the first move?[y/n]") {
+        if get_player_yes_no("Should the AI make the first move?[y/n]") {
             self.ai_player = 'X';
         } else {
             self.ai_player = 'O';
@@ -622,16 +639,15 @@ impl TicTacToe {
                 // Then check if it was a valid and open spot
                 // If reading worked and input was valid exit the loop
                 // If input was invalid continue the loop
-                Ok(strength) => match strength < 5 {
-                    true => {
+                Ok(strength) => {
+                    if strength < 5 {
                         self.ai_difficulty = strength;
                         break;
                     }
-                    false => (),
-                },
+                }
                 // Reading was unsuccessful
                 // Continue loop and let user enter new input
-                Err(e) => println!("Failed to parse input: {}", e),
+                Err(e) => println!("Failed to parse input: {e}"),
             }
         }
     }
@@ -775,9 +791,8 @@ mod tests {
 
     #[test]
     fn swap_player_swaps_player() {
-        let tictactoe = TicTacToe::new();
-        assert_eq!(tictactoe.swap_player('O'), 'X');
-        assert_eq!(tictactoe.swap_player('X'), 'O');
+        assert_eq!(swap_player('O'), 'X');
+        assert_eq!(swap_player('X'), 'O');
     }
 
     #[test]
