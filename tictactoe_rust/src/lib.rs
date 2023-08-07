@@ -758,13 +758,13 @@ mod tests {
         assert!(!tictactoe.is_player_win('X'));
         assert!(tictactoe.is_player_win('O'));
         tictactoe.board = [['X', 'O', 'X'], ['O', 'X', 'A'], ['X', 'A', 'O']];
-        assert!(tictactoe.is_player_win('X'))
+        assert!(tictactoe.is_player_win('X'));
     }
 
     #[test]
     fn is_board_filled_recognizes_empty_board() {
         let tictactoe = TicTacToe::new();
-        assert!(!tictactoe.is_board_filled())
+        assert!(!tictactoe.is_board_filled());
     }
 
     #[test]
@@ -795,7 +795,7 @@ mod tests {
     fn empty_cells_works_on_empty_board() {
         let tictactoe = TicTacToe::new();
         let mut found_empty_cells = tictactoe.empty_cells();
-        found_empty_cells.sort();
+        found_empty_cells.sort_unstable();
         let mut expected_empty_cells = vec![
             [0, 0],
             [0, 1],
@@ -807,7 +807,7 @@ mod tests {
             [1, 1],
             [1, 2],
         ];
-        expected_empty_cells.sort();
+        expected_empty_cells.sort_unstable();
         assert_eq!(found_empty_cells, expected_empty_cells);
     }
 
@@ -816,9 +816,9 @@ mod tests {
         let mut tictactoe = TicTacToe::new();
         tictactoe.board = [['X', 'O', '-'], ['O', '-', 'X'], ['-', 'X', 'X']];
         let mut found_empty_cells = tictactoe.empty_cells();
-        found_empty_cells.sort();
+        found_empty_cells.sort_unstable();
         let mut expected_empty_cells = vec![[0, 2], [2, 0], [1, 1]];
-        expected_empty_cells.sort();
+        expected_empty_cells.sort_unstable();
         assert_eq!(found_empty_cells, expected_empty_cells);
     }
 
@@ -1132,7 +1132,7 @@ mod tests {
                 col: 2,
                 end_state: EndState::Draw
             }
-        )
+        );
     }
 
     #[test]
@@ -1146,7 +1146,7 @@ mod tests {
                 col: 0,
                 end_state: EndState::Draw
             }
-        )
+        );
     }
 
     #[test]
@@ -1170,7 +1170,7 @@ mod tests {
                 col: 0,
                 end_state: EndState::Draw
             }
-        )
+        );
     }
 
     #[test]
@@ -1184,7 +1184,7 @@ mod tests {
                 col: 2,
                 end_state: EndState::Draw
             }
-        )
+        );
     }
 
     #[test]
