@@ -16,7 +16,7 @@ final class tictactoe_swiftTests: XCTestCase {
   func testSwapPlayer() throws {
     XCTAssertEqual("X", tictactoe.swapPlayer("O"))
     XCTAssertEqual("O", tictactoe.swapPlayer("X"))
-    // XCTest Documenation
+    // XCTest Documentation
     // https://developer.apple.com/documentation/xctest
 
     // Defining Test Cases and Test Methods

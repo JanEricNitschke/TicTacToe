@@ -55,7 +55,7 @@ type Move struct {
 }
 
 // showBoard prints the board of the received TicTacToe game
-// to stdout wiht the pretty formatting.
+// to stdout with the pretty formatting.
 func (tictactoe *TicTacToe) showBoard() {
 	// Separator for the rows of the board
 	var strLine = "---------------"

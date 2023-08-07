@@ -188,8 +188,8 @@ impl TicTacToe {
                     true => break,
                     false => (),
                 },
-                // Reading was unsuccesfull
-                // Continue loop and let user enter new inout
+                // Reading was unsuccessful
+                // Continue loop and let user enter new input
                 Err(e) => println!("Failed to parse input: {}", e),
             }
         }
@@ -629,8 +629,8 @@ impl TicTacToe {
                     }
                     false => (),
                 },
-                // Reading was unsuccesfull
-                // Continue loop and let user enter new inout
+                // Reading was unsuccessful
+                // Continue loop and let user enter new input
                 Err(e) => println!("Failed to parse input: {}", e),
             }
         }

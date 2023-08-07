@@ -214,7 +214,7 @@ class GameState extends ChangeNotifier {
     return _winningMove(player) ?? randomMove();
   }
 
-  /// Returns a winning, blocking or random move for [player] on the currnet [board].
+  /// Returns a winning, blocking or random move for [player] on the current [board].
   ({int spot, EndState endState}) winBlockMove(Player player) {
     return _winningMove(player) ?? _winningMove(player.swap()) ?? randomMove();
   }
@@ -373,7 +373,7 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
-/// Widget for chosing the strenght of the ai.
+/// Widget for choosing the strength of the ai.
 class DifficultySelection extends StatelessWidget {
   const DifficultySelection({
     super.key,

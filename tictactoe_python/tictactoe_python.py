@@ -36,7 +36,7 @@ class TicTacToe:
         self.ai_function: AIFunction = self.minmax
 
     def create_board(self) -> None:
-        """Initializes the board as a list of lists containting only '-'.
+        """Initializes the board as a list of lists containing only '-'.
 
         Args:
             None

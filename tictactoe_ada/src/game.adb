@@ -8,9 +8,9 @@ package body Game is
       (1, 5, 9), (3, 5, 7));
 
    procedure Show_Board (Game_Board : Board) is
-      Line_Seperator : constant String := "---------------------";
+      Line_Separator : constant String := "---------------------";
    begin
-      Put_Line (Line_Seperator);
+      Put_Line (Line_Separator);
       for Row in Rows loop
          for Column in Columns loop
             Put
@@ -19,7 +19,7 @@ package body Game is
                " |");
          end loop;
          New_Line;
-         Put_Line (Line_Seperator);
+         Put_Line (Line_Separator);
       end loop;
    end Show_Board;
 

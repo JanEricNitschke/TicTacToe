@@ -161,7 +161,7 @@ function clickedField(field) {
     // If the game is currently not live
     // but waiting for settings to be chosen
     // then shake the message
-    // (This could also be handled by just diabling the fields
+    // (This could also be handled by just disabling the fields
     // until all settings are chosen)
     if (game_status != "ongoing") {
         document.getElementById('message').style.animation = "";

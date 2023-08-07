@@ -163,11 +163,11 @@ module TictactoeRuby
     end
 
     def show_board
-      line_separater = "---------------"
-      puts line_separater
+      line_separator = "---------------"
+      puts line_separator
       @board.each do |row|
         row.each { |cell| print "| #{cell} |" }
-        puts "\n#{line_separater}"
+        puts "\n#{line_separator}"
       end
     end
 

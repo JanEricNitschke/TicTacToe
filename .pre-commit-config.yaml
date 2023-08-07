@@ -27,14 +27,45 @@ repos:
     - id: check-builtin-literals
       language: python
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.277
+  rev: v0.0.282
   hooks:
     - id: ruff
       args:
         - --fix
         - --exit-non-zero-on-fix
 - repo: https://github.com/psf/black
-  rev: 23.3.0
+  rev: 23.7.0
   hooks:
     - id: black
       language: python
+- repo: https://github.com/crate-ci/typos
+  rev: v1.16.2
+  hooks:
+    - id: typos
+      args: []
+- repo: local
+  hooks:
+    - id: pyright
+      name: pyright
+      entry: pyright tictactoe_python
+      language: system
+      types: [python]
+      pass_filenames: false
+- repo: local
+  hooks:
+    - id: pylint
+      name: pylint
+      entry: pylint tictactoe_python
+      language: system
+      types: [python]
+      pass_filenames: false
+      args:
+        [
+          "-rn", # Only display messagespre-
+          "-sn", # Don't display the score
+        ]
+- repo: https://github.com/golangci/golangci-lint
+  rev: v1.53.3
+  hooks:
+    - id: golangci-lint
+      entry: bash -c 'cd tictactoe_go && golangci-lint run --new-from-rev HEAD --fix'

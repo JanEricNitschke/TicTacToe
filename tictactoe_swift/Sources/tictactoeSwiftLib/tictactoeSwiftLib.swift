@@ -193,11 +193,11 @@ public class TicTacToe {
   func getYesNo(question: String) -> Bool {
     while true {
       print(question)
-      let respone = readLine() ?? ""
-      if ["Y", "y"].contains(respone) {
+      let response = readLine() ?? ""
+      if ["Y", "y"].contains(response) {
         return true
       }
-      if ["N", "n"].contains(respone) {
+      if ["N", "n"].contains(response) {
         return false
       }
     }

@@ -31,7 +31,7 @@ data FixSpotResult = InvalidInput | OutOfBounds | Taken | Valid deriving (Eq, Or
 main :: IO ()
 main = do
   setting <- getAIOpponent
-  start <- if setting then getAISart else return False
+  start <- if setting then getAIStart else return False
   difficulty <- if setting then getAIStrength else return 4
   playGame setting start difficulty
 
@@ -222,7 +222,7 @@ doPlayerMove player board = do
       putStrLn "The position has already been taken by a player! Please do your move on an empty position!"
       doPlayerMove player board
 
--- Trys to perform a move according to the players input
+-- Tries to perform a move according to the players input
 fixSpot :: [Maybe Int] -> Char -> Board -> (FixSpotResult, Board)
 -- Correct player input is exactly two integers
 fixSpot [Just input1, Just input2] player board
@@ -322,8 +322,8 @@ getAIOpponent :: IO Bool
 getAIOpponent = getYesNo "Play vs AI?[y/n]: "
 
 -- Get information of the AI opponent should make the first move
-getAISart :: IO Bool
-getAISart = getYesNo "Should the AI make the first move?[y/n]: "
+getAIStart :: IO Bool
+getAIStart = getYesNo "Should the AI make the first move?[y/n]: "
 
 getYesNo :: String -> IO Bool
 getYesNo question = do
@@ -345,7 +345,7 @@ trim = f . f
 -- Functionality for printing out the game board
 showBoard :: Board -> IO ()
 showBoard board = do
-  -- Need to put one line separater at the start
+  -- Need to put one line separator at the start
   putStrLn "---------------"
   showRows board
 

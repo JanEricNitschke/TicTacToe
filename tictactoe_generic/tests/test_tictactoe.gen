@@ -256,7 +256,7 @@ var passed = 0;
 fun report(test_function) {
     print("Test " + str(test_function), "");
     if test_function() {
-        print(" successfull.");
+        print(" successful.");
         passed += 1;
     } else {
         print(" failed.");
