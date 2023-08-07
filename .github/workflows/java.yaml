@@ -23,6 +23,8 @@ jobs:
         distribution: 'oracle' # See 'Supported distributions' for available options
         java-version: '20'
         cache: 'maven'
+    - name: Check style
+      run: mvn checkstyle:check
     - name: Build with Maven
       run: mvn --batch-mode --update-snapshots package
     - name: Test
