@@ -77,7 +77,6 @@ repos:
     entry: bash -c 'cd tictactoe_rust && cargo fmt'
     language: system
     types: [rust]
-
   - id: cargo-check
     name: cargo check
     description: Check the package for errors.
