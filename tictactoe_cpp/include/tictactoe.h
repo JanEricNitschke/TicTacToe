@@ -2,7 +2,6 @@
 
 #ifndef TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
 #define TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
-#include <tictactoe.h>
 
 #include <array>
 #include <iostream>

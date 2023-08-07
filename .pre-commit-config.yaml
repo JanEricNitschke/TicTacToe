@@ -105,6 +105,6 @@ repos:
       files: ^tictactoe_cpp/
       types: [c++]
     - id: clang-tidy
-      args: [--checks='boost-*,bugprone-*,performance-*,readability-*,portability-*,modernize-*,clang-analyzer-*,cppcoreguidelines-*']
+      args: ["--checks='boost-*,bugprone-*,performance-*,readability-*,portability-*,modernize-*,clang-analyzer-*,cppcoreguidelines-*'", -fix]
       files: ^tictactoe_cpp/
       types: [c++]

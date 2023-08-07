@@ -17,6 +17,10 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
+    - name: Lint with cpplint
+      run: |
+        pip install cpplint
+        cpplint */*.cpp */*.h
     - name: Prepare cmake
       run: |
         cmake -S . -B build
