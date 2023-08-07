@@ -69,3 +69,9 @@ repos:
   hooks:
     - id: golangci-lint
       entry: bash -c 'cd tictactoe_go && golangci-lint run --new-from-rev HEAD --fix'
+- repo: https://github.com/doublify/pre-commit-rust
+  rev: v1.0
+  hooks:
+    - id: fmt
+    - id: cargo-check
+    - id: clippy

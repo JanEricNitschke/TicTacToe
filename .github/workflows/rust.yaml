@@ -20,6 +20,13 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
+    - name: Lint
+      run: |
+        rustup component add clippy
+        # Run normal configuration and fail on default warnings
+        cargo clippy -- -D warnings
+        # Run pedantic but do not fail
+        cargo clippy -- -W clippy::all -W clippy::pedantic -W clippy::nursery -W clippy::cargo
     - name: Build
       run: cargo build --verbose
     - name: Test
