@@ -1,0 +1,30 @@
+# This workflow will run lints on the javascript version of tictactoe
+
+name: javascript
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Prettier
+        uses: actionsx/prettier@v2
+        with:
+          # prettier CLI arguments.
+          args: --check "./tictactoe_javascript/**.{css,js}"
+      - name: Install eslint
+        run: |
+          npm i eslint --save-dev
+          npm init @eslint/config
+          npm install --save-dev eslint eslint-config-google
+          npm install eslint @babel/core @babel/eslint-parser --save-dev
+          npm install --save-dev eslint-config-prettier
+      - name: Lint
+        run: ./node_modules/.bin/eslint ./tictactoe_javascript/ --ext .js,.jsx,.ts,.tsx
