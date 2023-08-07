@@ -111,3 +111,14 @@ repos:
     hooks:
       - id: dart-format
       - id: flutter-analyze
+
+  # java specific
+  - repo: local
+    hooks:
+    - id: checkstyle
+      name: checkstyle
+      description: Check java style
+      entry: bash -c 'cd tictactoe_java && mvn checkstyle:check'
+      language: system
+      types: [java]
+      pass_filenames: false
