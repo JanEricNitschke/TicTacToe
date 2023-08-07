@@ -604,7 +604,6 @@ class GameInfo extends StatelessWidget {
   }
 }
 
-
 /// Simple widget displaying the title of the app.
 class TitleWidget extends StatelessWidget {
   const TitleWidget({

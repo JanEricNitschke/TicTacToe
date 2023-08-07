@@ -1,6 +1,7 @@
 ---
 exclude: docs/|fibonacci/
 repos:
+  # General
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
@@ -26,6 +27,12 @@ repos:
         language: python
       - id: check-builtin-literals
         language: python
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.16.2
+    hooks:
+      - id: typos
+        args: []
+  # Python specific
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.0.282
     hooks:
@@ -38,11 +45,6 @@ repos:
     hooks:
       - id: black
         language: python
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.16.2
-    hooks:
-      - id: typos
-        args: []
   - repo: local
     hooks:
       - id: pyright
@@ -63,15 +65,19 @@ repos:
             "-rn", # Only display messagespre-
             "-sn", # Don't display the score
           ]
+
+  # golang specific
   - repo: https://github.com/golangci/golangci-lint
     rev: v1.53.3
     hooks:
       - id: golangci-lint
         entry: bash -c 'cd tictactoe_go && golangci-lint run --new-from-rev HEAD --fix'
+
+  # rust specific
   - repo: local
     hooks:
-      - id: fmt
-        name: fmt
+      - id: cargo-fmt
+        name: cargo fmt
         description: Format files with cargo fmt.
         entry: bash -c 'cd tictactoe_rust && cargo fmt'
         language: system
@@ -90,9 +96,18 @@ repos:
         language: system
         types: [rust]
         pass_filenames: false
+
+  # cpp specific
   - repo: https://github.com/cpplint/cpplint
     rev: 1.6.1 # Use the ref you want to point at
     hooks:
       - id: cpplint
         files: ^tictactoe_cpp/
         types: [c++]
+
+  # dart specific
+  - repo: https://github.com/dluksza/flutter-analyze-pre-commit
+    rev: "master"
+    hooks:
+      - id: dart-format
+      - id: flutter-analyze
