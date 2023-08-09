@@ -1,0 +1,31 @@
+# This workflow will run tests on the prolog version of tictactoe
+
+name: prolog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_prolog
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Install SWI-Prolog backend
+      uses: logtalk-actions/setup-swi-prolog@master
+      with:
+        swi-prolog-branch: stable
+        swi-prolog-version: latest
+    - name: Test
+      run: |
+        swipl  -g "pack_install(reif, [interactive(false)])" -t halt
+        swipl -g run_tests -t halt tictactoe_prolog_test.pl

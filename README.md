@@ -157,6 +157,18 @@ zig build install
 zig build test
 ```
 
+## TicTacToe-Prolog
+
+Simple tictactoe game with [Prolog](https://en.wikipedia.org/wiki/Prolog).
+
+Specifically [SWI-Prolog](https://www.swi-prolog.org/).
+
+To run and test:
+```bash
+swipl -g main -t halt tictactoe_prolog.pl
+swipl -g run_tests -t halt tictactoe_prolog_test.pl
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch
 

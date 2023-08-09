@@ -1,0 +1,242 @@
+#!/usr/bin/env swipl -g play -t halt tictactoe_prolog.pl
+
+:- module('tictactoe_prolog', [
+    main/0,
+    board1_player_spot_board2/4,
+    player/1, spot/1, initial_state/2,
+    player_other_player/2,
+    game_board/1,
+    board_spot_empty/3,
+    win_board_player/2,
+    board_winner_done/3,
+    in_range_number_res/2
+]).
+
+:- use_module(library(clpfd)).
+:- use_module(library(reif)).
+:- set_prolog_flag(double_quotes, chars).
+
+player(x). % 'X'
+player(o). % 'O'
+spot(-).
+spot(x).
+spot(o).
+
+% Board starts empty.
+% Player X makes first move
+initial_state([-,-,-,-,-,-,-,-,-], x).
+
+% Swap the player
+player_other_player(P1, P2) :-
+    P1 = x,
+    P2 = o.
+player_other_player(P1, P2) :-
+    P1 = o,
+    P2 = x.
+
+% Verify that the given list is a game board.
+game_board([A,B,C,D,E,F,G,H,I]) :-
+    spot(A),
+    spot(B),
+    spot(C),
+    spot(D),
+    spot(E),
+    spot(F),
+    spot(G),
+    spot(H),
+    spot(I).
+
+% Move on the board.
+% Initial board -> Player makes move at spot -> Resulting board.
+% We do not need to assert that Board2 is a game_board.
+% That is already given by the initial one being one and P being a player.
+% Same for the others.
+board1_player_spot_board2(Board1, P, 1, [P,B,C,D,E,F,G,H,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [-,B,C,D,E,F,G,H,I].
+board1_player_spot_board2(Board1, P, 2, [A,P,C,D,E,F,G,H,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,-,C,D,E,F,G,H,I].
+board1_player_spot_board2(Board1, P, 3, [A,B,P,D,E,F,G,H,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,B,-,D,E,F,G,H,I].
+board1_player_spot_board2(Board1, P, 4, [A,B,C,P,E,F,G,H,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,B,C,-,E,F,G,H,I].
+board1_player_spot_board2(Board1, P, 5, [A,B,C,D,P,F,G,H,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,B,C,D,-,F,G,H,I].
+board1_player_spot_board2(Board1, P, 6, [A,B,C,D,E,P,G,H,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,B,C,D,E,-,G,H,I].
+board1_player_spot_board2(Board1, P, 7, [A,B,C,D,E,F,P,H,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,B,C,D,E,F,-,H,I].
+board1_player_spot_board2(Board1, P, 8, [A,B,C,D,E,F,G,P,I]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,B,C,D,E,F,G,-,I].
+board1_player_spot_board2(Board1, P, 9, [A,B,C,D,E,F,G,H,P]) :-
+    player(P),
+    game_board(Board1),
+    Board1 = [A,B,C,D,E,F,G,H,-].
+
+board_spot_empty(Board, Spot, true) :-
+    game_board(Board),
+    nth1(Spot, Board, Elem),
+    =(Elem, -).
+
+board_spot_empty(Board, Spot, false) :-
+        game_board(Board),
+        nth1(Spot, Board, Elem),
+        player(Elem).
+
+% Player P has won the game on Board
+% Rows
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [P,P,P,_,_,_,_,_,_].
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [_,_,_,P,P,P,_,_,_].
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [_,_,_,_,_,_,P,P,P].
+% Cols
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [P,_,_,P,_,_,P,_,_].
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [_,P,_,_,P,_,_,P,_].
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [_,_,P,_,_,P,_,_,P].
+% Diags
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [P,_,_,_,P,_,_,_,P].
+win_board_player(Board, P) :-
+    player(P),
+    game_board(Board),
+    Board = [_,_,P,_,P,_,P,_,_].
+
+
+% Game is over when a player has won.
+% Or when the board is filled.
+% Win
+board_winner_done(Board, Player, true) :- win_board_player(Board, Player).
+% Draw
+board_winner_done(Board, neither, true) :-
+    Board = [A,B,C,D,E,F,G,H,I],
+    game_board(Board),
+    player(A),
+    player(B),
+    player(C),
+    player(D),
+    player(E),
+    player(F),
+    player(G),
+    player(H),
+    player(I),
+    \+ board_winner_done(Board, x, true),
+    \+ board_winner_done(Board, o, true).
+% Game not done
+board_winner_done(Board, Player, false) :-
+    game_board(Board),
+    player(Player),
+    \+ board_winner_done(Board, x, true),
+    \+ board_winner_done(Board, o, true),
+    \+ board_winner_done(Board, neither, true).
+
+
+in_range_number_res(N, true) :-
+    N #> 0,
+    N #< 10.
+in_range_number_res(N, false) :-
+    N #< 1;
+    N #> 9.
+
+% Read in a number from the user until they input a valid one.
+read_number(N) :-
+    repeat,
+    write('"Where to make your next move? [1-9]'), nl,
+    read_line_to_codes(current_input, Codes),
+    catch(number_codes(N, Codes),
+        _,
+        (write('Invalid input'), nl, fail)
+    ),
+    if_(in_range_number_res(N),
+        true,
+        (write('ERROR: Spot has to be in range [0-8]!'),nl,fail)
+    ).
+
+player_move(Board1, Player, Board2) :-
+    format("Player ~w's turn.", [Player]), nl,
+    show_board(Board1),
+    read_number(Spot),
+    if_(board_spot_empty(Board1, Spot),
+        board1_player_spot_board2(Board1, Player, Spot, Board2),
+        (format("ERROR: Spot ~w is already occupied!", [Spot]), fail)
+    ).
+
+
+turns(Board1, Player, Res) :-
+    game_board(Board1),
+    player(Player),
+    player_move(Board1, Player, Board2),
+    player_other_player(Player, Other),
+    if_(board_winner_done(Board2, Winner),
+        (
+            if_(Winner = Player,
+                (format("Player ~w wins the game!", [Player]), nl),
+                (format("Match Drawn!", []), nl)
+            ),
+            Res = Board2
+        ),
+        turns(Board2, Other, Res)
+    ).
+
+
+% %! go
+% %
+% % Program entry point
+play :-
+    initial_state(Board1, Player),
+    turns(Board1, Player, Board2),
+    show_board(Board2).
+
+show_board(Board) :-
+    game_board(Board),
+    Board = [A,B,C,D,E,F,G,H,I],
+    Line_separator = '-------------',
+    write(Line_separator), nl,
+    format("| ~w | ~w | ~w |", [A,B,C]), nl,
+    write(Line_separator), nl,
+    format("| ~w | ~w | ~w |", [D,E,F]), nl,
+    write(Line_separator), nl,
+    format("| ~w | ~w | ~w |", [G,H,I]), nl,
+    write(Line_separator), nl.
+
+
+    %! main
+    %
+    % Command-line entry point
+main :-
+% TODO: Handle errors, allow exit via
+% Ctrl-C or Ctrl-D
+    play.
