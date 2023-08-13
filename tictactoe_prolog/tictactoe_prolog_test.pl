@@ -8,7 +8,12 @@
     board_spot_empty/3,
     win_board_player/2,
     board_winner_done/3,
-    in_range_number_res/2
+    in_range_number_res/4,
+    find_empty_indices/3,
+    random_move_board1_player_board2/3,
+    winning_move_board1_player_spot_board2/4,
+    win_move_board1_player_board2/3,
+    win_block_move_board1_player_board2/3
 ]).
 
 :- use_module(library(plunit)).
@@ -120,21 +125,89 @@ test(draw, all(Winner == [neither])) :-
 :- begin_tests(numbers_in_range).
 
 test(valid, all(Res == [true])) :-
-    in_range_number_res(1, Res),
-    in_range_number_res(2, Res),
-    in_range_number_res(3, Res),
-    in_range_number_res(4, Res),
-    in_range_number_res(5, Res),
-    in_range_number_res(6, Res),
-    in_range_number_res(7, Res),
-    in_range_number_res(8, Res),
-    in_range_number_res(9, Res).
+    in_range_number_res(1, 1, 9, Res),
+    in_range_number_res(2, 1, 9, Res),
+    in_range_number_res(3, 1, 9, Res),
+    in_range_number_res(4, 1, 9, Res),
+    in_range_number_res(5, 1, 9, Res),
+    in_range_number_res(6, 1, 9, Res),
+    in_range_number_res(7, 1, 9, Res),
+    in_range_number_res(8, 1, 9, Res),
+    in_range_number_res(9, 1, 9, Res).
 
 test(invalid, all(Res == [false])) :-
-    in_range_number_res(-10, Res),
-    in_range_number_res(-1, Res),
-    in_range_number_res(10, Res),
-    in_range_number_res(1300, Res).
+    in_range_number_res(-10, 1, 9, Res),
+    in_range_number_res(-1, 1, 9, Res),
+    in_range_number_res(10, 1, 9, Res),
+    in_range_number_res(1300, 1, 9, Res).
 
 
 :- end_tests(numbers_in_range).
+
+
+:- begin_tests(find_empty_indices).
+
+test(empty_indices, all(Res == [[4,8,9]])) :-
+    find_empty_indices([x,x,x,-,o,o,x,-,-], 1, Res).
+
+
+:- end_tests(find_empty_indices).
+
+:- begin_tests(random_move).
+
+test(random_move_works, nondet) :-
+    random_move_board1_player_board2([-,-,x,x,x,x,x,x,x], o, Board2),
+    member(Board2, [[-,o,x,x,x,x,x,x,x], [o,-,x,x,x,x,x,x,x]]).
+
+:- end_tests(random_move).
+
+:- begin_tests(winning_move).
+
+test(winning_move_finds_row, all(Res == [[o,x,o,x,o,-,x,x,x]])) :-
+    winning_move_board1_player_spot_board2([o,x,o,x,o,-,x,x,-], x, 9, Res).
+
+test(winning_move_finds_col, all(Res == [[o,x,-,o,o,-,o,x,x]])) :-
+    winning_move_board1_player_spot_board2([o,x,-,-,o,-,o,x,x], o, 4, Res).
+
+test(winning_move_finds_diag, all(Res == [[o,-,-,-,o,-,-,-,o]])) :-
+    winning_move_board1_player_spot_board2([o,-,-,-,o,-,-,-,-], o, 9, Res).
+
+test(winning_move_finds_antidiag, all(Res == [[-,-,x,-,x,-,x,-,-]])) :-
+    winning_move_board1_player_spot_board2([-,-,-,-,x,-,x,-,-], x, 3, Res).
+
+test(winning_move_fails_on_no_win) :-
+    \+ winning_move_board1_player_spot_board2([x,o,x,-,o,o,o,x,x], x, _, _).
+
+:- end_tests(winning_move).
+
+:- begin_tests(win_move).
+
+test(win_move_finds_row, all(Res == [[o,x,o,x,o,-,x,x,x]])) :-
+    win_move_board1_player_board2([o,x,o,x,o,-,x,x,-], x, Res).
+
+test(win_move_finds_col, all(Res == [[o,x,-,o,-,-,o,x,x]])) :-
+    win_move_board1_player_board2([o,x,-,-,-,-,o,x,x], o, Res).
+
+test(win_move_finds_diag, all(Res == [[o,-,-,-,o,-,-,-,o]])) :-
+    win_move_board1_player_board2([o,-,-,-,o,-,-,-,-], o, Res).
+
+test(win_move_finds_antidiag, all(Res == [[-,-,x,-,x,-,x,-,-]])) :-
+    win_move_board1_player_board2([-,-,-,-,x,-,x,-,-], x, Res).
+
+test(win_move_does_not_fail_on_no_win, all(Res == [[x,o,x,x,o,o,o,x,x]])) :-
+    win_move_board1_player_board2([x,o,x,-,o,o,o,x,x], x, Res).
+
+:- end_tests(win_move).
+
+:- begin_tests(win_block_move).
+
+test(win_block_move_prioritizes_win, all(Res == [[x,x,x,o,o,-,-,-,-]])) :-
+    win_block_move_board1_player_board2([x,x,-,o,o,-,-,-,-], x, Res).
+
+test(win_block_move_blocks, all(Res == [[x,-,-,o,o,x,-,-,-]])) :-
+    win_block_move_board1_player_board2([x,-,-,o,o,-,-,-,-], x, Res).
+
+test(win_block_move_falls_back_to_random, all(Res == [[x,o,x,x,o,o,o,x,x]])) :-
+    win_block_move_board1_player_board2([x,o,x,-,o,o,o,x,x], x, Res).
+
+:- end_tests(win_block_move).

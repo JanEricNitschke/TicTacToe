@@ -1,4 +1,4 @@
-#!/usr/bin/env swipl -g play -t halt tictactoe_prolog.pl
+#!/usr/bin/env swipl -g main -t halt tictactoe_prolog.pl
 
 :- module('tictactoe_prolog', [
     main/0,
@@ -9,7 +9,12 @@
     board_spot_empty/3,
     win_board_player/2,
     board_winner_done/3,
-    in_range_number_res/2
+    in_range_number_res/4,
+    find_empty_indices/3,
+    random_move_board1_player_board2/3,
+    winning_move_board1_player_spot_board2/4,
+    win_move_board1_player_board2/3,
+    win_block_move_board1_player_board2/3
 ]).
 
 :- use_module(library(clpfd)).
@@ -88,6 +93,38 @@ board1_player_spot_board2(Board1, P, 9, [A,B,C,D,E,F,G,H,P]) :-
     game_board(Board1),
     Board1 = [A,B,C,D,E,F,G,H,-].
 
+
+find_empty_indices([],_,[]).
+find_empty_indices([-|Ls],N,[N|Rs]):-
+    N1 is N+1,
+    find_empty_indices(Ls,N1,Rs).
+find_empty_indices([L|Ls],N,Rs):-
+    L \= -,
+    N1 is N+1,
+    find_empty_indices(Ls,N1,Rs).
+
+random_move_board1_player_board2(Board1, P, Board2) :-
+    find_empty_indices(Board1, 1, Indices),
+    random_member(Spot, Indices),
+    board1_player_spot_board2(Board1, P, Spot, Board2).
+
+winning_move_board1_player_spot_board2(Board1, P, Board2) :-
+    board1_player_spot_board2(Board1, P, _, Board2),
+    win_board_player(Board2, P).
+
+winning_move_board1_player_spot_board2(Board1, P, Spot, Board2) :-
+    board1_player_spot_board2(Board1, P, Spot, Board2),
+    win_board_player(Board2, P).
+
+win_move_board1_player_board2(Board1, P, Board2) :-
+    winning_move_board1_player_spot_board2(Board1, P, _, Board2), !;
+    random_move_board1_player_board2(Board1, P, Board2).
+
+win_block_move_board1_player_board2(Board1, P, Board2) :-
+    winning_move_board1_player_spot_board2(Board1, P, _, Board2), !;
+    (player_other_player(P, Other), winning_move_board1_player_spot_board2(Board1, Other, Spot, _), board1_player_spot_board2(Board1, P, Spot, Board2)), !;
+    random_move_board1_player_board2(Board1, P, Board2).
+
 board_spot_empty(Board, Spot, true) :-
     game_board(Board),
     nth1(Spot, Board, Elem),
@@ -164,41 +201,69 @@ board_winner_done(Board, Player, false) :-
     \+ board_winner_done(Board, neither, true).
 
 
-in_range_number_res(N, true) :-
-    N #> 0,
-    N #< 10.
-in_range_number_res(N, false) :-
-    N #< 1;
-    N #> 9.
+in_range_number_res(N, Min, Max, true) :-
+    N #> Min - 1,
+    N #< Max + 1.
+in_range_number_res(N, Min, Max, false) :-
+    N #< Min;
+    N #> Max.
 
 % Read in a number from the user until they input a valid one.
-read_number(N) :-
+read_number(N, Text) :-
     repeat,
-    write('"Where to make your next move? [1-9]'), nl,
+    write(Text), nl,
     read_line_to_codes(current_input, Codes),
     catch(number_codes(N, Codes),
         _,
         (write('Invalid input'), nl, fail)
-    ),
-    if_(in_range_number_res(N),
-        true,
-        (write('ERROR: Spot has to be in range [0-8]!'),nl,fail)
     ).
 
 player_move(Board1, Player, Board2) :-
     format("Player ~w's turn.", [Player]), nl,
     show_board(Board1),
-    read_number(Spot),
+    read_number(Spot, 'Where to make your next move? [1-9]'),
+    if_(in_range_number_res(Spot, 1, 9),
+        true,
+        (write('ERROR: Spot has to be in range [0-8]!'),nl,fail)
+    ),
     if_(board_spot_empty(Board1, Spot),
         board1_player_spot_board2(Board1, Player, Spot, Board2),
         (format("ERROR: Spot ~w is already occupied!", [Spot]), fail)
     ).
 
+ai_move(Board1, Player, Strength, Board2) :-
+    format("AI turn as ~w.", [Player]), nl,
+    show_board(Board1),
+    (Strength = 1, random_move_board1_player_board2(Board1, Player, Board2));
+    (Strength = 2, win_move_board1_player_board2(Board1, Player, Board2));
+    (Strength = 3, win_block_move_board1_player_board2(Board1, Player, Board2)).
 
-turns(Board1, Player, Res) :-
+read_ai_strength(Strength) :-
+    write('AI strength settings:'), nl,
+    write('1: Easy'), nl,
+    write('2: Medium'), nl,
+    write('3: Hard'), nl,
+    write('4: Impossible'), nl,
+    read_number(Strength, 'How strong should the AI be? [1 - 4]'),
+    if_(in_range_number_res(Strength, 1, 4),
+        true,
+        (write('ERROR: AIStrength has to be in range [1-4]!'),nl,fail)
+    ).
+
+read_ai_marker(AIMarker) :-
+    repeat,
+    write('As which player should the AI play? [x, o, n (for no AI)]'), nl,
+    read_line_to_codes(current_input, Codes),
+    atom_codes(AIMarker, Codes),
+    (AIMarker = x; AIMarker = o; AIMarker = n).
+
+turns(Board1, Player, AIPlayer, AIStrength, Res) :-
     game_board(Board1),
     player(Player),
-    player_move(Board1, Player, Board2),
+    if_(AIPlayer = Player,
+        ai_move(Board1, Player, AIStrength, Board2),
+        player_move(Board1, Player, Board2)
+    ),
     player_other_player(Player, Other),
     if_(board_winner_done(Board2, Winner),
         (
@@ -208,8 +273,9 @@ turns(Board1, Player, Res) :-
             ),
             Res = Board2
         ),
-        turns(Board2, Other, Res)
+        turns(Board2, Other, AIPlayer, AIStrength, Res)
     ).
+
 
 
 % %! go
@@ -217,7 +283,12 @@ turns(Board1, Player, Res) :-
 % % Program entry point
 play :-
     initial_state(Board1, Player),
-    turns(Board1, Player, Board2),
+    read_ai_marker(AIMarker),
+    if_(AIMarker = n,
+        AIStrength = 0,
+        read_ai_strength(AIStrength)
+    ),
+    turns(Board1, Player, AIMarker, AIStrength, Board2),
     show_board(Board2).
 
 show_board(Board) :-
