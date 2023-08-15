@@ -13,10 +13,13 @@
     random_move_board1_player_board2/3,
     winning_move_board1_player_spot_board2/4,
     win_move_board1_player_board2/3,
-    win_block_move_board1_player_board2/3
+    win_block_move_board1_player_board2/3,
+    switch/2, end_state/4, larger_equal/3,
+    best_move_board1_player_board2_endstate/4
 ]).
 
 :- use_module(library(plunit)).
+:- use_module(library(clpfd)).
 
 :- begin_tests(player_and_swap_player).
 
@@ -211,3 +214,61 @@ test(win_block_move_falls_back_to_random, all(Res == [[x,o,x,x,o,o,o,x,x]])) :-
     win_block_move_board1_player_board2([x,o,x,-,o,o,o,x,x], x, Res).
 
 :- end_tests(win_block_move).
+
+
+:- begin_tests(switch).
+
+test(switch) :-
+    switch(5, [1:false, 2:false, 3:false, 4:false, 5:true, 6:false]).
+
+:- end_tests(switch).
+
+:- begin_tests(end_state).
+
+test(win, all(Res == [1])) :-
+    end_state([-,-,x,-,x,-,x,-,-], x, Res, true).
+
+test(loss, all(Res == [(-1)])) :-
+    end_state([-,-,x,-,x,-,x,-,-], o, Res, true).
+
+test(draw, all(Res == [0])) :-
+    end_state([x,o,x,x,o,o,o,x,x], o, Res, true),
+    end_state([x,o,x,x,o,o,o,x,x], x, Res, true).
+
+test(not_over, set(Res == [false])) :-
+    end_state([-,-,-,-,-,-,-,-,-], _, _, Res).
+
+:- end_tests(end_state).
+
+:- begin_tests(larger_equal).
+
+
+test(true, all(Res == [true])) :-
+    larger_equal(5, 3, Res),
+    larger_equal(-3, -3, Res).
+
+test(false) :-
+    larger_equal(2, 3, false).
+
+:- end_tests(larger_equal).
+
+:- begin_tests(minmax).
+
+test(takes_open_spot, nondet) :-
+    best_move_board1_player_board2_endstate([x,x,-,o,x,o,x,o,o], x, [x,x,x,o,x,o,x,o,o], Res),
+    #=(Res, 1).
+
+test(blocks_win, nondet) :-
+    best_move_board1_player_board2_endstate([o,o,x,x,-,o,-,o,x], x, [o,o,x,x,x,o,-,o,x], Res),
+    #=(Res, 0).
+
+test(takes_win, nondet) :-
+    best_move_board1_player_board2_endstate([o,o,x,x,-,-,-,o,x], o, [o,o,x,x,o,-,-,o,x], Res),
+    #=(Res, 1).
+
+test(finds_best, nondet) :-
+    best_move_board1_player_board2_endstate([x,-,-,-,-,-,-,-,-], o, [x,-,-,-,o,-,-,-,-], Res),
+    #=(Res, 0).
+
+
+:- end_tests(minmax).

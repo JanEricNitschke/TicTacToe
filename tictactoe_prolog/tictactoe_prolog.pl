@@ -14,7 +14,9 @@
     random_move_board1_player_board2/3,
     winning_move_board1_player_spot_board2/4,
     win_move_board1_player_board2/3,
-    win_block_move_board1_player_board2/3
+    win_block_move_board1_player_board2/3,
+    switch/2, end_state/4, larger_equal/3,
+    best_move_board1_player_board2_endstate/4
 ]).
 
 :- use_module(library(clpfd)).
@@ -27,9 +29,13 @@ spot(-).
 spot(x).
 spot(o).
 
+board_empty([-,-,-,-,-,-,-,-,-]).
+
 % Board starts empty.
 % Player X makes first move
-initial_state([-,-,-,-,-,-,-,-,-], x).
+initial_state(Board, x) :- board_empty(Board).
+
+
 
 % Swap the player
 player_other_player(P1, P2) :-
@@ -93,38 +99,94 @@ board1_player_spot_board2(Board1, P, 9, [A,B,C,D,E,F,G,H,P]) :-
     game_board(Board1),
     Board1 = [A,B,C,D,E,F,G,H,-].
 
-
+% Find all the empty indices in the list.
+% Used for random move. (Could also use bag of and nextmove.)
+% Empty list has no empty (-) indices
 find_empty_indices([],_,[]).
+% If the head is - add the current index to the result
 find_empty_indices([-|Ls],N,[N|Rs]):-
     N1 is N+1,
     find_empty_indices(Ls,N1,Rs).
+% Do not if not
 find_empty_indices([L|Ls],N,Rs):-
     L \= -,
     N1 is N+1,
     find_empty_indices(Ls,N1,Rs).
 
+% Make a move on a random member of the empty indices
+% Could also take the bag of all possible moved board and take
+% a random member there.
 random_move_board1_player_board2(Board1, P, Board2) :-
     find_empty_indices(Board1, 1, Indices),
     random_member(Spot, Indices),
     board1_player_spot_board2(Board1, P, Spot, Board2).
 
-winning_move_board1_player_spot_board2(Board1, P, Board2) :-
-    board1_player_spot_board2(Board1, P, _, Board2),
-    win_board_player(Board2, P).
-
+% Winning move is one, after which the player has won.
 winning_move_board1_player_spot_board2(Board1, P, Spot, Board2) :-
     board1_player_spot_board2(Board1, P, Spot, Board2),
     win_board_player(Board2, P).
 
+% Do winning or random move
 win_move_board1_player_board2(Board1, P, Board2) :-
     winning_move_board1_player_spot_board2(Board1, P, _, Board2), !;
     random_move_board1_player_board2(Board1, P, Board2).
 
+% Blocking move is one where if the opponent had made it they would have won.
+% Take a winning, blocking or random move.
 win_block_move_board1_player_board2(Board1, P, Board2) :-
     winning_move_board1_player_spot_board2(Board1, P, _, Board2), !;
     (player_other_player(P, Other), winning_move_board1_player_spot_board2(Board1, Other, Spot, _), board1_player_spot_board2(Board1, P, Spot, Board2)), !;
     random_move_board1_player_board2(Board1, P, Board2).
 
+%Reifed version for use with if_/3
+larger_equal(First, Second, true) :-
+    First #>= Second.
+
+larger_equal(First, Second, false) :-
+    First #< Second.
+
+
+% Check which of the exhaustively generated board
+% Has the best end state for the player.
+% Do so by recursively making best moves again.
+best_of([Board], Player, Board, Endstate) :-
+    player_other_player(Player, Other),
+    best_move_board1_player_board2_endstate(Board, Other, _, Result),
+    Endstate = (-Result),
+    !.
+
+best_of([Board|Boards], Player, BestBoard, Endstate) :-
+    best_of(Boards, Player, RestBest, RestState),
+    player_other_player(Player, Other),
+    best_move_board1_player_board2_endstate(Board, Other, _, ThisEndstate),
+    if_(larger_equal((-ThisEndstate), RestState),
+        (
+            (Endstate = (-ThisEndstate)),
+            (BestBoard = Board)
+        ),
+        (
+            (Endstate = RestState),
+            (BestBoard = RestBest)
+        )
+    ), !.
+
+% If the board is empty take the random shortcut
+best_move_board1_player_board2_endstate(Board1, Player, Board2, Endstate) :-
+    board_empty(Board1),
+    random_move_board1_player_board2(Board1, Player, Board2),
+    Endstate = 0, !.
+
+% There are still moves to make -> the bag is not empty
+best_move_board1_player_board2_endstate(Board1, Player, Board2, Endstate) :-
+    end_state(Board1, Player, _, false),
+    bagof(NextBoard, Spot^board1_player_spot_board2(Board1, Player, Spot, NextBoard) , NextBoardBag),
+    best_of(NextBoardBag, Player, Board2, Endstate), !.
+
+% The bag would be empty -> bagof fails.
+best_move_board1_player_board2_endstate(Board1, Player, _, Endstate) :-
+    end_state(Board1, Player, Endstate, true), !.
+
+% Check if a board spot is empty.
 board_spot_empty(Board, Spot, true) :-
     game_board(Board),
     nth1(Spot, Board, Elem),
@@ -200,7 +262,8 @@ board_winner_done(Board, Player, false) :-
     \+ board_winner_done(Board, o, true),
     \+ board_winner_done(Board, neither, true).
 
-
+% Check if a value is in a valid range.
+% Used for board boundary and Ai strength.
 in_range_number_res(N, Min, Max, true) :-
     N #> Min - 1,
     N #< Max + 1.
@@ -218,6 +281,8 @@ read_number(N, Text) :-
         (write('Invalid input'), nl, fail)
     ).
 
+% Have the human player perform a move.
+% Check for integer input, empty spot and board boundaries.
 player_move(Board1, Player, Board2) :-
     format("Player ~w's turn.", [Player]), nl,
     show_board(Board1),
@@ -231,13 +296,20 @@ player_move(Board1, Player, Board2) :-
         (format("ERROR: Spot ~w is already occupied!", [Spot]), fail)
     ).
 
+% AI makes a move depending on the specified strength.
 ai_move(Board1, Player, Strength, Board2) :-
     format("AI turn as ~w.", [Player]), nl,
     show_board(Board1),
-    (Strength = 1, random_move_board1_player_board2(Board1, Player, Board2));
-    (Strength = 2, win_move_board1_player_board2(Board1, Player, Board2));
-    (Strength = 3, win_block_move_board1_player_board2(Board1, Player, Board2)).
+    switch(Strength,
+        [
+            1:random_move_board1_player_board2(Board1, Player, Board2),
+            2:win_move_board1_player_board2(Board1, Player, Board2),
+            3:win_block_move_board1_player_board2(Board1, Player, Board2),
+            4:best_move_board1_player_board2_endstate(Board1, Player, Board2, _)
+        ]
+    ).
 
+% Ask the user for the ai strength.
 read_ai_strength(Strength) :-
     write('AI strength settings:'), nl,
     write('1: Easy'), nl,
@@ -250,6 +322,9 @@ read_ai_strength(Strength) :-
         (write('ERROR: AIStrength has to be in range [1-4]!'),nl,fail)
     ).
 
+% Ask the user as which marker the AI should play.
+% Determines if it moves first as 'x' always moves first.
+% Chose 'n' to play with 2 players.
 read_ai_marker(AIMarker) :-
     repeat,
     write('As which player should the AI play? [x, o, n (for no AI)]'), nl,
@@ -257,6 +332,8 @@ read_ai_marker(AIMarker) :-
     atom_codes(AIMarker, Codes),
     (AIMarker = x; AIMarker = o; AIMarker = n).
 
+% (possibly) alternate turns between human and ai.
+% Check if the game is over after each move.
 turns(Board1, Player, AIPlayer, AIStrength, Res) :-
     game_board(Board1),
     player(Player),
@@ -276,7 +353,23 @@ turns(Board1, Player, AIPlayer, AIStrength, Res) :-
         turns(Board2, Other, AIPlayer, AIStrength, Res)
     ).
 
+% Check the end state.
+end_state(Board, Player, State, Over) :-
+    if_(board_winner_done(Board, Winner),
+        (
+            Over = true,
+            player_other_player(Player, Other),
+            switch(Winner, [Player: (State=1), neither: (State=0), Other: (State=(-1))])
+        ),
+        (Over = false)
+    ).
 
+% Simple switch statement.
+switch(X, [Val:Goal|Cases]) :-
+    if_(X=Val,
+        call(Goal),
+        switch(X, Cases)
+    ).
 
 % %! go
 % %
@@ -291,6 +384,7 @@ play :-
     turns(Board1, Player, AIMarker, AIStrength, Board2),
     show_board(Board2).
 
+% Pretty print the game board.
 show_board(Board) :-
     game_board(Board),
     Board = [A,B,C,D,E,F,G,H,I],
@@ -304,9 +398,9 @@ show_board(Board) :-
     write(Line_separator), nl.
 
 
-    %! main
-    %
-    % Command-line entry point
+%! main
+%
+% Command-line entry point
 main :-
 % TODO: Handle errors, allow exit via
 % Ctrl-C or Ctrl-D
