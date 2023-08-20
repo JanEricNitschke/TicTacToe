@@ -1,0 +1,38 @@
+# This workflow will run the tests on the lisp version of tictactoe
+
+name: lisp
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_common-lisp
+    strategy:
+      # Each combination of lisp and os are tested
+      matrix:
+        lisp: [sbcl-bin]
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      # setup-lisp requires an env variable to be set, not matrix.lisp
+    - name: Set LISP env var
+      run: echo "LISP=${{ matrix.lisp }}" >> $GITHUB_ENV
+    - uses: 40ants/setup-lisp@v2
+      # with:
+      #   asdf-system: tictactoe_common-lisp
+    - name: Compile
+      run: |
+        ros -L sbcl-bin run -- --eval "(let ((warning (nth-value 1 (compile-file \"src/tictactoe_common-lisp.lisp\")))) (if warning (sb-ext:exit :code 1) (sb-ext:exit)))"
+    - name: Run tests (Non-Windows)
+      run: |
+        # Install the roswell script for the test library
+        ros install neil-lindquist/ci-utils # for run-fiveam
+        # Run the tests
+        run-fiveam -e t -l tictactoe_common-lisp-test :tictactoe.common-lisp

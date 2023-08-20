@@ -171,14 +171,23 @@ swipl -g run_tests -t halt tictactoe_prolog_test.pl
 
 ## TicTacToe-Common-Lisp
 
-Simple tictactoe game with [Common Lisp](https://lisp-lang.org/)
+Simple tictactoe game with [Common Lisp](https://lisp-lang.org/).
 
-To run:
+In the repl run
+```common-lisp
+(load "D:/Programming/Projects/TicTacToe/TicTacToe/tictactoe_common-lisp/tictactoe_common-lisp.asd")
+(ql:quickload :tictactoe_common-lisp)
+(ql:quickload :fiveam)
+```
+
+To compile, run and test:
 ```bash
-sbcl.exe --core C:\\lispstick\\Steel\ Bank\ Common\ Lisp\\1.1.12\\sbcl.core  --load tictactoe_common-lisp.lisp --eval '(progn (play) (sb-ext:quit))'
+sbcl.exe --core C:\\lispstick\\Steel\ Bank\ Common\ Lisp\\1.1.12\\sbcl.core  --eval "(let ((warning (nth-value 1 (compile-file \"src/tictactoe_common-lisp.lisp\")))) (if warning (sb-ext:exit :code 1) (sb-ext:exit)))"
+sbcl.exe --core C:\\lispstick\\Steel\ Bank\ Common\ Lisp\\1.1.12\\sbcl.core  --load src/tictactoe_common-lisp.lisp --eval '(progn (tictactoe_common-lisp:play) (sb-ext:quit))'
+sbcl.exe --core C:\\lispstick\\Steel\ Bank\ Common\ Lisp\\1.1.12\\sbcl.core  --non-interactive --load run-tests.lisp
 ```
 
 ## TicTacToe-scratch
-Very simple two player tictactoe game with Scratch
+Very simple two player tictactoe game with Scratch.
 
 To play load it on the [Scratch website](https://scratch.mit.edu/)
