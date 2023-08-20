@@ -387,7 +387,8 @@ play :-
 % Pretty print the game board.
 show_board(Board) :-
     game_board(Board),
-    Board = [A,B,C,D,E,F,G,H,I],
+    board_pretty_board(Board, PrettyBoard),
+    PrettyBoard = [A,B,C,D,E,F,G,H,I],
     Line_separator = '-------------',
     write(Line_separator), nl,
     format("| ~w | ~w | ~w |", [A,B,C]), nl,
@@ -397,7 +398,21 @@ show_board(Board) :-
     format("| ~w | ~w | ~w |", [G,H,I]), nl,
     write(Line_separator), nl.
 
+spot_index_pretty_spot(Spot, Index, Pretty) :-
+    if_(Spot = -,
+        (Pretty = Index),
+        (Pretty = Spot)
+    ).
 
+board_pretty_board(Board, PrettyBoard) :-
+    board_index_pretty_board(Board, 1, PrettyBoard).
+
+board_index_pretty_board([], _, []).
+
+board_index_pretty_board([Head|Board], Index, [PrettyHead|PrettyBoard]) :-
+    spot_index_pretty_spot(Head, Index, PrettyHead),
+    NextIndex #= Index + 1,
+    board_index_pretty_board(Board, NextIndex, PrettyBoard).
 %! main
 %
 % Command-line entry point
