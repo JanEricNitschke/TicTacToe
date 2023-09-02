@@ -5,7 +5,8 @@
   (:use :common-lisp)
   (:export
    :play
-   :other-player))
+   :x
+   :o))
 
 (in-package :tictactoe_common-lisp)
 
@@ -53,7 +54,8 @@
     (dolist (spot straight)
       (cond
 	((eql (elt board spot) player) (incf (first result)))
-	(spot (push spot (second result)))))
+	((eql (elt board spot) nil) (push spot (second result)))))
+    (setf (second result)(reverse (second result)))
     result))
 
 ;; Check if the given player has won the game.
