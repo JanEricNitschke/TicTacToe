@@ -100,19 +100,118 @@
 	 (return)))))
 
 
+;; Ask whether the player should be played by the AI
+(defun ai-player-p (player)
+  (y-or-n-p (format nil "Should player ~a be played by AI?" player)))
+
+
+;; Get the AI strength for the given player
+(defun get-ai-strength (player)
+  (format t "AI strength settings:~%")
+  (format t "1: Easy~%")
+  (format t "2: Medium~%")
+  (format t "3: Hard~%")
+  (format t "4: Impossible~%")
+  (loop
+     (let ((user-input (parse-integer
+			(prompt-read
+			 (format nil "How strong should the AI for player ~a be? [1 - 4]" player))
+			 :junk-allowed t)))
+       (when (and user-input (and (> user-input 0) (< user-input 5)))
+	 (return user-input)))))
+
+;; Get AI settings for the given player
+(defun ai-player-settings (player)
+  (if (ai-player-p player)
+      (list t (get-ai-strength player))
+      (list nil nil)))
+
+;; Checks if the current turn should be performed by the AI
+(defun get-turn-settings (player x-ai o-ai)
+  (if (eql player 'x)
+      x-ai
+      o-ai))
+
+;; Get a random element from the list
+(defun get-random-element (lst)
+  (nth (random (length lst) (make-random-state t)) lst))
+
+;; Check if a spot is open on the board
+(defun legal-p (spot board)
+  (null (elt board spot)))
+
+;; Get a list of all empty spots
+(defun empty-spots (board)
+  (loop for i from 0 to (1- (length board))
+     when (legal-p i board)
+     collect i))
+
+;; Get a list (spot -1) where spot represents any valid open spot
+(defun random-move (board)
+    (let ((move (list -1 -1)))
+    (setf (first move) (get-random-element (empty-spots board)))
+    move))
+
+;; Get list of winning move spots
+(defun get-winning-moves (board player)
+  (let ((winning-spots '()))
+    (dolist (straight +straights+)
+      (let ((result (check-straight straight player board)))
+	(when (and (= (first result) 2) (= 1 (list-length (second result))))
+	  (push (first (second result)) winning-spots))))
+    (nreverse winning-spots)))
+
+;; Get winning or random move
+(defun win-move (board player)
+  (let ((winning-moves (get-winning-moves board player)))
+	(if winning-moves
+	    (list (get-random-element winning-moves) -1)
+	    (random-move board))))
+
+;; Get winning, blocking or random move
+(defun win-block-move (board player)
+  (let ((winning-moves (get-winning-moves board player)))
+    (when winning-moves
+      (return-from win-block-move (list (get-random-element winning-moves) -1))))
+  (let ((blocking-moves (get-winning-moves board (other-player player))))
+	(when blocking-moves
+	  (return-from win-block-move (list (get-random-element blocking-moves) -1))))
+  (random-move board))
+
+
+;; Perform an AI turn
+(defun ai-turn (player board ai-strength)
+  (format t "Player ~a turn~%." player)
+  (show-board board)
+  (let ((spot (cond
+		((eql 1 ai-strength) (random-move board))
+		((eql 2 ai-strength) (win-move board player))
+		((eql 3 ai-strength) (win-block-move board player))
+		(t (random-move board)))))
+    (setf (elt board (first spot)) player))
+  (sleep 1))
+
+;; Ask the user for the AI strength
+
 ;; Play a game of tictactoe by performing alternating player turns
 ;; and after each checking whether the game is over by draw or win.
 (defun play ()
-  (let ((game-board (generate-board)) (current-player 'x))
+  (let ((game-board (generate-board))
+	(current-player 'x)
+	(x-ai-settings (ai-player-settings 'x))
+	(o-ai-settings (ai-player-settings 'o)))
     (loop
-       (player-turn current-player game-board)
-       (when (player-won-p game-board current-player)
-	 (format t "Player ~a wins the game!~%" current-player)
-	 (return))
-       (when (board-filled-p game-board)
-	 (format t "Match Drawn!~%")
-	 (return))
-       (setf current-player (other-player current-player)))
+       (destructuring-bind (ai-turn-now ai-strength) (get-turn-settings current-player x-ai-settings o-ai-settings)
+	 (if ai-turn-now
+	     (ai-turn current-player game-board ai-strength)
+	     (player-turn current-player game-board))
+	 (when (player-won-p game-board current-player)
+	   (format t "Player ~a wins the game!~%" current-player)
+	   (return))
+	 (when (board-filled-p game-board)
+	   (format t "Match Drawn!~%")
+	   (return))
+	 (setf current-player (other-player current-player))))
     (show-board game-board)))
 
 
