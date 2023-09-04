@@ -208,66 +208,116 @@
 (defun same-elements (l1 l2)
   (and (subsetp l1 l2) (subsetp l2 l1)))
 
-(test :finds-row
+(test :winning-move-finds-row
       (let ((moves (tictactoe_common-lisp::get-winning-moves (list 'o 'x 'o 'x 'o nil 'x 'x nil) 'x)))
 	(is (same-elements moves (list 8)))))
 
-(test :finds-col
+(test :winning-move-finds-col
       (let ((moves (tictactoe_common-lisp::get-winning-moves (list 'o 'x nil nil nil nil 'o 'x 'x) 'o)))
 	(is (same-elements moves (list 3)))))
 
-(test :finds-diag
+(test :winning-move-finds-diag
       (let ((moves (tictactoe_common-lisp::get-winning-moves (list 'o nil nil nil 'o nil nil nil nil) 'o)))
 	(is (same-elements moves (list 8)))))
 
-(test :finds-antidiag
+(test :winning-move-finds-antidiag
       (let ((moves (tictactoe_common-lisp::get-winning-moves (list nil nil nil nil 'x nil 'x nil nil) 'x)))
 	(is (same-elements moves (list 2)))))
 
-(test :finds-multiple
+(test :winning-move-finds-multiple
       (let ((moves (tictactoe_common-lisp::get-winning-moves (list 'x nil 'x nil 'x nil nil nil nil) 'x)))
 	(is (same-elements  moves (list 1 6 8)))))
 
-(test :handles-none
+(test :winning-move-handles-none
       (let ((moves (tictactoe_common-lisp::get-winning-moves (list nil nil nil nil nil nil nil nil nil) 'x)))
 	(is (equal  moves nil))))
 
 (setup-suite :win-move)
 
-(test :finds-row
+(test :win-move-finds-row
       (let ((move (tictactoe_common-lisp::win-move (list 'o 'x 'o 'x 'o nil 'x 'x nil) 'x)))
-	(is (equal move (list 8 -1)))))
+	(is (equal move (list 8 nil)))))
 
-(test :finds-col
+(test :win-move-finds-col
       (let ((move (tictactoe_common-lisp::win-move (list 'o 'x nil nil nil nil 'o 'x 'x) 'o)))
-	(is (equal move (list 3 -1)))))
+	(is (equal move (list 3 nil)))))
 
-(test :finds-diag
+(test :win-move-finds-diag
       (let ((move (tictactoe_common-lisp::win-move (list 'o nil nil nil 'o nil nil nil nil) 'o)))
-	(is (equal move (list 8 -1)))))
+	(is (equal move (list 8 nil)))))
 
-(test :finds-antidiag
+(test :win-move-finds-antidiag
       (let ((move (tictactoe_common-lisp::win-move (list nil nil nil nil 'x nil 'x nil nil) 'x)))
-	(is (equal move (list 2 -1)))))
+	(is (equal move (list 2 nil)))))
 
-(test :finds-multiple
+(test :win-move-finds-multiple
       (let ((move (tictactoe_common-lisp::win-move (list 'x nil 'x nil 'x nil nil nil nil) 'x)))
-	(is (equal (second move) -1))
+	(is (equal (second move) nil))
 	(is (member (first move) (list 1 6 8)))))
 
-(test :handles-none
+(test :win-move-handles-none
       (let ((move (tictactoe_common-lisp::win-move (list nil nil nil nil nil nil nil nil nil) 'x)))
-	(is (equal (second move) -1))
+	(is (equal (second move) nil))
 	(is (member (first move) (list 0 1 2 3 4 5 6 7 8)))))
 
 (setup-suite :win-block-move)
 
-(test :finds-win
+(test :win-block-move-finds-win
       (let ((move (tictactoe_common-lisp::win-block-move (list 'x 'x nil 'o 'o nil nil nil nil) 'x)))
-	(is (equal move (list 2 -1)))))
+	(is (equal move (list 2 nil)))))
 
-(test :block-win
+(test :win-block-move-blocks-win
       (let ((move (tictactoe_common-lisp::win-block-move (list 'x NIL nil 'o 'o nil nil nil nil) 'x)))
-	(is (equal move (list 5 -1)))))
+	(is (equal move (list 5 nil)))))
+
+(setup-suite :get-best-moves)
+
+(test :get-best-moves-takes-open-spot
+      (let ((moves (tictactoe_common-lisp::get-best-moves (list 'x 'x nil 'o 'x 'o 'x 'o 'o) 'x)))
+	(is (equal  moves (list (list 2) 1)))))
+
+(test :get-best-moves-takes-blocks-win
+      (let ((moves (tictactoe_common-lisp::get-best-moves (list 'o 'o 'x 'x nil 'o nil 'o 'x) 'x)))
+	(is (equal  moves (list (list 4) 0)))))
+
+(test :get-best-moves-takes-takes-win
+      (let ((moves (tictactoe_common-lisp::get-best-moves (list 'o 'o 'x 'x nil nil nil 'o 'x) 'o)))
+	(is (equal  moves (list (list 4) 1)))))
+
+(test :get-best-moves-finds-best
+      (let ((moves (tictactoe_common-lisp::get-best-moves (list 'x nil nil nil nil nil nil nil nil) 'o)))
+	(is (equal  moves (list (list 4) 0)))))
+
+(test :get-best-moves-finds-multiple
+      (let ((moves (tictactoe_common-lisp::get-best-moves (list 'x nil 'x nil 'x nil nil nil nil) 'x)))
+	(is (equal (second moves) 1))
+	;; 1 6 8 win immediately.
+	;; All other spots win on the next turn.
+	(is (same-elements (first moves) (list 1 3 5 6 7 8)))))
+
+(setup-suite :min-max)
+
+(test :min-max-takes-open-spot
+      (let ((move (tictactoe_common-lisp::min-max (list 'x 'x nil 'o 'x 'o 'x 'o 'o) 'x)))
+	(is (equal  move (list 2 1)))))
+
+(test :min-max-takes-blocks-win
+      (let ((move (tictactoe_common-lisp::min-max (list 'o 'o 'x 'x nil 'o nil 'o 'x) 'x)))
+	(is (equal  move (list 4 0)))))
+
+(test :min-max-takes-takes-win
+      (let ((move (tictactoe_common-lisp::min-max (list 'o 'o 'x 'x nil nil nil 'o 'x) 'o)))
+	(is (equal  move (list 4 1)))))
+
+(test :min-max-finds-best
+      (let ((move (tictactoe_common-lisp::min-max (list 'x nil nil nil nil nil nil nil nil) 'o)))
+	(is (equal  move (list 4 0)))))
+
+(test :min-max-finds-multiple
+      (let ((move (tictactoe_common-lisp::min-max (list 'x nil 'x nil 'x nil nil nil nil) 'x)))
+	(is (equal (second move) 1))
+	;; 1 6 8 win immediately.
+	;; All other spots win on the next turn.
+	(is (member (first move) (list 1 3 5 6 7 8)))))
 
 (in-suite :tictactoe.common-lisp)

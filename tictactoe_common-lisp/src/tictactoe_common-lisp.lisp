@@ -148,9 +148,7 @@
 
 ;; Get a list (spot -1) where spot represents any valid open spot
 (defun random-move (board)
-    (let ((move (list -1 -1)))
-    (setf (first move) (get-random-element (empty-spots board)))
-    move))
+  (list (get-random-element (empty-spots board)) nil))
 
 ;; Get list of winning move spots
 (defun get-winning-moves (board player)
@@ -165,19 +163,45 @@
 (defun win-move (board player)
   (let ((winning-moves (get-winning-moves board player)))
 	(if winning-moves
-	    (list (get-random-element winning-moves) -1)
+	    (list (get-random-element winning-moves) nil)
 	    (random-move board))))
 
 ;; Get winning, blocking or random move
 (defun win-block-move (board player)
   (let ((winning-moves (get-winning-moves board player)))
     (when winning-moves
-      (return-from win-block-move (list (get-random-element winning-moves) -1))))
+      (return-from win-block-move (list (get-random-element winning-moves) nil))))
   (let ((blocking-moves (get-winning-moves board (other-player player))))
 	(when blocking-moves
-	  (return-from win-block-move (list (get-random-element blocking-moves) -1))))
+	  (return-from win-block-move (list (get-random-element blocking-moves) nil))))
   (random-move board))
 
+
+;; Get list of optimal moves
+(defun get-best-moves (board player)
+  (when (player-won-p board player)
+    (return-from get-best-moves (list nil 1)))
+  (when (player-won-p board (other-player player))
+    (return-from get-best-moves (list nil -1)))
+  (when (board-filled-p board)
+    (return-from get-best-moves (list nil 0)))
+  (let ((empties (empty-spots board)))
+    (when (= 9 (list-length empties))
+      (return-from get-best-moves (list (loop :for n :below 9 :collect n) 0)))
+    (let ((best-moves (list nil -2)))
+      (dolist (spot empties)
+	(setf (elt board spot) player)
+	(let ((current-score (second (get-best-moves board (other-player player)))))
+	  (cond
+	    ((= (- current-score) (second best-moves)) (push spot (first best-moves)))
+	    ((> (- current-score) (second best-moves))  (setf best-moves (list (list spot) (- current-score))))))
+	(setf (elt board spot) nil))
+      best-moves)))
+
+;; Get an optimal move
+(defun min-max (board player)
+  (destructuring-bind (spots score) (get-best-moves board player)
+    (list (get-random-element spots) score)))
 
 ;; Perform an AI turn
 (defun ai-turn (player board ai-strength)
@@ -187,6 +211,7 @@
 		((eql 1 ai-strength) (random-move board))
 		((eql 2 ai-strength) (win-move board player))
 		((eql 3 ai-strength) (win-block-move board player))
+		((eql 4 ai-strength) (min-max board player))
 		(t (random-move board)))))
     (setf (elt board (first spot)) player))
   (sleep 1))
