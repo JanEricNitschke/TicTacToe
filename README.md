@@ -173,7 +173,7 @@ swipl -g run_tests -t halt tictactoe_prolog_test.pl
 
 Simple tictactoe game with [Common Lisp](https://lisp-lang.org/).
 
-In the repl run
+In the repl run:
 ```common-lisp
 (load "D:/Programming/Projects/TicTacToe/TicTacToe/tictactoe_common-lisp/tictactoe_common-lisp.asd")
 (ql:quickload :tictactoe_common-lisp)
