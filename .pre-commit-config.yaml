@@ -28,13 +28,13 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.16.13
+    rev: v1.16.17
     hooks:
       - id: typos
         args: []
   # Python specific
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.291
+    rev: v0.0.292
     hooks:
       - id: ruff
         args:
@@ -155,7 +155,7 @@ repos:
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
-    rev: v1.56.3
+    rev: v1.56.4
     hooks:
       - id: rubocop
 

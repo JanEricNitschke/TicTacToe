@@ -795,7 +795,7 @@ test "get N empty cells some" {
 }
 
 /// Get all the empty cells on the board.
-/// Usefull for getting a random valid spot or exhaustively checking them
+/// Useful for getting a random valid spot or exhaustively checking them
 /// for the minmax algorithm.
 fn getEmptyCells(board: *GameBoard, allocator: std.mem.Allocator) ![]const (usize) {
     // Max size of empty cells is the size of the board -> 9
