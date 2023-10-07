@@ -21,7 +21,7 @@ auto createBoard() -> GameBoard {
 
 // Function to get yes/no response from the player
 auto getPlayerYesNo(const std::string question) -> bool {
-  std::string solo;
+  std::string solo{};
   while (solo != "Y" && solo != "N") {
     std::cout << question << std::endl;
     std::cin >> solo;
@@ -53,8 +53,8 @@ auto getAIStart() -> std::string {
 // 3 wins or blocks if possible
 // 4 plays perfect
 auto getAIStrength() -> int {
-  std::string input;
-  int strength;
+  std::string input{};
+  int strength{};
   std::cout << "AI strength settings:" << std::endl;
   std::cout << "1: Easy" << std::endl;
   std::cout << "2: Medium" << std::endl;
@@ -290,7 +290,7 @@ Move getBlockingMove(const std::string &player, const GameBoard &board) {
 // Try to perform a winning move
 // If there is none return a random one instead
 Move winMove(const std::string &player, const GameBoard &board) {
-  Move winMove = getWinningMove(player, board);
+  Move winMove{getWinningMove(player, board)};
   if (winMove[2] == 0) {
     return winMove;
   }
@@ -300,11 +300,11 @@ Move winMove(const std::string &player, const GameBoard &board) {
 // Try to find a winning or blocking move
 // If neither exists do a random one instead
 Move blockWinMove(const std::string &player, const GameBoard &board) {
-  Move winMove = getWinningMove(player, board);
+  Move winMove{getWinningMove(player, board)};
   if (winMove[2] == 0) {
     return winMove;
   }
-  Move blockMove = getBlockingMove(player, board);
+  Move blockMove{getBlockingMove(player, board)};
   if (blockMove[2] == 0) {
     return blockMove;
   }
@@ -345,7 +345,7 @@ Move minmax(const std::string &player, GameBoard *board) {
   // Recursively apply minmax algorithm
   for (const std::array<int, 2> &cell : empty_cells) {
     (*board)[cell[0]][cell[1]] = player;
-    Move currentMove = minmax(swapPlayer(player), board);
+    Move currentMove{minmax(swapPlayer(player), board)};
     if (-currentMove[2] > best_move[2]) {
       best_move = {{cell[0], cell[1], -currentMove[2]}};
     }
@@ -356,7 +356,7 @@ Move minmax(const std::string &player, GameBoard *board) {
 
 // Pretty print the current board
 void showBoard(const GameBoard &board) {
-  std::string line_separator = "---------------";
+  std::string line_separator{"---------------"};
   const int board_size = board.size();
   std::cout << line_separator << std::endl;
   for (int i = 0; i < board_size; i++) {
@@ -372,7 +372,7 @@ void aiTurn(const std::string &player, GameBoard *board, int ai_strength) {
   // Inform the player of the game state
   std::cout << "AI turn as player " << player << "." << std::endl;
   showBoard(*board);
-  Move best_move;
+  Move best_move{};
   // Check which function to use to perform AI move
   switch (ai_strength) {
     // False positive
