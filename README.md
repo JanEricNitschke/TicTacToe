@@ -14,7 +14,7 @@ coverage html
 ```
 
 ## TicTacToe-javascript
-Simple tictactoe game with [Javascript](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/).
+Simple tictactoe game with [JavaScript](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/).
 
 Hosted [here](https://main.dwbh88xp4gd1m.amplifyapp.com/) on AWS.
 
