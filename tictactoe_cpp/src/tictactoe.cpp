@@ -3,13 +3,19 @@
 #include <tictactoe.h>
 
 #include <algorithm>
+#include <array>
 #include <chrono>  // NOLINT [build/c++11]
+#include <iostream>
 #include <random>
+#include <string>
 #include <thread>  // NOLINT [build/c++11]
+#include <tuple>
+#include <unordered_map>
+#include <vector>
 
 // Initialize an empty game board
 auto createBoard() -> GameBoard {
-  GameBoard board = {{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
+  GameBoard board{{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
   return board;
 }
 
@@ -48,7 +54,7 @@ auto getAIStart() -> std::string {
 // 4 plays perfect
 auto getAIStrength() -> int {
   std::string input;
-  int strength = -1;
+  int strength;
   std::cout << "AI strength settings:" << std::endl;
   std::cout << "1: Easy" << std::endl;
   std::cout << "2: Medium" << std::endl;
@@ -75,7 +81,7 @@ auto getAIStrength() -> int {
 // Checks if the given player
 // has won on the given board
 auto isPlayerWin(const std::string &player, const GameBoard &board) -> bool {
-  bool win = false;
+  bool win{false};
   const int board_size = board.size();
 
   // checking rows
@@ -172,7 +178,7 @@ std::vector<std::array<int, 2>> getEmptyCells(const GameBoard &board) {
 // Performs any random valid move
 Move randomMove(const GameBoard &board) {
   // Get all the empty cells
-  const std::vector<std::array<int, 2>> empty_cells = getEmptyCells(board);
+  const std::vector<std::array<int, 2>> empty_cells{getEmptyCells(board)};
   // Pick a random number in range 0, length of the list and take that element
   std::array<int, 2> chosenCell = empty_cells[std::rand() % empty_cells.size()];
   return {{chosenCell[0], chosenCell[1], 0}};
@@ -309,7 +315,7 @@ Move blockWinMove(const std::string &player, const GameBoard &board) {
 Move minmax(const std::string &player, GameBoard *board) {
   // Base cases
   // Player won
-  Move best_move = {{-1, -1, -1}};
+  Move best_move{{-1, -1, -1}};
   if (isPlayerWin(player, *board)) {
     best_move[2] = 1;
     return best_move;
@@ -390,9 +396,9 @@ void aiTurn(const std::string &player, GameBoard *board, int ai_strength) {
 
 // Perform player turn
 void playerTurn(const std::string &player, GameBoard *board) {
-  int row = -1;
-  int col = -1;
-  bool valid_move = false;
+  int row{-1};
+  int col{-1};
+  bool valid_move{false};
   // Let the player input their move and validate
   while (!valid_move) {
     std::cout << "Player " << player << " turn" << std::endl;
