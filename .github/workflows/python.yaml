@@ -42,7 +42,7 @@ jobs:
           version: 1.1.330
           working-directory: ./tictactoe_python
       - name: Thorough check with pylint
-        run: pylint tictactoe_python.py
+        run: pylint tictactoe/
       - name: Test with pytest
         run: |
           coverage run -m pytest --durations=10

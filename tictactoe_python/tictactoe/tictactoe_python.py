@@ -323,7 +323,7 @@ class TicTacToe:
             list of [row, col, value] of a winning move
             or None if there is none.
         """
-        win_conditions = {
+        win_conditions: dict[str, set[tuple[int, int]]] = {
             "row0": {(0, 0), (0, 1), (0, 2)},
             "row1": {(1, 0), (1, 1), (1, 2)},
             "row2": {(2, 0), (2, 1), (2, 2)},

@@ -1,8 +1,8 @@
-"""Tests tictactoe_python.py."""
+"""Tests tictactoe.tictactoe_python.py."""
 
 from unittest.mock import MagicMock, patch
 
-from tictactoe_python import TicTacToe
+from tictactoe.tictactoe_python import TicTacToe
 
 
 class TestTicTacToe:
@@ -250,8 +250,8 @@ class TestTicTacToe:
         ]
         assert self.tictactoe.minmax(board, "X") == [1, 1, 0]
 
-    @patch("tictactoe_python.TicTacToe.minmax")
-    @patch("tictactoe_python.TicTacToe.show_board")
+    @patch("tictactoe.tictactoe_python.TicTacToe.minmax")
+    @patch("tictactoe.tictactoe_python.TicTacToe.show_board")
     def test_ai_turn(self, show_mock: MagicMock, minmax_mock: MagicMock):
         """Tests ai_turn."""
         minmax_mock.side_effect = [[0, 0, 1], [1, 0, 0], [2, 2, 1]]
@@ -273,9 +273,9 @@ class TestTicTacToe:
         assert minmax_mock.call_count == 3
         assert self.tictactoe.board[2][2] == "O"
 
-    @patch("tictactoe_python.TicTacToe.fix_spot")
-    @patch("tictactoe_python.TicTacToe.get_player_input")
-    @patch("tictactoe_python.TicTacToe.show_board")
+    @patch("tictactoe.tictactoe_python.TicTacToe.fix_spot")
+    @patch("tictactoe.tictactoe_python.TicTacToe.get_player_input")
+    @patch("tictactoe.tictactoe_python.TicTacToe.show_board")
     def test_player_turn(
         self, show_mock: MagicMock, input_mock: MagicMock, fix_mock: MagicMock
     ):
@@ -322,8 +322,8 @@ class TestTicTacToe:
             "X",
         ) == [0, 2, 0]
 
-    @patch("tictactoe_python.TicTacToe._get_winning_move")
-    @patch("tictactoe_python.TicTacToe.random_move")
+    @patch("tictactoe.tictactoe_python.TicTacToe._get_winning_move")
+    @patch("tictactoe.tictactoe_python.TicTacToe.random_move")
     def test_win_move(self, random_move_mock: MagicMock, winning_move_mock: MagicMock):
         """Tests win_move."""
         winning_move_mock.side_effect = [[0, 0, 1], None]
@@ -353,9 +353,9 @@ class TestTicTacToe:
         board = [["O", "X", "X"], ["-", "O", "-"], ["O", "X", "-"]]
         assert self.tictactoe._get_winning_move(board, "X") is None
 
-    @patch("tictactoe_python.TicTacToe._get_winning_move")
-    @patch("tictactoe_python.TicTacToe._get_blocking_move")
-    @patch("tictactoe_python.TicTacToe.random_move")
+    @patch("tictactoe.tictactoe_python.TicTacToe._get_winning_move")
+    @patch("tictactoe.tictactoe_python.TicTacToe._get_blocking_move")
+    @patch("tictactoe.tictactoe_python.TicTacToe.random_move")
     def test_block_win_move(
         self,
         random_move_mock: MagicMock,

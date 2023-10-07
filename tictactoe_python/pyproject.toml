@@ -91,7 +91,7 @@ target-version = "py311"
 convention = "google" # Accepts: "google", "numpy", or "pep257".
 
 [tool.pyright]
-include                            = ["tictactoe_python.py"]
+include                            = ["tictactoe/"]
 exclude                            = ["tests"]
 typeCheckingMode                   = "strict"
 strictListInference                = true
