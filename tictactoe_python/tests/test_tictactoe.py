@@ -136,12 +136,12 @@ class TestTicTacToe:
         """Tests get_player_input."""
         input_mock.side_effect = ["1 0", "1", "", "1 1 1", "-1 1", "3 1", "a 1", "2 2"]
         assert self.tictactoe.get_player_input() == (1, 0)
-        assert self.tictactoe.get_player_input() is False
-        assert self.tictactoe.get_player_input() is False
-        assert self.tictactoe.get_player_input() is False
+        assert self.tictactoe.get_player_input() is None
+        assert self.tictactoe.get_player_input() is None
+        assert self.tictactoe.get_player_input() is None
         assert self.tictactoe.get_player_input() == (-1, 1)
         assert self.tictactoe.get_player_input() == (3, 1)
-        assert self.tictactoe.get_player_input() is False
+        assert self.tictactoe.get_player_input() is None
         assert self.tictactoe.get_player_input() == (2, 2)
 
     def test_empty_cells(self):
