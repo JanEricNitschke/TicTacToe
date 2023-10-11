@@ -7,7 +7,6 @@ import random
 import sys
 from collections.abc import Callable
 from time import sleep
-from typing import Literal
 
 Board = list[list[str]]
 
@@ -36,13 +35,7 @@ class TicTacToe:
         self.ai_function: AIFunction = self.minmax
 
     def create_board(self) -> None:
-        """Initializes the board as a list of lists containing only '-'.
-
-        Args:
-            None
-        Returns:
-            None (board modified in place)
-        """
+        """Initializes the board as a list of lists containing only '-'."""
         self.board = []
         for _ in range(3):
             row = [self.empty_indicator for _ in range(3)]
@@ -61,7 +54,7 @@ class TicTacToe:
             player (str): Symbol of the player making the move
 
         Returns:
-            bool (board modified in place)
+            bool: Board modified in place
         """
         if row not in range(3) or col not in range(3):
             print(
@@ -86,7 +79,7 @@ class TicTacToe:
             board (Board): Board as a list of lists
 
         Returns:
-            bool
+            bool: Whether the player won via a row
         """
         board_length = len(board)
         for i in range(board_length):
@@ -102,7 +95,7 @@ class TicTacToe:
             board (Board): Board as a list of lists
 
         Returns:
-            bool
+            bool: Whether the player won via a column
         """
         board_length = len(board)
         for i in range(board_length):
@@ -118,7 +111,7 @@ class TicTacToe:
             board (Board): Board as a list of lists
 
         Returns:
-            bool
+            bool: Whether the player won via a diagonal
         """
         board_length = len(board)
         if win := all(board[i][i] == player for i in range(board_length)):
@@ -138,7 +131,7 @@ class TicTacToe:
             board (Board): Board as a list of lists
 
         Returns:
-            bool
+            bool: Whether the player won
         """
         if self._is_row_win(player, board):
             return True
@@ -151,11 +144,8 @@ class TicTacToe:
     def is_board_filled(self) -> bool:
         """Checks if the board is completely filled (indicating a tie).
 
-        Args:
-            None
-
         Returns:
-            bool
+            bool: WHether the board is filled.
         """
         for row in self.board:
             for item in row:
@@ -170,19 +160,12 @@ class TicTacToe:
             player (str): String of the current player
 
         Returns:
-            string (of the new player)
+            str: The new player
         """
         return "X" if player == "O" else "O"
 
     def show_board(self) -> None:
-        """Prints out the current board.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
+        """Prints out the current board."""
         line_separator = "---------------"
         print(line_separator)
         for row in self.board:
@@ -190,14 +173,12 @@ class TicTacToe:
                 print(f"| {item} |", end="")
             print(f"\n{line_separator}")
 
-    def get_player_input(self) -> Literal[False] | tuple[int, int]:
+    def get_player_input(self) -> tuple[int, int] | None:
         """Asks the player for input and validates it.
 
-        Args:
-            None
-
         Returns:
-            Tuple of whether input is valid and if so also the input
+            tuple[int, int] | None: Tuple of whether input is valid
+                and if so also the input
         """
         # taking user input
         player_input = input("Enter row and column numbers to fix spot: ").split()
@@ -207,7 +188,7 @@ class TicTacToe:
                 f"value{'' if len(player_input) == 1 else 's'}."
                 " You need to enter exactly two integers to defined your position!"
             )
-            return False
+            return None
         try:
             row, col = list(map(int, player_input))
         except ValueError:
@@ -216,7 +197,7 @@ class TicTacToe:
                 f"({player_input[0]}, {player_input[1]}) could not be "
                 "converted to an integer. Try again!"
             )
-            return False
+            return None
         return (row, col)
 
     def ai_turn(self, player: str) -> None:
@@ -224,9 +205,6 @@ class TicTacToe:
 
         Args:
             player (str): Which side the AI is playing on
-
-        Returns:
-            None
         """
         print(f"AI turn as {player}.")
         self.show_board()
@@ -242,7 +220,7 @@ class TicTacToe:
             board (Board): Board as a list of lists
 
         Returns:
-            list of tuples of empty board coordinates
+            list[tuple[int, int]]: Empty board coordinates
         """
         return [
             (row, col)
@@ -250,6 +228,7 @@ class TicTacToe:
             if board[row][col] == self.empty_indicator
         ]
 
+    # Move could probably become a dataclass
     def minmax(self, board: Board, player: str) -> list[int]:
         """Takes a board state and return the optimal move for the given player.
 
@@ -258,7 +237,7 @@ class TicTacToe:
             player (str): The player whose move it currently is
 
         Returns:
-            list of [row, col, value] of best move
+            list[int]: [row, col, value] of best move
         """
         best_move = [-1, -1, -1]
         if self.is_player_win(player, board):
@@ -291,7 +270,7 @@ class TicTacToe:
                 AI move functions
 
         Returns:
-            list of [row, col, value] of a random valid move
+            list[int]: [row, col, value] of a random valid move
         """
         empty_cells = self.empty_cells(board)
         cell = random.choice(empty_cells)
@@ -305,7 +284,7 @@ class TicTacToe:
             player (str): The player whose move it currently is.
 
         Returns:
-            list of [row, col, value] of best move
+            list[int]: [row, col, value] of best move
         """
         winning_move = self._get_winning_move(board, player)
         if winning_move is None:
@@ -320,8 +299,8 @@ class TicTacToe:
             player (str): The player whose move it currently is.
 
         Returns:
-            list of [row, col, value] of a winning move
-            or None if there is none.
+            list[int] | None: [row, col, value] of a winning move
+                or None if there is none.
         """
         win_conditions: dict[str, set[tuple[int, int]]] = {
             "row0": {(0, 0), (0, 1), (0, 2)},
@@ -374,7 +353,7 @@ class TicTacToe:
             player (str): The player whose move it currently is.
 
         Returns:
-            list of [row, col, value] of best move
+            list[int]: [row, col, value] of best move
         """
         winning_move = self._get_winning_move(board, player)
         if winning_move is not None:
@@ -392,8 +371,8 @@ class TicTacToe:
             player (str): The player whose move it currently is.
 
         Returns:
-            list of [row, col, value] of a blocking move
-            or None if there is none.
+            list[int] | None: [row, col, value] of a blocking move
+                or None if there is none.
         """
         return self._get_winning_move(board, self.swap_player_turn(player))
 
@@ -402,9 +381,6 @@ class TicTacToe:
 
         Args:
             player (str): Which side the user is playing on
-
-        Returns:
-            None
         """
         valid_move = False
         while not valid_move:
@@ -439,7 +415,7 @@ class TicTacToe:
             question (str): The question to ask the user
 
         Returns:
-            A boolean whether the user answered in the affirmative or not
+            bool: Whether the user answered in the affirmative or not
         """
         response = ""
         while response not in ["Y", "N"]:
@@ -479,14 +455,7 @@ class TicTacToe:
         self.ai_function = ai_mapping_dict[response]
 
     def start(self) -> None:
-        """Starts the game and contains the main game loop.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
+        """Starts the game and contains the main game loop."""
         self.create_board()
 
         self.get_player_number()

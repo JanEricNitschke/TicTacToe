@@ -33,6 +33,12 @@ repos:
       - id: typos
         args: []
   # Python specific
+  - repo: https://github.com/JanEricNitschke/pymend
+    rev: "v1.0.8"
+    hooks:
+      - id: pymend
+        language: python
+        args: ["--write", "--check", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.0.292
     hooks:
