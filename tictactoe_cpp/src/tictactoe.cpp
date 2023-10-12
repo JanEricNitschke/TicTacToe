@@ -85,12 +85,12 @@ auto getAIStrength() -> int {
 // has won on the given board
 auto isPlayerWin(const std::string &player, const GameBoard &board) -> bool {
   bool win{false};
-  const int board_size = board.size();
+  const size_t board_size{board.size()};
 
   // checking rows
-  for (int i = 0; i < board_size; i++) {
+  for (size_t i = 0; i < board_size; i++) {
     win = true;
-    for (int j = 0; j < board_size; j++) {
+    for (size_t j = 0; j < board_size; j++) {
       if (board[i][j] != player) {
         win = false;
         break;
@@ -102,9 +102,9 @@ auto isPlayerWin(const std::string &player, const GameBoard &board) -> bool {
   }
 
   // checking cols
-  for (int i = 0; i < board_size; i++) {
+  for (size_t i = 0; i < board_size; i++) {
     win = true;
-    for (int j = 0; j < board_size; j++) {
+    for (size_t j = 0; j < board_size; j++) {
       if (board[j][i] != player) {
         win = false;
         break;
@@ -117,7 +117,7 @@ auto isPlayerWin(const std::string &player, const GameBoard &board) -> bool {
 
   // checking diagonal
   win = true;
-  for (int i = 0; i < board_size; i++) {
+  for (size_t i = 0; i < board_size; i++) {
     if (board[i][i] != player) {
       win = false;
       break;
@@ -129,7 +129,7 @@ auto isPlayerWin(const std::string &player, const GameBoard &board) -> bool {
 
   // checking antidiagonal
   win = true;
-  for (int i = 0; i < board_size; i++) {
+  for (size_t i = 0; i < board_size; i++) {
     if (board[i][board_size - i - 1] != player) {
       win = false;
       break;
@@ -148,9 +148,9 @@ auto isPlayerWin(const std::string &player, const GameBoard &board) -> bool {
 // Will be used to check for draw after checking
 // for either player win first
 auto isBoardFilled(const GameBoard &board) -> bool {
-  const int board_size = board.size();
-  for (int i = 0; i < board_size; i++) {
-    for (int j = 0; j < board_size; j++) {
+  const size_t board_size{board.size()};
+  for (size_t i = 0; i < board_size; i++) {
+    for (size_t j = 0; j < board_size; j++) {
       if (board[j][i] == "-") {
         return false;
       }
@@ -360,10 +360,10 @@ Move minmax(const std::string &player, GameBoard *board) {
 // Pretty print the current board
 void showBoard(const GameBoard &board) {
   std::string line_separator{"---------------"};
-  const int board_size = board.size();
+  const size_t board_size{board.size()};
   std::cout << line_separator << std::endl;
-  for (int i = 0; i < board_size; i++) {
-    for (int j = 0; j < board_size; j++) {
+  for (size_t i = 0; i < board_size; i++) {
+    for (size_t j = 0; j < board_size; j++) {
       std::cout << "| " << board[i][j] << " |";
     }
     std::cout << std::endl << line_separator << std::endl;
