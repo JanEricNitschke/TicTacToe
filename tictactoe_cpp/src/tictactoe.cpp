@@ -67,6 +67,9 @@ auto getAIStrength() -> int {
       strength = std::stoi(input);
     } catch (std::invalid_argument const &ex) {
       std::cout << "Invalid input" << std::endl;
+      std::cin.clear();  // Clear the error state
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+                      '\n');  // Clear input buffer
       continue;
     }
     if (strength > 4 || strength < 1) {
@@ -418,6 +421,9 @@ void playerTurn(const std::string &player, GameBoard *board) {
                 << ") could not be converted to an integer. Try again!"
                 << std::endl;
       valid_move = false;
+      std::cin.clear();  // Clear the error state
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+                      '\n');  // Clear input buffer
       continue;
     }
     // That the numbers are within bounds
