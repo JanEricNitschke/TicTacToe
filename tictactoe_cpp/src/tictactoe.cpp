@@ -52,9 +52,9 @@ auto getAIStart() -> std::string {
 // 2 wins if possible
 // 3 wins or blocks if possible
 // 4 plays perfect
-auto getAIStrength() -> int {
+auto getAIStrength() -> uint8_t {
   std::string input{};
-  int strength{};
+  uint8_t strength{};
   std::cout << "AI strength settings:" << std::endl;
   std::cout << "1: Easy" << std::endl;
   std::cout << "2: Medium" << std::endl;
@@ -165,11 +165,11 @@ std::string swapPlayer(const std::string &player) {
   return (player == "X") ? "O" : "X";
 }
 
-std::vector<std::array<int, 2>> getEmptyCells(const GameBoard &board) {
-  const int board_size = board.size();
-  std::vector<std::array<int, 2>> empty_cells;
-  for (int i = 0; i < board_size; i++) {
-    for (int j = 0; j < board_size; j++) {
+std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board) {
+  const size_t board_size = board.size();
+  std::vector<std::array<size_t, 2>> empty_cells;
+  for (size_t i = 0; i < board_size; i++) {
+    for (size_t j = 0; j < board_size; j++) {
       if (board[i][j] == "-") {
         empty_cells.push_back({{i, j}});
       }
@@ -181,20 +181,21 @@ std::vector<std::array<int, 2>> getEmptyCells(const GameBoard &board) {
 // Performs any random valid move
 Move randomMove(const GameBoard &board) {
   // Get all the empty cells
-  const std::vector<std::array<int, 2>> empty_cells{getEmptyCells(board)};
+  const std::vector<std::array<size_t, 2>> empty_cells{getEmptyCells(board)};
   // Pick a random number in range 0, length of the list and take that element
-  std::array<int, 2> chosenCell = empty_cells[std::rand() % empty_cells.size()];
-  return {{chosenCell[0], chosenCell[1], 0}};
+  std::array<size_t, 2> chosenCell =
+      empty_cells[std::rand() % empty_cells.size()];
+  return Move{.row{chosenCell[0]}, .col{chosenCell[1]}, .state{0}};
 }
 
 // Adjust wincondition requirements according to board state.
 void checkWinconditions(
     const std::string &player, const GameBoard &board,
-    std::unordered_map<std::string, std::set<std::tuple<int, int>>>
+    std::unordered_map<std::string, std::set<std::tuple<size_t, size_t>>>
         *win_conditions) {
-  const int board_size = board.size();
-  for (int row = 0; row < board_size; row++) {
-    for (int col = 0; col < board_size; col++) {
+  const size_t board_size = board.size();
+  for (size_t row = 0; row < board_size; row++) {
+    for (size_t col = 0; col < board_size; col++) {
       // If the given player occupies this cell
       // then that reduces the required positions
       // in that line by one
@@ -242,30 +243,30 @@ void checkWinconditions(
 // and an empty cell as the last slot
 Move getWinningMove(const std::string &player, const GameBoard &board) {
   // Build  all of the possible lines
-  std::unordered_map<std::string, std::set<std::tuple<int, int>>>
+  std::unordered_map<std::string, std::set<std::tuple<size_t, size_t>>>
       win_conditions{
-          {"row0", std::set<std::tuple<int, int>>({std::make_tuple(0, 0),
-                                                   std::make_tuple(0, 1),
-                                                   std::make_tuple(0, 2)})},
-          {"row1", std::set<std::tuple<int, int>>({std::make_tuple(1, 0),
-                                                   std::make_tuple(1, 1),
-                                                   std::make_tuple(1, 2)})},
-          {"row2", std::set<std::tuple<int, int>>({std::make_tuple(2, 0),
-                                                   std::make_tuple(2, 1),
-                                                   std::make_tuple(2, 2)})},
-          {"col0", std::set<std::tuple<int, int>>({std::make_tuple(0, 0),
-                                                   std::make_tuple(1, 0),
-                                                   std::make_tuple(2, 0)})},
-          {"col1", std::set<std::tuple<int, int>>({std::make_tuple(0, 1),
-                                                   std::make_tuple(1, 1),
-                                                   std::make_tuple(2, 1)})},
-          {"col2", std::set<std::tuple<int, int>>({std::make_tuple(0, 2),
-                                                   std::make_tuple(1, 2),
-                                                   std::make_tuple(2, 2)})},
-          {"diag", std::set<std::tuple<int, int>>({std::make_tuple(0, 0),
-                                                   std::make_tuple(1, 1),
-                                                   std::make_tuple(2, 2)})},
-          {"antidiag", std::set<std::tuple<int, int>>(
+          {"row0", std::set<std::tuple<size_t, size_t>>(
+                       {std::make_tuple(0, 0), std::make_tuple(0, 1),
+                        std::make_tuple(0, 2)})},
+          {"row1", std::set<std::tuple<size_t, size_t>>(
+                       {std::make_tuple(1, 0), std::make_tuple(1, 1),
+                        std::make_tuple(1, 2)})},
+          {"row2", std::set<std::tuple<size_t, size_t>>(
+                       {std::make_tuple(2, 0), std::make_tuple(2, 1),
+                        std::make_tuple(2, 2)})},
+          {"col0", std::set<std::tuple<size_t, size_t>>(
+                       {std::make_tuple(0, 0), std::make_tuple(1, 0),
+                        std::make_tuple(2, 0)})},
+          {"col1", std::set<std::tuple<size_t, size_t>>(
+                       {std::make_tuple(0, 1), std::make_tuple(1, 1),
+                        std::make_tuple(2, 1)})},
+          {"col2", std::set<std::tuple<size_t, size_t>>(
+                       {std::make_tuple(0, 2), std::make_tuple(1, 2),
+                        std::make_tuple(2, 2)})},
+          {"diag", std::set<std::tuple<size_t, size_t>>(
+                       {std::make_tuple(0, 0), std::make_tuple(1, 1),
+                        std::make_tuple(2, 2)})},
+          {"antidiag", std::set<std::tuple<size_t, size_t>>(
                            {std::make_tuple(0, 2), std::make_tuple(1, 1),
                             std::make_tuple(2, 0)})}};
   // Adjust wincondition requirements according to board state.
@@ -274,13 +275,14 @@ Move getWinningMove(const std::string &player, const GameBoard &board) {
   // position from the player to be fulfilled
   for (auto const &x : win_conditions) {
     if (x.second.size() == 1) {
-      std::tuple<int, int> firstWin = *x.second.begin();
-      Move winMove = {{std::get<0>(firstWin), std::get<1>(firstWin), 0}};
+      std::tuple<size_t, size_t> firstWin = *x.second.begin();
+      Move winMove = {
+          .row{std::get<0>(firstWin)}, .col{std::get<1>(firstWin)}, .state{0}};
       return winMove;
     }
   }
   // If there is no winning move return a default value
-  return {{-1, -1, -1}};
+  return Move{.row{0}, .col{0}, .state{-1}};
 }
 
 // Tries to find a move that would block the opponent
@@ -294,7 +296,7 @@ Move getBlockingMove(const std::string &player, const GameBoard &board) {
 // If there is none return a random one instead
 Move winMove(const std::string &player, const GameBoard &board) {
   Move winMove{getWinningMove(player, board)};
-  if (winMove[2] == 0) {
+  if (winMove.state == 0) {
     return winMove;
   }
   return randomMove(board);
@@ -304,11 +306,11 @@ Move winMove(const std::string &player, const GameBoard &board) {
 // If neither exists do a random one instead
 Move blockWinMove(const std::string &player, const GameBoard &board) {
   Move winMove{getWinningMove(player, board)};
-  if (winMove[2] == 0) {
+  if (winMove.state == 0) {
     return winMove;
   }
   Move blockMove{getBlockingMove(player, board)};
-  if (blockMove[2] == 0) {
+  if (blockMove.state == 0) {
     return blockMove;
   }
   return randomMove(board);
@@ -318,39 +320,40 @@ Move blockWinMove(const std::string &player, const GameBoard &board) {
 Move minmax(const std::string &player, GameBoard *board) {
   // Base cases
   // Player won
-  Move best_move{{-1, -1, -1}};
+  Move best_move{.row = 0, .col = 0, .state = -1};
   if (isPlayerWin(player, *board)) {
-    best_move[2] = 1;
+    best_move.state = 1;
     return best_move;
   }
   // Player lost
   if (isPlayerWin(swapPlayer(player), *board)) {
-    best_move[2] = -1;
+    best_move.state = -1;
     return best_move;
   }
-  const std::vector<std::array<int, 2>> empty_cells = getEmptyCells(*board);
+  const std::vector<std::array<size_t, 2>> empty_cells = getEmptyCells(*board);
   // Game is drawn
   if (empty_cells.empty()) {
-    best_move[2] = 0;
+    best_move.state = 0;
     return best_move;
   }
   // To reduce required computation
   // and increase replayability
   // just do a random move as the first
   // Optimal play still forces a draw
-  const int board_size = board->size();
+  const size_t board_size = board->size();
   if (empty_cells.size() == (board_size * board_size)) {
-    best_move[0] = std::rand() % board_size;
-    best_move[1] = std::rand() % board_size;
-    best_move[2] = 0;
+    best_move.row = std::rand() % board_size;
+    best_move.col = std::rand() % board_size;
+    best_move.state = 0;
     return best_move;
   }
   // Recursively apply minmax algorithm
-  for (const std::array<int, 2> &cell : empty_cells) {
+  for (const std::array<size_t, 2> &cell : empty_cells) {
     (*board)[cell[0]][cell[1]] = player;
     Move currentMove{minmax(swapPlayer(player), board)};
-    if (-currentMove[2] > best_move[2]) {
-      best_move = {{cell[0], cell[1], -currentMove[2]}};
+    if (-currentMove.state > best_move.state) {
+      best_move = {
+          .row = cell[0], .col = cell[1], .state = -(currentMove.state)};
     }
     (*board)[cell[0]][cell[1]] = "-";
   }
@@ -371,7 +374,7 @@ void showBoard(const GameBoard &board) {
 }
 
 // Perform AI move
-void aiTurn(const std::string &player, GameBoard *board, int ai_strength) {
+void aiTurn(const std::string &player, GameBoard *board, uint8_t ai_strength) {
   // Inform the player of the game state
   std::cout << "AI turn as player " << player << "." << std::endl;
   showBoard(*board);
@@ -392,15 +395,15 @@ void aiTurn(const std::string &player, GameBoard *board, int ai_strength) {
       best_move = minmax(player, board);
   }
   // Perform the move
-  (*board)[best_move[0]][best_move[1]] = player;
+  (*board)[best_move.row][best_move.col] = player;
   // Wait 1 second to have a smooth playing experience
   std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 // Perform player turn
 void playerTurn(const std::string &player, GameBoard *board) {
-  int row{-1};
-  int col{-1};
+  size_t row{};
+  size_t col{};
   bool valid_move{false};
   // Let the player input their move and validate
   while (!valid_move) {
@@ -413,8 +416,8 @@ void playerTurn(const std::string &player, GameBoard *board) {
     std::cin >> input1 >> input2;
     // That they entered two numbers
     try {
-      row = std::stoi(input1);
-      col = std::stoi(input2);
+      row = std::stoull(input1);
+      col = std::stoull(input2);
     } catch (std::invalid_argument const &ex) {
       std::cout << "At least one of your entered inputs of (" << input1 << ", "
                 << input2

@@ -8,7 +8,7 @@ auto main() -> int {
   std::string player{"X"};
   bool singlePlayer{getPlayerNumber()};
   std::string AI_marker{};
-  int AI_strength{};
+  uint8_t AI_strength{};
   if (singlePlayer) {
     AI_marker = getAIStart();
     AI_strength = getAIStrength();

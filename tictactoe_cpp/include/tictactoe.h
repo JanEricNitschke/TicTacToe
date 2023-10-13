@@ -15,7 +15,15 @@
 // // used for Move and GameBoard as they are common
 // // and long
 typedef std::array<std::array<std::string, 3>, 3> GameBoard;
-typedef std::array<int, 3> Move;
+struct Move {
+  size_t row{};
+  size_t col{};
+  int state{};
+
+  bool operator==(const Move &other) const {
+    return (row == other.row && col == other.col && state == other.state);
+  }
+};
 
 // Initialize an empty game board
 GameBoard createBoard();
@@ -38,7 +46,7 @@ std::string getAIStart();
 // 2 wins if possible
 // 3 wins or blocks if possible
 // 4 plays perfect
-int getAIStrength();
+uint8_t getAIStrength();
 
 // Checks if the given player
 // has won on the given board
@@ -54,7 +62,7 @@ bool isBoardFilled(const GameBoard &board);
 // Only expected X or O as input
 std::string swapPlayer(const std::string &player);
 
-std::vector<std::array<int, 2>> getEmptyCells(const GameBoard &board);
+std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board);
 
 // Performs any random valid move
 Move randomMove(const GameBoard &board);
@@ -62,7 +70,7 @@ Move randomMove(const GameBoard &board);
 // Adjust wincondition requirements according to board state.
 void checkWinconditions(
     const std::string &player, const GameBoard &board,
-    std::unordered_map<std::string, std::set<std::tuple<int, int>>>
+    std::unordered_map<std::string, std::set<std::tuple<size_t, size_t>>>
         *win_conditions);
 
 // Tries to find a move where the given player wins on the
@@ -89,7 +97,7 @@ Move minmax(const std::string &player, GameBoard *board);
 void showBoard(const GameBoard &board);
 
 // Perform AI move
-void aiTurn(const std::string &player, GameBoard *board, int ai_strength);
+void aiTurn(const std::string &player, GameBoard *board, uint8_t ai_strength);
 
 // Perform player turn
 void playerTurn(const std::string &player, GameBoard *board);
