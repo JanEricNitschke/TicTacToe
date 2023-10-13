@@ -29,7 +29,7 @@ struct Move {
 GameBoard createBoard();
 
 // Function to get yes/no response from the player
-bool getPlayerYesNo(const std::string question);
+bool getPlayerYesNo(const std::string &question);
 
 // Get information whether it is a
 // 1 person or 2 person game

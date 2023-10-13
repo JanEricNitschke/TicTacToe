@@ -20,7 +20,7 @@ auto createBoard() -> GameBoard {
 }
 
 // Function to get yes/no response from the player
-auto getPlayerYesNo(const std::string question) -> bool {
+auto getPlayerYesNo(const std::string &question) -> bool {
   std::string solo{};
   while (solo != "Y" && solo != "N") {
     std::cout << question << std::endl;
