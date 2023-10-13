@@ -46,7 +46,7 @@ std::string getAIStart();
 // 2 wins if possible
 // 3 wins or blocks if possible
 // 4 plays perfect
-uint8_t getAIStrength();
+int getAIStrength();
 
 // Checks if the given player
 // has won on the given board
@@ -97,7 +97,7 @@ Move minmax(const std::string &player, GameBoard *board);
 void showBoard(const GameBoard &board);
 
 // Perform AI move
-void aiTurn(const std::string &player, GameBoard *board, uint8_t ai_strength);
+void aiTurn(const std::string &player, GameBoard *board, int ai_strength);
 
 // Perform player turn
 void playerTurn(const std::string &player, GameBoard *board);

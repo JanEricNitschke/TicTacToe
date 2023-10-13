@@ -52,9 +52,9 @@ auto getAIStart() -> std::string {
 // 2 wins if possible
 // 3 wins or blocks if possible
 // 4 plays perfect
-auto getAIStrength() -> uint8_t {
+auto getAIStrength() -> int {
   std::string input{};
-  uint8_t strength{};
+  int strength{};
   std::cout << "AI strength settings:" << std::endl;
   std::cout << "1: Easy" << std::endl;
   std::cout << "2: Medium" << std::endl;
@@ -374,7 +374,7 @@ void showBoard(const GameBoard &board) {
 }
 
 // Perform AI move
-void aiTurn(const std::string &player, GameBoard *board, uint8_t ai_strength) {
+void aiTurn(const std::string &player, GameBoard *board, int ai_strength) {
   // Inform the player of the game state
   std::cout << "AI turn as player " << player << "." << std::endl;
   showBoard(*board);
