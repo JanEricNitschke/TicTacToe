@@ -8,6 +8,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <string_view>
 #include <thread>  // NOLINT [build/c++11]
 #include <tuple>
 #include <unordered_map>
@@ -15,12 +16,12 @@
 
 // Initialize an empty game board
 auto createBoard() -> GameBoard {
-  GameBoard board{{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}};
+  GameBoard board{{{'-', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}}};
   return board;
 }
 
 // Function to get yes/no response from the player
-auto getPlayerYesNo(const std::string &question) -> bool {
+auto getPlayerYesNo(std::string_view question) -> bool {
   std::string solo{};
   while (solo != "Y" && solo != "N") {
     std::cout << question << std::endl;
@@ -40,11 +41,11 @@ auto getPlayerNumber() -> bool {
 // the first move.
 // Player 'X' makes odd moves so if AI
 // should make the first it needs to be player 'X'
-auto getAIStart() -> std::string {
+auto getAIStart() -> char {
   if (getPlayerYesNo("Should the AI make the first move?[y/n]: ")) {
-    return "X";
+    return 'X';
   }
-  return "O";
+  return 'O';
 }
 
 // Ask user for AI strength
@@ -83,7 +84,7 @@ auto getAIStrength() -> int {
 
 // Checks if the given player
 // has won on the given board
-auto isPlayerWin(const std::string &player, const GameBoard &board) -> bool {
+auto isPlayerWin(char player, const GameBoard &board) -> bool {
   bool win{false};
   const size_t board_size{board.size()};
 
@@ -151,7 +152,7 @@ auto isBoardFilled(const GameBoard &board) -> bool {
   const size_t board_size{board.size()};
   for (size_t i = 0; i < board_size; i++) {
     for (size_t j = 0; j < board_size; j++) {
-      if (board[j][i] == "-") {
+      if (board[j][i] == '-') {
         return false;
       }
     }
@@ -161,16 +162,14 @@ auto isBoardFilled(const GameBoard &board) -> bool {
 
 // Swap between player X and O
 // Only expected X or O as input
-std::string swapPlayer(const std::string &player) {
-  return (player == "X") ? "O" : "X";
-}
+char swapPlayer(char player) { return (player == 'X') ? 'O' : 'X'; }
 
 std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board) {
   const size_t board_size = board.size();
   std::vector<std::array<size_t, 2>> empty_cells;
   for (size_t i = 0; i < board_size; i++) {
     for (size_t j = 0; j < board_size; j++) {
-      if (board[i][j] == "-") {
+      if (board[i][j] == '-') {
         empty_cells.push_back({{i, j}});
       }
     }
@@ -190,7 +189,7 @@ Move randomMove(const GameBoard &board) {
 
 // Adjust wincondition requirements according to board state.
 void checkWinconditions(
-    const std::string &player, const GameBoard &board,
+    char player, const GameBoard &board,
     std::unordered_map<std::string, std::set<std::tuple<size_t, size_t>>>
         *win_conditions) {
   const size_t board_size = board.size();
@@ -241,7 +240,7 @@ void checkWinconditions(
 // Tries to find a move where the given player wins on the
 // given board. So any line that contains the player twice
 // and an empty cell as the last slot
-Move getWinningMove(const std::string &player, const GameBoard &board) {
+Move getWinningMove(char player, const GameBoard &board) {
   // Build  all of the possible lines
   std::unordered_map<std::string, std::set<std::tuple<size_t, size_t>>>
       win_conditions{
@@ -287,14 +286,14 @@ Move getWinningMove(const std::string &player, const GameBoard &board) {
 
 // Tries to find a move that would block the opponent
 // winning on their next move
-Move getBlockingMove(const std::string &player, const GameBoard &board) {
+Move getBlockingMove(char player, const GameBoard &board) {
   // Just find a move that would make the opponent win
   return getWinningMove(swapPlayer(player), board);
 }
 
 // Try to perform a winning move
 // If there is none return a random one instead
-Move winMove(const std::string &player, const GameBoard &board) {
+Move winMove(char player, const GameBoard &board) {
   Move winMove{getWinningMove(player, board)};
   if (winMove.state == 0) {
     return winMove;
@@ -304,7 +303,7 @@ Move winMove(const std::string &player, const GameBoard &board) {
 
 // Try to find a winning or blocking move
 // If neither exists do a random one instead
-Move blockWinMove(const std::string &player, const GameBoard &board) {
+Move blockWinMove(char player, const GameBoard &board) {
   Move winMove{getWinningMove(player, board)};
   if (winMove.state == 0) {
     return winMove;
@@ -317,7 +316,7 @@ Move blockWinMove(const std::string &player, const GameBoard &board) {
 }
 // Takes a board state and returns the coordinates of the optimal move for the
 // given player
-Move minmax(const std::string &player, GameBoard *board) {
+Move minmax(char player, GameBoard *board) {
   // Base cases
   // Player won
   Move best_move{.row = 0, .col = 0, .state = -1};
@@ -355,14 +354,14 @@ Move minmax(const std::string &player, GameBoard *board) {
       best_move = {
           .row = cell[0], .col = cell[1], .state = -(currentMove.state)};
     }
-    (*board)[cell[0]][cell[1]] = "-";
+    (*board)[cell[0]][cell[1]] = '-';
   }
   return best_move;
 }
 
 // Pretty print the current board
 void showBoard(const GameBoard &board) {
-  std::string line_separator{"---------------"};
+  std::string_view line_separator{"---------------"};
   const size_t board_size{board.size()};
   std::cout << line_separator << std::endl;
   for (size_t i = 0; i < board_size; i++) {
@@ -374,7 +373,7 @@ void showBoard(const GameBoard &board) {
 }
 
 // Perform AI move
-void aiTurn(const std::string &player, GameBoard *board, int ai_strength) {
+void aiTurn(char player, GameBoard *board, int ai_strength) {
   // Inform the player of the game state
   std::cout << "AI turn as player " << player << "." << std::endl;
   showBoard(*board);
@@ -401,7 +400,7 @@ void aiTurn(const std::string &player, GameBoard *board, int ai_strength) {
 }
 
 // Perform player turn
-void playerTurn(const std::string &player, GameBoard *board) {
+void playerTurn(char player, GameBoard *board) {
   size_t row{};
   size_t col{};
   bool valid_move{false};
@@ -439,7 +438,7 @@ void playerTurn(const std::string &player, GameBoard *board) {
       continue;
     }
     // And that the position is not taken
-    if ((*board)[row - 1][col - 1] != "-") {
+    if ((*board)[row - 1][col - 1] != '-') {
       std::cout << "The position (" << row << ", " << col
                 << ") has already been taken by a player! Please do your move "
                    "on an empty position."

@@ -5,9 +5,9 @@
 auto main() -> int {
   srand(static_cast<unsigned int>(time(NULL)));
   GameBoard board{createBoard()};
-  std::string player{"X"};
+  char player{'X'};
   bool singlePlayer{getPlayerNumber()};
-  std::string AI_marker{};
+  char AI_marker{};
   int AI_strength{};
   if (singlePlayer) {
     AI_marker = getAIStart();

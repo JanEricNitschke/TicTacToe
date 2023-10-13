@@ -7,6 +7,7 @@
 #include <iostream>
 #include <set>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
@@ -14,7 +15,7 @@
 // // Define aliases for the data structures
 // // used for Move and GameBoard as they are common
 // // and long
-typedef std::array<std::array<std::string, 3>, 3> GameBoard;
+typedef std::array<std::array<char, 3>, 3> GameBoard;
 struct Move {
   size_t row{};
   size_t col{};
@@ -29,7 +30,7 @@ struct Move {
 GameBoard createBoard();
 
 // Function to get yes/no response from the player
-bool getPlayerYesNo(const std::string &question);
+bool getPlayerYesNo(std::string_view question);
 
 // Get information whether it is a
 // 1 person or 2 person game
@@ -39,7 +40,7 @@ bool getPlayerNumber();
 // the first move.
 // Player 'X' makes odd moves so if AI
 // should make the first it needs to be player 'X'
-std::string getAIStart();
+char getAIStart();
 
 // Ask user for AI strength
 // 1 is Random
@@ -50,7 +51,7 @@ int getAIStrength();
 
 // Checks if the given player
 // has won on the given board
-bool isPlayerWin(const std::string &player, const GameBoard &board);
+bool isPlayerWin(char player, const GameBoard &board);
 
 // Checks if the board is completely filled
 // That is the case if no '-' can be found
@@ -60,7 +61,7 @@ bool isBoardFilled(const GameBoard &board);
 
 // Swap between player X and O
 // Only expected X or O as input
-std::string swapPlayer(const std::string &player);
+char swapPlayer(char player);
 
 std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board);
 
@@ -69,36 +70,36 @@ Move randomMove(const GameBoard &board);
 
 // Adjust wincondition requirements according to board state.
 void checkWinconditions(
-    const std::string &player, const GameBoard &board,
+    char player, const GameBoard &board,
     std::unordered_map<std::string, std::set<std::tuple<size_t, size_t>>>
         *win_conditions);
 
 // Tries to find a move where the given player wins on the
 // given board. So any line that contains the player twice
 // and an empty cell as the last slot
-Move getWinningMove(const std::string &player, const GameBoard &board);
+Move getWinningMove(char player, const GameBoard &board);
 
 // Tries to find a move that would block the opponent
 // winning on their next move
-Move getBlockingMove(const std::string &player, const GameBoard &board);
+Move getBlockingMove(char player, const GameBoard &board);
 
 // Try to perform a winning move
 // If there is none return a random one instead
-Move winMove(const std::string &player, const GameBoard &board);
+Move winMove(char player, const GameBoard &board);
 
 // Try to find a winning or blocking move
 // If neither exists do a random one instead
-Move blockWinMove(const std::string &player, const GameBoard &board);
+Move blockWinMove(char player, const GameBoard &board);
 
 // The coordinates of the optimal move for the player on the board
-Move minmax(const std::string &player, GameBoard *board);
+Move minmax(char player, GameBoard *board);
 
 // Pretty print the current board
 void showBoard(const GameBoard &board);
 
 // Perform AI move
-void aiTurn(const std::string &player, GameBoard *board, int ai_strength);
+void aiTurn(char player, GameBoard *board, int ai_strength);
 
 // Perform player turn
-void playerTurn(const std::string &player, GameBoard *board);
+void playerTurn(char player, GameBoard *board);
 #endif  // TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
