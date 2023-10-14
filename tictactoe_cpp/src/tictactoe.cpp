@@ -1,12 +1,12 @@
 // Copyright 2022-2023 Jan-Eric Nitschke. All rights reserved.
 
 #include <tictactoe.h>
+#include <Random.h>
 
 #include <algorithm>
 #include <array>
 #include <chrono>  // NOLINT [build/c++11]
 #include <iostream>
-#include <random>
 #include <string>
 #include <string_view>
 #include <thread>  // NOLINT [build/c++11]
@@ -183,7 +183,7 @@ Move randomMove(const GameBoard &board) {
   const std::vector<std::array<size_t, 2>> empty_cells{getEmptyCells(board)};
   // Pick a random number in range 0, length of the list and take that element
   std::array<size_t, 2> chosenCell =
-      empty_cells[std::rand() % empty_cells.size()];
+      empty_cells[Random::get<size_t>(0, empty_cells.size() - 1)];
   return Move{.row{chosenCell[0]}, .col{chosenCell[1]}, .state{0}};
 }
 
@@ -341,10 +341,7 @@ Move minmax(char player, GameBoard *board) {
   // Optimal play still forces a draw
   const size_t board_size = board->size();
   if (empty_cells.size() == (board_size * board_size)) {
-    best_move.row = std::rand() % board_size;
-    best_move.col = std::rand() % board_size;
-    best_move.state = 0;
-    return best_move;
+    return randomMove(*board);
   }
   // Recursively apply minmax algorithm
   for (const std::array<size_t, 2> &cell : empty_cells) {

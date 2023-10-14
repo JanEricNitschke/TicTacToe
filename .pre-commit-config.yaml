@@ -3,7 +3,7 @@ exclude: docs/|fibonacci/
 repos:
   # General
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-yaml
         language: python
@@ -28,13 +28,13 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.16.17
+    rev: v1.16.19
     hooks:
       - id: typos
         args: []
   # Python specific
   - repo: https://github.com/JanEricNitschke/pymend
-    rev: "v1.0.8"
+    rev: "v1.0.10"
     hooks:
       - id: pymend
         language: python
@@ -161,7 +161,7 @@ repos:
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
-    rev: v1.56.4
+    rev: v1.57.1
     hooks:
       - id: rubocop
 
