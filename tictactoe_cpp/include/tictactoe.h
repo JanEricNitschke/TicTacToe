@@ -15,7 +15,7 @@
 // // Define aliases for the data structures
 // // used for Move and GameBoard as they are common
 // // and long
-typedef std::array<std::array<char, 3>, 3> GameBoard;
+using GameBoard = std::array<std::array<char, 3>, 3>;
 struct Move {
   size_t row{};
   size_t col{};
