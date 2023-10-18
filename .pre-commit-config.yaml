@@ -28,7 +28,7 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.16.19
+    rev: v1.16.20
     hooks:
       - id: typos
         args: []
