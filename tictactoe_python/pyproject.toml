@@ -7,54 +7,8 @@ check             = true
 
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
-select = [
-    "E",
-    "F",
-    "B",
-    "W",
-    "I",
-    "N",
-    "D",
-    "UP",
-    "YTT",
-    "ANN",
-    "S",
-    "BLE",
-    "FBT",
-    "A",
-    "C4",
-    "DTZ",
-    "T10",
-    "EXE",
-    "ISC",
-    "ICN",
-    "G",
-    "INP",
-    "PIE",
-    "PYI",
-    "PT",
-    "Q",
-    "RSE",
-    "RET",
-    "SLF",
-    "SIM",
-    "TID",
-    "TCH",
-    "INT",
-    "ARG",
-    "ERA",
-    "PD",
-    "PERF",
-    "PGH",
-    "PLC",
-    "PLE",
-    "PLR",
-    "PLW",
-    "TRY",
-    "NPY",
-    "RUF",
-]
-ignore = ["ANN101", "S311"]
+select = ["ALL"]
+ignore = ["ANN101", "S311", "T20", "COM"]
 
 # Exclude a variety of commonly ignored directories.
 exclude = [

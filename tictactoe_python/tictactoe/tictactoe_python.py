@@ -291,7 +291,9 @@ class TicTacToe:
             return self.random_move(board, player)
         return winning_move
 
-    def _get_winning_move(self, board: Board, player: str) -> list[int] | None:
+    def _get_winning_move(  # noqa: C901
+        self, board: Board, player: str
+    ) -> list[int] | None:
         """Takes a board state and returns the coordinates of a winning move or None.
 
         Args:
