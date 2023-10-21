@@ -4,7 +4,6 @@
 #include <tictactoe.h>
 
 #include <algorithm>
-#include <array>
 #include <chrono>  // NOLINT [build/c++11]
 #include <iostream>
 #include <string>
@@ -13,12 +12,6 @@
 #include <tuple>
 #include <unordered_map>
 #include <vector>
-
-// Initialize an empty game board
-auto createBoard() -> GameBoard {
-  GameBoard board{{{'-', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}}};
-  return board;
-}
 
 // Function to get yes/no response from the player
 auto getPlayerYesNo(std::string_view question) -> bool {
@@ -164,13 +157,13 @@ auto isBoardFilled(const GameBoard &board) -> bool {
 // Only expected X or O as input
 char swapPlayer(char player) { return (player == 'X') ? 'O' : 'X'; }
 
-std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board) {
+std::vector<Spot> getEmptyCells(const GameBoard &board) {
   const size_t board_size{board.size()};
-  std::vector<std::array<size_t, 2>> empty_cells{};
+  std::vector<Spot> empty_cells{};
   for (size_t i{0}; i < board_size; i++) {
     for (size_t j{0}; j < board_size; j++) {
       if (board[i][j] == '-') {
-        empty_cells.push_back({{i, j}});
+        empty_cells.push_back({i, j});
       }
     }
   }
@@ -180,11 +173,10 @@ std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board) {
 // Performs any random valid move
 Move randomMove(const GameBoard &board) {
   // Get all the empty cells
-  const std::vector<std::array<size_t, 2>> empty_cells{getEmptyCells(board)};
+  const std::vector<Spot> empty_cells{getEmptyCells(board)};
   // Pick a random number in range 0, length of the list and take that element
-  std::array<size_t, 2> chosenCell{
-      empty_cells[Random::get<size_t>(0, empty_cells.size() - 1)]};
-  return {.row{chosenCell[0]}, .col{chosenCell[1]}, .state{0}};
+  Spot chosenCell{empty_cells[Random::get<size_t>(0, empty_cells.size() - 1)]};
+  return {.spot = {.row{chosenCell.row}, .col{chosenCell.col}}, .state{0}};
 }
 
 // Adjust wincondition requirements according to board state.
@@ -275,13 +267,13 @@ Move getWinningMove(char player, const GameBoard &board) {
   for (const auto &x : win_conditions) {
     if (x.second.size() == 1) {
       std::tuple<size_t, size_t> firstWin{*x.second.begin()};
-      Move winMove = {
-          .row{std::get<0>(firstWin)}, .col{std::get<1>(firstWin)}, .state{0}};
-      return winMove;
+      return {
+          .spot = {.row{std::get<0>(firstWin)}, .col{std::get<1>(firstWin)}},
+          .state{0}};
     }
   }
   // If there is no winning move return a default value
-  return {.row{0}, .col{0}, .state{-1}};
+  return {.spot = {.row{0}, .col{0}}, .state{-1}};
 }
 
 // Tries to find a move that would block the opponent
@@ -319,7 +311,7 @@ Move blockWinMove(char player, const GameBoard &board) {
 Move minmax(char player, GameBoard *board) {
   // Base cases
   // Player won
-  Move best_move{.row = 0, .col = 0, .state = -1};
+  Move best_move{.spot = {.row = 0, .col = 0}, .state = -1};
   if (isPlayerWin(player, *board)) {
     best_move.state = 1;
     return best_move;
@@ -329,7 +321,7 @@ Move minmax(char player, GameBoard *board) {
     best_move.state = -1;
     return best_move;
   }
-  const std::vector<std::array<size_t, 2>> empty_cells{getEmptyCells(*board)};
+  const std::vector<Spot> empty_cells{getEmptyCells(*board)};
   // Game is drawn
   if (empty_cells.empty()) {
     best_move.state = 0;
@@ -345,13 +337,13 @@ Move minmax(char player, GameBoard *board) {
   }
   // Recursively apply minmax algorithm
   for (const auto &cell : empty_cells) {
-    (*board)[cell[0]][cell[1]] = player;
+    (*board)[cell.row][cell.col] = player;
     Move currentMove{minmax(swapPlayer(player), board)};
     if (-currentMove.state > best_move.state) {
-      best_move = {
-          .row = cell[0], .col = cell[1], .state = -(currentMove.state)};
+      best_move = {.spot = {.row = cell.row, .col = cell.col},
+                   .state = -(currentMove.state)};
     }
-    (*board)[cell[0]][cell[1]] = '-';
+    (*board)[cell.row][cell.col] = '-';
   }
   return best_move;
 }
@@ -391,7 +383,7 @@ void aiTurn(char player, GameBoard *board, int ai_strength) {
       best_move = minmax(player, board);
   }
   // Perform the move
-  (*board)[best_move.row][best_move.col] = player;
+  (*board)[best_move.spot.row][best_move.spot.col] = player;
   // Wait 1 second to have a smooth playing experience
   std::this_thread::sleep_for(std::chrono::seconds(1));
 }

@@ -16,19 +16,29 @@
 // // used for Move and GameBoard as they are common
 // // and long
 using GameBoard = std::array<std::array<char, 3>, 3>;
-struct Move {
+
+struct Spot {
   size_t row{};
   size_t col{};
+
+  bool operator==(const Spot &other) const {
+    return (row == other.row && col == other.col);
+  }
+};
+
+struct Move {
+  Spot spot{};
   int state{};
 
   bool operator==(const Move &other) const {
-    return (row == other.row && col == other.col && state == other.state);
+    return (spot == other.spot && state == other.state);
   }
 };
 
 // Initialize an empty game board
-GameBoard createBoard();
-
+constexpr auto createBoard() -> GameBoard {
+  return {{{'-', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}}};
+}
 // Function to get yes/no response from the player
 bool getPlayerYesNo(std::string_view question);
 
@@ -63,7 +73,7 @@ bool isBoardFilled(const GameBoard &board);
 // Only expected X or O as input
 char swapPlayer(char player);
 
-std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board);
+std::vector<Spot> getEmptyCells(const GameBoard &board);
 
 // Performs any random valid move
 Move randomMove(const GameBoard &board);
