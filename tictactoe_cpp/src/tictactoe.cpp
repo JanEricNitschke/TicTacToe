@@ -89,9 +89,9 @@ auto isPlayerWin(char player, const GameBoard &board) -> bool {
   const size_t board_size{board.size()};
 
   // checking rows
-  for (size_t i = 0; i < board_size; i++) {
+  for (size_t i{0}; i < board_size; i++) {
     win = true;
-    for (size_t j = 0; j < board_size; j++) {
+    for (size_t j{0}; j < board_size; j++) {
       if (board[i][j] != player) {
         win = false;
         break;
@@ -103,9 +103,9 @@ auto isPlayerWin(char player, const GameBoard &board) -> bool {
   }
 
   // checking cols
-  for (size_t i = 0; i < board_size; i++) {
+  for (size_t i{0}; i < board_size; i++) {
     win = true;
-    for (size_t j = 0; j < board_size; j++) {
+    for (size_t j{0}; j < board_size; j++) {
       if (board[j][i] != player) {
         win = false;
         break;
@@ -118,7 +118,7 @@ auto isPlayerWin(char player, const GameBoard &board) -> bool {
 
   // checking diagonal
   win = true;
-  for (size_t i = 0; i < board_size; i++) {
+  for (size_t i{0}; i < board_size; i++) {
     if (board[i][i] != player) {
       win = false;
       break;
@@ -130,7 +130,7 @@ auto isPlayerWin(char player, const GameBoard &board) -> bool {
 
   // checking antidiagonal
   win = true;
-  for (size_t i = 0; i < board_size; i++) {
+  for (size_t i{0}; i < board_size; i++) {
     if (board[i][board_size - i - 1] != player) {
       win = false;
       break;
@@ -150,8 +150,8 @@ auto isPlayerWin(char player, const GameBoard &board) -> bool {
 // for either player win first
 auto isBoardFilled(const GameBoard &board) -> bool {
   const size_t board_size{board.size()};
-  for (size_t i = 0; i < board_size; i++) {
-    for (size_t j = 0; j < board_size; j++) {
+  for (size_t i{0}; i < board_size; i++) {
+    for (size_t j{0}; j < board_size; j++) {
       if (board[j][i] == '-') {
         return false;
       }
@@ -167,8 +167,8 @@ char swapPlayer(char player) { return (player == 'X') ? 'O' : 'X'; }
 std::vector<std::array<size_t, 2>> getEmptyCells(const GameBoard &board) {
   const size_t board_size{board.size()};
   std::vector<std::array<size_t, 2>> empty_cells{};
-  for (size_t i = 0; i < board_size; i++) {
-    for (size_t j = 0; j < board_size; j++) {
+  for (size_t i{0}; i < board_size; i++) {
+    for (size_t j{0}; j < board_size; j++) {
       if (board[i][j] == '-') {
         empty_cells.push_back({{i, j}});
       }
@@ -193,8 +193,8 @@ void checkWinconditions(
     std::unordered_map<std::string, std::set<std::tuple<size_t, size_t>>>
         *win_conditions) {
   const size_t board_size{board.size()};
-  for (size_t row = 0; row < board_size; row++) {
-    for (size_t col = 0; col < board_size; col++) {
+  for (size_t row{0}; row < board_size; row++) {
+    for (size_t col{0}; col < board_size; col++) {
       // If the given player occupies this cell
       // then that reduces the required positions
       // in that line by one
@@ -361,8 +361,8 @@ void showBoard(const GameBoard &board) {
   std::string_view line_separator{"---------------"};
   const size_t board_size{board.size()};
   std::cout << line_separator << std::endl;
-  for (size_t i = 0; i < board_size; i++) {
-    for (size_t j = 0; j < board_size; j++) {
+  for (size_t i{0}; i < board_size; i++) {
+    for (size_t j{0}; j < board_size; j++) {
       std::cout << "| " << board[i][j] << " |";
     }
     std::cout << std::endl << line_separator << std::endl;
