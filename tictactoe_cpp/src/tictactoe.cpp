@@ -272,7 +272,7 @@ Move getWinningMove(char player, const GameBoard &board) {
   checkWinconditions(player, board, &win_conditions);
   // Check if any line requires exactly one more
   // position from the player to be fulfilled
-  for (auto const &x : win_conditions) {
+  for (const auto &x : win_conditions) {
     if (x.second.size() == 1) {
       std::tuple<size_t, size_t> firstWin{*x.second.begin()};
       Move winMove = {
@@ -344,7 +344,7 @@ Move minmax(char player, GameBoard *board) {
     return randomMove(*board);
   }
   // Recursively apply minmax algorithm
-  for (const std::array<size_t, 2> &cell : empty_cells) {
+  for (const auto &cell : empty_cells) {
     (*board)[cell[0]][cell[1]] = player;
     Move currentMove{minmax(swapPlayer(player), board)};
     if (-currentMove.state > best_move.state) {
