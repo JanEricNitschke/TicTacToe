@@ -17,6 +17,17 @@
 // // and long
 using GameBoard = std::array<std::array<char, 3>, 3>;
 
+enum class GameState {
+  undecided = 0,
+  loss = 1,
+  draw = 2,
+  win = 3,
+};
+
+GameState operator-(GameState const &state);
+
+std::ostream& operator << (std::ostream& os, const GameState& obj);
+
 struct Spot {
   size_t row{};
   size_t col{};
@@ -28,17 +39,31 @@ struct Spot {
 
 struct Move {
   Spot spot{};
-  int state{};
+  GameState state{};
 
   bool operator==(const Move &other) const {
     return (spot == other.spot && state == other.state);
   }
 };
 
+struct AISettings {
+  bool isAI{};
+  int strength{};
+};
+
+struct BestMoves {
+  std::vector<Spot> spots{};
+  GameState state{};
+};
+
 // Initialize an empty game board
 constexpr auto createBoard() -> GameBoard {
   return {{{'-', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}}};
 }
+
+// Get AI settings for the given player
+AISettings getAISettings(char player);
+
 // Function to get yes/no response from the player
 bool getPlayerYesNo(std::string_view question);
 
@@ -101,7 +126,10 @@ Move winMove(char player, const GameBoard &board);
 // If neither exists do a random one instead
 Move blockWinMove(char player, const GameBoard &board);
 
-// The coordinates of the optimal move for the player on the board
+// The coordinates of the optimal moves for the player on the board
+BestMoves getBestMoves(char player, GameBoard *board);
+
+// The coordinates of the one optimal move for the player on the board
 Move minmax(char player, GameBoard *board);
 
 // Pretty print the current board

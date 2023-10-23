@@ -13,6 +13,35 @@
 #include <unordered_map>
 #include <vector>
 
+GameState operator-(GameState const &state) {
+  switch (state) {
+    case GameState::win:
+      return GameState::loss;
+    case GameState::loss:
+      return GameState::win;
+    case GameState::draw:
+      return GameState::draw;
+    default:
+      return GameState::undecided;
+  }
+}
+
+std::ostream &operator<<(std::ostream &os, const GameState &obj) {
+  os << static_cast<std::underlying_type<GameState>::type>(obj);
+  return os;
+}
+
+auto getAISettings(char player) -> AISettings {
+  AISettings settings{};
+  std::string player_string{player};
+  settings.isAI =
+      getPlayerYesNo("Is player " + player_string + " an AI?[y/n]: ");
+  if (settings.isAI) {
+    settings.strength = getAIStrength();
+  }
+  return settings;
+}
+
 // Function to get yes/no response from the player
 auto getPlayerYesNo(std::string_view question) -> bool {
   std::string solo{};
@@ -28,17 +57,6 @@ auto getPlayerYesNo(std::string_view question) -> bool {
 // 1 person or 2 person game
 auto getPlayerNumber() -> bool {
   return getPlayerYesNo("Play alone vs AI?[y/n]: ");
-}
-
-// Get information whether the AI should make
-// the first move.
-// Player 'X' makes odd moves so if AI
-// should make the first it needs to be player 'X'
-auto getAIStart() -> char {
-  if (getPlayerYesNo("Should the AI make the first move?[y/n]: ")) {
-    return 'X';
-  }
-  return 'O';
 }
 
 // Ask user for AI strength
@@ -163,7 +181,7 @@ std::vector<Spot> getEmptyCells(const GameBoard &board) {
   for (size_t i{0}; i < board_size; i++) {
     for (size_t j{0}; j < board_size; j++) {
       if (board[i][j] == '-') {
-        empty_cells.push_back({i, j});
+        empty_cells.emplace_back(i, j);
       }
     }
   }
@@ -176,7 +194,8 @@ Move randomMove(const GameBoard &board) {
   const std::vector<Spot> empty_cells{getEmptyCells(board)};
   // Pick a random number in range 0, length of the list and take that element
   Spot chosenCell{empty_cells[Random::get<size_t>(0, empty_cells.size() - 1)]};
-  return {.spot = {.row{chosenCell.row}, .col{chosenCell.col}}, .state{0}};
+  return {.spot = {.row{chosenCell.row}, .col{chosenCell.col}},
+          .state{GameState::undecided}};
 }
 
 // Adjust wincondition requirements according to board state.
@@ -269,11 +288,11 @@ Move getWinningMove(char player, const GameBoard &board) {
       std::tuple<size_t, size_t> firstWin{*x.second.begin()};
       return {
           .spot = {.row{std::get<0>(firstWin)}, .col{std::get<1>(firstWin)}},
-          .state{0}};
+          .state{GameState::win}};
     }
   }
   // If there is no winning move return a default value
-  return {.spot = {.row{0}, .col{0}}, .state{-1}};
+  return {.spot = {.row{0}, .col{0}}, .state{GameState::undecided}};
 }
 
 // Tries to find a move that would block the opponent
@@ -287,7 +306,7 @@ Move getBlockingMove(char player, const GameBoard &board) {
 // If there is none return a random one instead
 Move winMove(char player, const GameBoard &board) {
   Move winMove{getWinningMove(player, board)};
-  if (winMove.state == 0) {
+  if (winMove.state != GameState::undecided) {
     return winMove;
   }
   return randomMove(board);
@@ -297,35 +316,35 @@ Move winMove(char player, const GameBoard &board) {
 // If neither exists do a random one instead
 Move blockWinMove(char player, const GameBoard &board) {
   Move winMove{getWinningMove(player, board)};
-  if (winMove.state == 0) {
+  if (winMove.state != GameState::undecided) {
     return winMove;
   }
   Move blockMove{getBlockingMove(player, board)};
-  if (blockMove.state == 0) {
+  if (blockMove.state != GameState::undecided) {
     return blockMove;
   }
   return randomMove(board);
 }
 // Takes a board state and returns the coordinates of the optimal move for the
 // given player
-Move minmax(char player, GameBoard *board) {
+BestMoves getBestMoves(char player, GameBoard *board) {
   // Base cases
   // Player won
-  Move best_move{.spot = {.row = 0, .col = 0}, .state = -1};
+  BestMoves best_moves{.spots{}, .state = GameState::undecided};
   if (isPlayerWin(player, *board)) {
-    best_move.state = 1;
-    return best_move;
+    best_moves.state = GameState::win;
+    return best_moves;
   }
   // Player lost
   if (isPlayerWin(swapPlayer(player), *board)) {
-    best_move.state = -1;
-    return best_move;
+    best_moves.state = GameState::loss;
+    return best_moves;
   }
   const std::vector<Spot> empty_cells{getEmptyCells(*board)};
   // Game is drawn
   if (empty_cells.empty()) {
-    best_move.state = 0;
-    return best_move;
+    best_moves.state = GameState::draw;
+    return best_moves;
   }
   // To reduce required computation
   // and increase replayability
@@ -333,19 +352,33 @@ Move minmax(char player, GameBoard *board) {
   // Optimal play still forces a draw
   const size_t board_size{board->size()};
   if (empty_cells.size() == (board_size * board_size)) {
-    return randomMove(*board);
+    Move random_move{randomMove(*board)};
+    best_moves.spots.push_back(random_move.spot);
+    return best_moves;
   }
   // Recursively apply minmax algorithm
   for (const auto &cell : empty_cells) {
     (*board)[cell.row][cell.col] = player;
-    Move currentMove{minmax(swapPlayer(player), board)};
-    if (-currentMove.state > best_move.state) {
-      best_move = {.spot = {.row = cell.row, .col = cell.col},
-                   .state = -(currentMove.state)};
+    BestMoves current_moves{getBestMoves(swapPlayer(player), board)};
+    if (-current_moves.state > best_moves.state) {
+      best_moves.state = -current_moves.state;
+      best_moves.spots = {cell};
+    } else if (-current_moves.state == best_moves.state) {
+      best_moves.spots.push_back(cell);
     }
     (*board)[cell.row][cell.col] = '-';
   }
-  return best_move;
+  return best_moves;
+}
+
+Move minmax(char player, GameBoard *board) {
+  BestMoves best_moves{getBestMoves(player, board)};
+  if (best_moves.spots.empty()) {
+    return {.spot{}, .state{best_moves.state}};
+  }
+  Spot random_best_spot =
+      best_moves.spots[Random::get<size_t>(0, best_moves.spots.size() - 1)];
+  return {.spot{random_best_spot}, .state{best_moves.state}};
 }
 
 // Pretty print the current board

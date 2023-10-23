@@ -5,17 +5,15 @@
 auto main() -> int {
   GameBoard board{createBoard()};
   char player{'X'};
-  bool singlePlayer{getPlayerNumber()};
-  char AI_marker{};
-  int AI_strength{};
-  if (singlePlayer) {
-    AI_marker = getAIStart();
-    AI_strength = getAIStrength();
-  }
+
+  AISettings xSettings = getAISettings('X');
+  AISettings oSettings = getAISettings('O');
 
   while (true) {
-    if (singlePlayer && player == AI_marker) {
-      aiTurn(player, &board, AI_strength);
+    if (player == 'X' && xSettings.isAI) {
+      aiTurn(player, &board, xSettings.strength);
+    } else if (player == 'O' && oSettings.isAI) {
+      aiTurn(player, &board, oSettings.strength);
     } else {
       playerTurn(player, &board);
     }

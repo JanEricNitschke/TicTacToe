@@ -120,110 +120,112 @@ TEST(getEmptyCells /*unused*/, fullBoard /*unused*/) {
 TEST(minmax /*unused*/, emptyBoard /*unused*/) {
   GameBoard refBoard = {{{'-', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}}};
   std::vector<Move> possibleResults = {{
-      Move{{0, 0}, 0},
-      Move{{0, 1}, 0},
-      Move{{0, 2}, 0},
-      Move{{1, 0}, 0},
-      Move{{1, 1}, 0},
-      Move{{1, 2}, 0},
-      Move{{2, 0}, 0},
-      Move{{2, 1}, 0},
-      Move{{2, 2}, 0},
+      Move{{0, 0}, GameState::undecided},
+      Move{{0, 1}, GameState::undecided},
+      Move{{0, 2}, GameState::undecided},
+      Move{{1, 0}, GameState::undecided},
+      Move{{1, 1}, GameState::undecided},
+      Move{{1, 2}, GameState::undecided},
+      Move{{2, 0}, GameState::undecided},
+      Move{{2, 1}, GameState::undecided},
+      Move{{2, 2}, GameState::undecided},
   }};
   EXPECT_THAT(possibleResults, ::testing::Contains(minmax('X', &refBoard)));
 }
 
 TEST(minmax /*unused*/, fullBoard /*unused*/) {
   GameBoard refBoard = {{{'X', 'X', 'X'}, {'X', 'X', 'X'}, {'X', 'X', 'X'}}};
-  Move expectedResult = {.spot = {.row{0}, .col{0}}, .state{1}};
+  Move expectedResult = {{0, 0}, GameState::win};
   EXPECT_THAT(expectedResult, minmax('X', &refBoard));
-  expectedResult = {.spot = {.row{0}, .col{0}}, .state{-1}};
+  expectedResult = {{0, 0}, GameState::loss};
   EXPECT_THAT(expectedResult, minmax('O', &refBoard));
 }
 
 TEST(minmax /*unused*/, partialBoards /*unused*/) {
   GameBoard refBoard = {{{'X', 'X', '-'}, {'O', 'X', 'O'}, {'X', 'O', 'O'}}};
-  Move expectedResult = {{0, 2}, 1};
+  Move expectedResult = {{0, 2}, GameState::win};
   EXPECT_THAT(expectedResult, minmax('X', &refBoard));
   EXPECT_THAT(expectedResult, minmax('O', &refBoard));
   refBoard = {{{'O', 'O', 'X'}, {'X', '-', 'O'}, {'-', 'O', 'X'}}};
-  expectedResult = {{1, 1}, 0};
+  expectedResult = {{1, 1}, GameState::draw};
   EXPECT_THAT(expectedResult, minmax('X', &refBoard));
   refBoard = {{{'O', 'O', 'X'}, {'X', '-', '-'}, {'-', 'O', 'X'}}};
-  expectedResult = {{1, 1}, 1};
+  expectedResult = {{1, 1}, GameState::win};
   EXPECT_THAT(expectedResult, minmax('O', &refBoard));
   refBoard = {{{'O', '-', '-'}, {'-', '-', '-'}, {'-', '-', '-'}}};
-  expectedResult = {{1, 1}, 0};
+  expectedResult = {{1, 1}, GameState::draw};
   EXPECT_THAT(expectedResult, minmax('X', &refBoard));
 }
 
 TEST(getWinningMove /*unused*/, row /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', 'X', 'O'}, {'X', 'O', '-'}, {'X', 'X', '-'}}};
-  constexpr Move expectedResult = {{2, 2}, 0};
+  constexpr Move expectedResult = {{2, 2}, GameState::win};
   EXPECT_THAT(expectedResult, getWinningMove('X', refBoard));
 }
 
 TEST(getWinningMove /*unused*/, col /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', '-', '-'}, {'-', '-', '-'}, {'O', 'X', 'X'}}};
-  constexpr Move expectedResult = {{1, 0}, 0};
+  constexpr Move expectedResult = {{1, 0}, GameState::win};
   EXPECT_THAT(expectedResult, getWinningMove('O', refBoard));
 }
 
 TEST(getWinningMove /*unused*/, diagonal /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', '-', '-'}, {'-', 'O', '-'}, {'-', '-', '-'}}};
-  constexpr Move expectedResult = {{2, 2}, 0};
+  constexpr Move expectedResult = {{2, 2}, GameState::win};
   EXPECT_THAT(expectedResult, getWinningMove('O', refBoard));
 }
 
 TEST(getWinningMove /*unused*/, antidiagonal /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'-', '-', '-'}, {'-', 'X', '-'}, {'X', '-', '-'}}};
-  constexpr Move expectedResult = {{0, 2}, 0};
+  constexpr Move expectedResult = {{0, 2}, GameState::win};
   EXPECT_THAT(expectedResult, getWinningMove('X', refBoard));
 }
 
 TEST(getWinningMove /*unused*/, none /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', 'X', 'X'}, {'-', 'O', '-'}, {'O', 'X', '-'}}};
-  constexpr Move expectedResult = {0, 0, -1};
+  constexpr Move expectedResult = {.spot = {.row = 0, .col = 0},
+                                   .state = GameState::undecided};
   EXPECT_THAT(expectedResult, getWinningMove('X', refBoard));
 }
 
 TEST(getBlockingMove /*unused*/, row /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', 'X', 'O'}, {'X', 'O', '-'}, {'X', 'X', '-'}}};
-  constexpr Move expectedResult = {{2, 2}, 0};
+  constexpr Move expectedResult = {.spot = {.row = 2, .col = 2},
+                                   .state = GameState::win};
   EXPECT_THAT(expectedResult, getBlockingMove('O', refBoard));
 }
 
 TEST(getBlockingMove /*unused*/, col /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', '-', '-'}, {'-', '-', '-'}, {'O', 'X', 'X'}}};
-  constexpr Move expectedResult = {{1, 0}, 0};
+  constexpr Move expectedResult = {{1, 0}, GameState::win};
   EXPECT_THAT(expectedResult, getBlockingMove('X', refBoard));
 }
 
 TEST(getBlockingMove /*unused*/, diagonal /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', '-', '-'}, {'-', 'O', '-'}, {'-', '-', '-'}}};
-  constexpr Move expectedResult = {{2, 2}, 0};
+  constexpr Move expectedResult = {{2, 2}, GameState::win};
   EXPECT_THAT(expectedResult, getBlockingMove('X', refBoard));
 }
 
 TEST(getBlockingMove /*unused*/, antidiagonal /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'-', '-', '-'}, {'-', 'X', '-'}, {'X', '-', '-'}}};
-  constexpr Move expectedResult = {{0, 2}, 0};
+  constexpr Move expectedResult = {{0, 2}, GameState::win};
   EXPECT_THAT(expectedResult, getBlockingMove('O', refBoard));
 }
 
 TEST(getBlockingMove /*unused*/, none /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', 'X', 'X'}, {'-', 'O', '-'}, {'O', 'X', '-'}}};
-  constexpr Move expectedResult = {0, 0, -1};
+  constexpr Move expectedResult = {{0, 0}, GameState::undecided};
   EXPECT_THAT(expectedResult, getBlockingMove('O', refBoard));
 }
 
@@ -233,20 +235,20 @@ TEST(randomMove /*unused*/, emptyBoard /*unused*/) {
   Move result = randomMove(refBoard);
   EXPECT_LT(result.spot.row, 3);
   EXPECT_LT(result.spot.col, 3);
-  EXPECT_EQ(result.state, 0);
+  EXPECT_EQ(result.state, GameState::undecided);
 }
 
 TEST(randomMove /*unused*/, oneOption /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'X', 'X', '-'}, {'O', 'X', 'O'}, {'X', 'O', 'O'}}};
-  constexpr Move expectedResult = {{0, 2}, 0};
+  constexpr Move expectedResult = {{0, 2}, GameState::undecided};
   EXPECT_THAT(expectedResult, randomMove(refBoard));
 }
 
 TEST(winMove /*unused*/, prioritizesWin /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'O', '-', 'X'}, {'-', '-', '-'}, {'O', 'X', 'X'}}};
-  constexpr Move expectedResult = {{1, 0}, 0};
+  constexpr Move expectedResult = {{1, 0}, GameState::win};
   EXPECT_THAT(expectedResult, winMove('O', refBoard));
 }
 
@@ -256,20 +258,20 @@ TEST(winMove /*unused*/, worksWithoutWin /*unused*/) {
   Move result = winMove('X', refBoard);
   EXPECT_LT(result.spot.row, 3);
   EXPECT_LT(result.spot.col, 3);
-  EXPECT_EQ(result.state, 0);
+  EXPECT_EQ(result.state, GameState::undecided);
 }
 
 TEST(blockWinMove /*unused*/, prioritizesWin /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'X', '-', 'O'}, {'-', '-', '-'}, {'X', '-', 'O'}}};
-  constexpr Move expectedResult = {{1, 0}, 0};
+  constexpr Move expectedResult = {{1, 0}, GameState::win};
   EXPECT_THAT(expectedResult, blockWinMove('X', refBoard));
 }
 
 TEST(blockWinMove /*unused*/, blocksIfNoWin /*unused*/) {
   constexpr GameBoard refBoard = {
       {{'X', '-', 'O'}, {'-', '-', '-'}, {'-', '-', 'O'}}};
-  constexpr Move expectedResult = {{1, 2}, 0};
+  constexpr Move expectedResult = {{1, 2}, GameState::win};
   EXPECT_THAT(expectedResult, blockWinMove('X', refBoard));
 }
 
@@ -279,5 +281,5 @@ TEST(blockWinMove /*unused*/, worksWithoutBlockWin /*unused*/) {
   Move result = blockWinMove('X', refBoard);
   EXPECT_LT(result.spot.row, 3);
   EXPECT_LT(result.spot.col, 3);
-  EXPECT_EQ(result.state, 0);
+  EXPECT_EQ(result.state, GameState::undecided);
 }
