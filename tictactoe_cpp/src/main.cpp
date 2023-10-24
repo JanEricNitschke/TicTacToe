@@ -3,7 +3,7 @@
 #include <tictactoe.h>
 
 auto main() -> int {
-  GameBoard board{createBoard()};
+  auto board{createBoard<3>()};
   char player{'X'};
 
   AISettings xSettings = getAISettings('X');
