@@ -5,6 +5,7 @@
 
 #include <Random.h>
 
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include <limits>
@@ -336,10 +337,13 @@ Move blockWinMove(char player, const GameBoard<N> &board) {
 
 // The coordinates of the optimal moves for the player on the board
 template <std::size_t N>
-BestMoves getBestMoves(char player, GameBoard<N> *board) {
+BestMoves getBestMoves(char player, GameBoard<N> *board,
+                       GameState bestX = GameState::loss,
+                       GameState bestO = GameState::loss,
+                       std::size_t max_depth = 10) {
+  BestMoves best_moves{.spots{}, .state = GameState::undecided};
   // Base cases
   // Player won
-  BestMoves best_moves{.spots{}, .state = GameState::undecided};
   if (isPlayerWin(player, *board)) {
     best_moves.state = GameState::win;
     return best_moves;
@@ -349,9 +353,10 @@ BestMoves getBestMoves(char player, GameBoard<N> *board) {
     best_moves.state = GameState::loss;
     return best_moves;
   }
+
   const std::vector<Spot> empty_cells{getEmptyCells(*board)};
-  // Game is drawn
   if (empty_cells.empty()) {
+    // Game is drawn
     best_moves.state = GameState::draw;
     return best_moves;
   }
@@ -359,9 +364,9 @@ BestMoves getBestMoves(char player, GameBoard<N> *board) {
   // and increase replayability
   // just do a random move as the first
   // Optimal play still forces a draw
-  if (empty_cells.size() == (N * N)) {
-    Move random_move{randomMove(*board)};
-    best_moves.spots.push_back(random_move.spot);
+  if (empty_cells.size() >= max_depth) {
+    Move heuristic_move{randomMove(*board)};
+    best_moves.spots.push_back(heuristic_move.spot);
     return best_moves;
   }
   // Recursively apply minmax algorithm
@@ -375,6 +380,18 @@ BestMoves getBestMoves(char player, GameBoard<N> *board) {
       best_moves.spots.push_back(cell);
     }
     (*board)[cell.row][cell.col] = '-';
+    // alpha-beta pruning part
+    if (player == 'X') {
+      bestX = std::max(bestX, best_moves.state);
+      if (best_moves.state < bestO) {
+        break;
+      }
+    } else {
+      bestO = std::max(bestO, best_moves.state);
+      if (best_moves.state < bestX) {
+        break;
+      }
+    }
   }
   return best_moves;
 }
@@ -382,7 +399,8 @@ BestMoves getBestMoves(char player, GameBoard<N> *board) {
 // The coordinates of the one optimal move for the player on the board
 template <std::size_t N>
 Move minmax(char player, GameBoard<N> *board) {
-  BestMoves best_moves{getBestMoves(player, board)};
+  BestMoves best_moves{
+      getBestMoves(player, board, GameState::undecided, GameState::undecided)};
   if (best_moves.spots.empty()) {
     return {.spot{}, .state{best_moves.state}};
   }
