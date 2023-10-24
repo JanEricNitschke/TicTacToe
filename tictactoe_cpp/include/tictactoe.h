@@ -364,7 +364,7 @@ BestMoves getBestMoves(char player, GameBoard<N> *board,
   // and increase replayability
   // just do a random move as the first
   // Optimal play still forces a draw
-  if (empty_cells.size() >= max_depth) {
+  if (empty_cells.size() >= max_depth || empty_cells.size() == N * N) {
     Move heuristic_move{randomMove(*board)};
     best_moves.spots.push_back(heuristic_move.spot);
     return best_moves;
