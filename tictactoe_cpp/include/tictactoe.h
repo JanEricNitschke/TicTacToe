@@ -9,22 +9,42 @@
 #include <array>
 #include <iostream>
 #include <limits>
-#include <set>
 #include <string>
 #include <string_view>
 #include <thread>  // NOLINT [build/c++11]
 #include <tuple>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 // Yes, this could just be a vector and then we could set the
 // size at runtime too. But i wanted to do something with templates.
 template <std::size_t N>
 using GameBoard = std::array<std::array<char, N>, N>;
+
 // // Define aliases for the data structures
 // // used for Move and TicTacToeBoard as they are common
 // // and long
 using TicTacToeBoard = GameBoard<3>;
+
+// Declaration of the concept "Hashable", which is satisfied by any type 'T'
+// such that for values 'a' of type 'T', the expression std::hash<T>{}(a)
+// compiles and its result is convertible to std::size_t
+// From: https://en.cppreference.com/w/cpp/language/constraints
+template <typename T>
+concept Hashable = requires(T a) {
+  { std::hash<T>{}(a) } -> std::convertible_to<std::size_t>;
+};  // NOLINT [readability/braces]
+
+// Specialization for unordered_set
+template <Hashable T>
+struct std::hash<std::tuple<T, T>> {
+  std::size_t operator()(const std::tuple<T, T> &tuple) const noexcept {
+    std::size_t h1 = std::hash<T>{}(std::get<0>(tuple));
+    std::size_t h2 = std::hash<T>{}(std::get<1>(tuple));
+    return h1 ^ (h2 << 1);  // or use boost::hash_combine
+  }
+};
 
 enum class GameState {
   undecided = 0,
@@ -215,8 +235,10 @@ Move randomMove(const GameBoard<N> &board) {
 template <std::size_t N>
 void checkWinconditions(
     char player, const GameBoard<N> &board,
+    // Yes, with these sizes the ordered one is probably faster
+    // But i wanted to do something more with templates.
     std::unordered_map<std::string,
-                       std::set<std::tuple<std::size_t, std::size_t>>>
+                       std::unordered_set<std::tuple<std::size_t, std::size_t>>>
         *win_conditions) {
   for (size_t row{0}; row < N; row++) {
     for (size_t col{0}; col < N; col++) {
@@ -269,7 +291,7 @@ template <std::size_t N>
 Move getWinningMove(char player, const GameBoard<N> &board) {
   // Build  all of the possible lines
   std::unordered_map<std::string,
-                     std::set<std::tuple<std::size_t, std::size_t>>>
+                     std::unordered_set<std::tuple<std::size_t, std::size_t>>>
       win_conditions{};
   for (size_t row{0}; row < N; row++) {
     for (size_t col{0}; col < N; col++) {
