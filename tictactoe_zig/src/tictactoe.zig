@@ -357,7 +357,7 @@ test "checkWinCondition open" {
         Player.X,
     };
 
-    var expected: ConditionResult = .{ .open = &[_]usize{ 0, 1, 2 }, .done = 0 };
+    const expected: ConditionResult = .{ .open = &[_]usize{ 0, 1, 2 }, .done = 0 };
     const actual = try checkWinCondition(Player.X, &board, [_]usize{ 0, 1, 2 }, std.testing.allocator);
     defer std.testing.allocator.free(actual.open);
 
@@ -377,7 +377,7 @@ test "checkWinCondition partial" {
         Player.X,
     };
 
-    var expected: ConditionResult = .{ .open = &[_]usize{4}, .done = 1 };
+    const expected: ConditionResult = .{ .open = &[_]usize{4}, .done = 1 };
     const actual = try checkWinCondition(Player.O, &board, [_]usize{ 0, 4, 8 }, std.testing.allocator);
     defer std.testing.allocator.free(actual.open);
 
@@ -821,8 +821,7 @@ test "get empty cells none" {
         Player.X,
     };
 
-    var expected: []const usize = &[_]usize{};
-
+    const expected: []const usize = &[_]usize{};
     const actual = try getEmptyCells(&board, std.testing.allocator);
     defer std.testing.allocator.free(actual);
 
@@ -842,11 +841,9 @@ test "get empty cells some" {
         Player.X,
     };
 
-    var expected: []const usize = &[_]usize{ 2, 4, 6 };
-
+    const expected: []const usize = &[_]usize{ 2, 4, 6 };
     const actual = try getEmptyCells(&board, std.testing.allocator);
     defer std.testing.allocator.free(actual);
-
     try std.testing.expectEqualDeep(expected, actual);
 }
 

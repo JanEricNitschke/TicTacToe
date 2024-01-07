@@ -173,7 +173,6 @@ fun Difficulty(textColor: Color, backgroundColor: Color, modifier: Modifier = Mo
 
 @Composable
 fun TicTacToe(modifier: Modifier = Modifier) {
-    println("In TicTacToe")
     val titleColor = Color(0xFF722007)
     val uiColor = Color(0xFFFF9900)
     val elementBackgroundColor = Color(0xFFF8F8F8)
