@@ -16,9 +16,9 @@ public class TicTacToe {
   /**
    * Game loop of tictactoe.
    * Initializes the board, marker and players.
-   * And then lets players make their moves.y
+   * And then lets players make their moves.
    *
-   * @param humanPlayer Human player playing the game.s
+   * @param humanPlayer Human player playing the game.
    * @param aiPlayer    Optional AI player as an opponent.
    */
   void playGame(final HumanPlayer humanPlayer, final AIPlayer aiPlayer) {
