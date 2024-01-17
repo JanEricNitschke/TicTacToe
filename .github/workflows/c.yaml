@@ -1,0 +1,25 @@
+# This workflow will run the tests on the C++ version of tictactoe
+
+name: C
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_c
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Build
+      run: |
+        make
+    - name: Test
+      run: |
+        make test

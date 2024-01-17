@@ -33,8 +33,8 @@ using TicTacToeBoard = GameBoard<3>;
 // From: https://en.cppreference.com/w/cpp/language/constraints
 template <typename T>
 concept Hashable = requires(T a) {
-  { std::hash<T>{}(a) } -> std::convertible_to<std::size_t>;
-};  // NOLINT [readability/braces]
+                     { std::hash<T>{}(a) } -> std::convertible_to<std::size_t>;
+                   };  // NOLINT [readability/braces]
 
 // Specialization for unordered_set
 template <Hashable T>
