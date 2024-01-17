@@ -3,8 +3,6 @@
 #ifndef TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
 #define TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
 
-#include <Random.h>
-
 #include <algorithm>
 #include <array>
 #include <iostream>
@@ -16,6 +14,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include "Random.h"
 
 // Yes, this could just be a vector and then we could set the
 // size at runtime too. But i wanted to do something with templates.
@@ -76,8 +76,8 @@ struct Move {
 };
 
 struct AISettings {
-  bool isAI{};
-  int strength{};
+  bool isAI{};     // cppcheck-suppress unusedStructMember
+  int strength{};  // cppcheck-suppress unusedStructMember
 };
 
 struct BestMoves {
@@ -90,9 +90,7 @@ template <std::size_t N>
 constexpr auto createBoard() -> GameBoard<N> {
   GameBoard<N> board{};
   for (auto &row : board) {
-    for (auto &col : row) {
-      col = '-';
-    }
+    std::fill(row.begin(), row.end(), '-');
   }
   return board;
 }
@@ -311,13 +309,13 @@ Move getWinningMove(char player, const GameBoard<N> &board) {
   checkWinconditions(player, board, &win_conditions);
   // Check if any line requires exactly one more
   // position from the player to be fulfilled
-  for (const auto &x : win_conditions) {
-    if (x.second.size() == 1) {
-      std::tuple<std::size_t, std::size_t> firstWin{*x.second.begin()};
-      return {
-          .spot = {.row{std::get<0>(firstWin)}, .col{std::get<1>(firstWin)}},
-          .state{GameState::win}};
-    }
+  auto it = std::find_if(win_conditions.begin(), win_conditions.end(),
+                         [](const auto &x) { return x.second.size() == 1; });
+
+  if (it != win_conditions.end()) {
+    std::tuple<std::size_t, std::size_t> firstWin{*it->second.begin()};
+    return {.spot = {.row{std::get<0>(firstWin)}, .col{std::get<1>(firstWin)}},
+            .state{GameState::win}};
   }
   // If there is no winning move return a default value
   return {.spot = {.row{0}, .col{0}}, .state{GameState::undecided}};
@@ -335,9 +333,9 @@ Move getBlockingMove(char player, const GameBoard<N> &board) {
 // If there is none return a random one instead
 template <std::size_t N>
 Move winMove(char player, const GameBoard<N> &board) {
-  Move winMove{getWinningMove(player, board)};
-  if (winMove.state != GameState::undecided) {
-    return winMove;
+  Move winningMove{getWinningMove(player, board)};
+  if (winningMove.state != GameState::undecided) {
+    return winningMove;
   }
   return randomMove(board);
 }
@@ -346,13 +344,13 @@ Move winMove(char player, const GameBoard<N> &board) {
 // If neither exists do a random one instead
 template <std::size_t N>
 Move blockWinMove(char player, const GameBoard<N> &board) {
-  Move winMove{getWinningMove(player, board)};
-  if (winMove.state != GameState::undecided) {
-    return winMove;
+  Move winningMove{getWinningMove(player, board)};
+  if (winningMove.state != GameState::undecided) {
+    return winningMove;
   }
-  Move blockMove{getBlockingMove(player, board)};
-  if (blockMove.state != GameState::undecided) {
-    return blockMove;
+  Move blockingMove{getBlockingMove(player, board)};
+  if (blockingMove.state != GameState::undecided) {
+    return blockingMove;
   }
   return randomMove(board);
 }
