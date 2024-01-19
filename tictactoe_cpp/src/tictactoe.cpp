@@ -48,7 +48,7 @@ auto getPlayerYesNo(std::string_view question) -> bool {
   while (solo != "Y" && solo != "N") {
     std::cout << question << std::endl;
     std::cin >> solo;
-    std::transform(solo.begin(), solo.end(), solo.begin(), ::toupper);
+    std::ranges::transform(solo, solo.begin(), ::toupper);
   }
   return static_cast<bool>(solo == "Y");
 }

@@ -90,7 +90,7 @@ template <std::size_t N>
 constexpr auto createBoard() -> GameBoard<N> {
   GameBoard<N> board{};
   for (auto &row : board) {
-    std::fill(row.begin(), row.end(), '-');
+    std::ranges::fill(row, '-');
   }
   return board;
 }
@@ -124,62 +124,44 @@ int getAIStrength();
 // has won on the given board
 template <std::size_t N>
 auto isPlayerWin(char player, const GameBoard<N> &board) -> bool {
-  bool win{false};
-
-  // checking rows
-  for (size_t i{0}; i < N; i++) {
-    win = true;
-    for (size_t j{0}; j < N; j++) {
-      if (board[i][j] != player) {
-        win = false;
-        break;
-      }
-    }
-    if (win) {
-      return win;
+  // Checking rows
+  for (size_t i = 0; i < N; ++i) {
+    if (std::all_of(board[i].begin(), board[i].end(),
+                    [player](char cell) { return cell == player; })) {
+      return true;
     }
   }
 
-  // checking cols
-  for (size_t i{0}; i < N; i++) {
-    win = true;
-    for (size_t j{0}; j < N; j++) {
-      if (board[j][i] != player) {
-        win = false;
-        break;
-      }
-    }
-    if (win) {
-      return win;
+  // Checking columns
+  for (size_t col = 0; col < N; ++col) {
+    if (std::all_of(board.begin(), board.end(), [col, player](const auto &row) {
+          return row[col] == player;
+        })) {
+      return true;
     }
   }
 
-  // checking diagonal
-  win = true;
-  for (size_t i{0}; i < N; i++) {
+  // Checking diagonal
+  bool diagonalWin{true};
+  for (size_t i{0}; i < N; ++i) {
     if (board[i][i] != player) {
-      win = false;
+      diagonalWin = false;
       break;
     }
   }
-  if (win) {
-    return win;
+  if (diagonalWin) {
+    return true;
   }
 
-  // checking antidiagonal
-  win = true;
-  for (size_t i{0}; i < N; i++) {
+  // Checking antidiagonal
+  bool antidiagonalWin{true};
+  for (size_t i{0}; i < N; ++i) {
     if (board[i][N - i - 1] != player) {
-      win = false;
+      antidiagonalWin = false;
       break;
     }
   }
-  if (win) {
-    return win;
-  }
-
-  // found no full line
-  return false;
+  return antidiagonalWin;
 }
 
 // Checks if the board is completely filled
@@ -240,42 +222,37 @@ void checkWinconditions(
         *win_conditions) {
   for (size_t row{0}; row < N; row++) {
     for (size_t col{0}; col < N; col++) {
+      auto &row_set = (*win_conditions)["row" + std::to_string(row)];
+      auto &col_set = (*win_conditions)["col" + std::to_string(col)];
+      auto &diag_set = (*win_conditions)["diag"];
+      auto &antidiag_set = (*win_conditions)["antidiag"];
+
       // If the given player occupies this cell
       // then that reduces the required positions
       // in that line by one
       if (board[row][col] == player) {
-        if ((*win_conditions)["row" + std::to_string(row)].find(
-                std::make_tuple(row, col)) !=
-            (*win_conditions)["row" + std::to_string(row)].end()) {
-          (*win_conditions)["row" + std::to_string(row)].erase(
-              std::make_tuple(row, col));
-        }
-        if ((*win_conditions)["col" + std::to_string(col)].find(
-                std::make_tuple(row, col)) !=
-            (*win_conditions)["col" + std::to_string(col)].end()) {
-          (*win_conditions)["col" + std::to_string(col)].erase(
-              std::make_tuple(row, col));
-        }
-        if (row == col && (*win_conditions)["diag"].find(std::make_tuple(
-                              row, col)) != (*win_conditions)["diag"].end()) {
-          (*win_conditions)["diag"].erase(std::make_tuple(row, col));
-        }
-        if (row == (N - 1 - col) &&
-            (*win_conditions)["antidiag"].find(std::make_tuple(row, col)) !=
-                (*win_conditions)["antidiag"].end()) {
-          (*win_conditions)["antidiag"].erase(std::make_tuple(row, col));
-        }
-      }
-      // If the opposing player occupies this cell
-      // then all lines that contain it become useless
-      if (board[row][col] == swapPlayer(player)) {
-        (*win_conditions)["row" + std::to_string(row)].clear();
-        (*win_conditions)["col" + std::to_string(col)].clear();
+        row_set.erase(std::make_tuple(row, col));
+        col_set.erase(std::make_tuple(row, col));
+
         if (row == col) {
-          (*win_conditions)["diag"].clear();
+          diag_set.erase(std::make_tuple(row, col));
         }
+
         if (row == (N - 1 - col)) {
-          (*win_conditions)["antidiag"].clear();
+          antidiag_set.erase(std::make_tuple(row, col));
+        }
+      } else if (board[row][col] == swapPlayer(player)) {
+        // If the opposing player occupies this cell
+        // then all lines that contain it become useless
+        row_set.clear();
+        col_set.clear();
+
+        if (row == col) {
+          diag_set.clear();
+        }
+
+        if (row == (N - 1 - col)) {
+          antidiag_set.clear();
         }
       }
     }
@@ -293,15 +270,13 @@ Move getWinningMove(char player, const GameBoard<N> &board) {
       win_conditions{};
   for (size_t row{0}; row < N; row++) {
     for (size_t col{0}; col < N; col++) {
-      win_conditions["row" + std::to_string(row)].insert(
-          std::make_tuple(row, col));
-      win_conditions["col" + std::to_string(col)].insert(
-          std::make_tuple(row, col));
+      win_conditions["row" + std::to_string(row)].insert({row, col});
+      win_conditions["col" + std::to_string(col)].insert({row, col});
       if (row == col) {
-        win_conditions["diag"].insert(std::make_tuple(row, col));
+        win_conditions["diag"].insert({row, col});
       }
       if (row == (N - 1 - col)) {
-        win_conditions["antidiag"].insert(std::make_tuple(row, col));
+        win_conditions["antidiag"].insert({row, col});
       }
     }
   }
@@ -374,7 +349,7 @@ BestMoves getBestMoves(char player, GameBoard<N> *board,
     return best_moves;
   }
 
-  const std::vector<Spot> empty_cells{getEmptyCells(*board)};
+  const auto empty_cells{getEmptyCells(*board)};
   if (empty_cells.empty()) {
     // Game is drawn
     best_moves.state = GameState::draw;
@@ -385,14 +360,14 @@ BestMoves getBestMoves(char player, GameBoard<N> *board,
   // just do a random move as the first
   // Optimal play still forces a draw
   if (empty_cells.size() >= max_depth || empty_cells.size() == N * N) {
-    Move heuristic_move{randomMove(*board)};
+    auto heuristic_move{randomMove(*board)};
     best_moves.spots.push_back(heuristic_move.spot);
     return best_moves;
   }
   // Recursively apply minmax algorithm
   for (const auto &cell : empty_cells) {
     (*board)[cell.row][cell.col] = player;
-    BestMoves current_moves{getBestMoves(swapPlayer(player), board)};
+    auto current_moves{getBestMoves(swapPlayer(player), board)};
     if (-current_moves.state > best_moves.state) {
       best_moves.state = -current_moves.state;
       best_moves.spots = {cell};
