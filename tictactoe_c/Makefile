@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -std=c17 -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith \
 		  -Wcast-align -Wstrict-prototypes -Wstrict-overflow=5 -Wwrite-strings \
 		  -Waggregate-return -Wcast-qual -Wswitch-default -Wswitch-enum \
-		  -Wconversion -Wunreachable-code -Wformat=2 -Winit-self
+		  -Wconversion -Wunreachable-code -Wformat=2 -Winit-self -Werror
 
 TARGET_DIR = bin
 TARGET = $(TARGET_DIR)/tictactoe_c

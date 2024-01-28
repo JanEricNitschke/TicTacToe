@@ -5,11 +5,34 @@
 
 #include <stdbool.h>
 enum { BOARD_SIZE = 9 };
-void play_game(void);
-void player_turn(char player, char board[static BOARD_SIZE]);
-bool is_player_win(char player, const char board[static BOARD_SIZE]);
-bool is_board_filled(const char board[static BOARD_SIZE]);
-char swap_player(char player);
-void show_board(const char board[static BOARD_SIZE]);
+// Sadly 1 = '1' doesnt work.
+enum GameValue {
+  X = 'X',
+  O = 'O',
+  ONE = '1',
+  TWO = '2',
+  THREE = '3',
+  FOUR = '4',
+  FIVE = '5',
+  SIX = '6',
+  SEVEN = '7',
+  EIGHT = '8',
+  ZERO = '0'
+};
+typedef enum GameValue GameValue;
+enum PlayerValue { PLAYER_X = X, PLAYER_O = O };
+typedef enum PlayerValue PlayerValue;
+void play_game(int playerX_strength, int playerO_strength);
+void player_turn(PlayerValue player, GameValue board[static BOARD_SIZE]);
+void ai_turn(PlayerValue player, GameValue board[static BOARD_SIZE],
+             int strength);
+bool is_player_win(PlayerValue player,
+                   const GameValue board[static BOARD_SIZE]);
+bool is_board_filled(const GameValue board[static BOARD_SIZE]);
+PlayerValue swap_player(PlayerValue player);
+void show_board(const GameValue board[static BOARD_SIZE]);
+bool is_occupied(GameValue spot_value);
+bool is_unoccupied(GameValue spot_value);
+void flush_output(void);
 
 #endif  // TICTACTOE_C_INCLUDE_TICTACTOE_H_

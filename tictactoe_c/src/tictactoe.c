@@ -3,52 +3,77 @@
 #include "tictactoe.h"
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-void player_turn(const char player, char board[static BOARD_SIZE]) {
+bool is_occupied(const GameValue spot_value) {
+  return spot_value == X || spot_value == O;
+}
+
+bool is_unoccupied(const GameValue spot_value) {
+  return !is_occupied(spot_value);
+}
+
+void flush_output(void) {
+  if (fflush(stdout) != 0) {
+    perror("Error flushing stdout");
+    exit(EXIT_FAILURE);
+  }
+}
+
+void ai_turn(const PlayerValue player, GameValue board[static BOARD_SIZE],
+             const int strength) {
+  printf("AI turn as player %c with strength %d.\n", player, strength);
+  show_board(board);
+  flush_output();
+  for (int i = 0; i < BOARD_SIZE; i++) {
+    if (is_unoccupied(board[i])) {
+      board[i] = (GameValue)player;
+      break;
+    }
+  }
+  sleep(1);
+}
+
+void player_turn(const PlayerValue player, GameValue board[static BOARD_SIZE]) {
   size_t position = 0;
   while (true) {
     printf("Player %c turn:\n", player);
     show_board(board);
     printf("Where to make your next move? [0-8]\n");
-    if (fflush(stdout) != 0) {
-      perror("Error flushing stdout");
-      exit(EXIT_FAILURE);
-      // Handle the error or exit the program
-    }
-    // Read the next character in the input buffer
+    flush_output();
+
     int chr = fgetc(stdin);
     int discard = 0;
     while (((discard = fgetc(stdin)) != '\n') && (discard != EOF)) {
       ;
     }
-    // Check if the value is in range
+
     if (chr >= '0' && (chr <= '9')) {
       position = (size_t)(chr - '0');
     } else {
       printf("Unexpected character: %c\n", chr);
       continue;
     }
-    // Remove remaining characters from the
-    // input buffer.
-
     if (position >= BOARD_SIZE) {
       printf("Invalid position. Position must be less than %d.\n", BOARD_SIZE);
       continue;
     }
 
-    if (board[position] == 'X' || board[position] == 'O') {
+    if (is_occupied(board[position])) {
       printf("Position already taken. Choose another position.\n");
       continue;
     }
 
     break;  // Break out of the loop if all conditions are satisfied
   }
-  board[position] = player;
+  board[position] = (GameValue)player;
 }
 
-bool is_player_win(const char player, const char board[static BOARD_SIZE]) {
+bool is_player_win(const PlayerValue player,
+                   const GameValue board[static BOARD_SIZE]) {
   const size_t win_patterns[8][3] = {
       {0, 1, 2}, {3, 4, 5}, {6, 7, 8},  // horizontal
       {0, 3, 6}, {1, 4, 7}, {2, 5, 8},  // vertical
@@ -56,29 +81,30 @@ bool is_player_win(const char player, const char board[static BOARD_SIZE]) {
   };
   for (int i = 0; i < 8; i++) {
     const size_t* pattern = win_patterns[i];
-    if (board[pattern[0]] == player && board[pattern[1]] == player &&
-        board[pattern[2]] == player) {
+    if (board[pattern[0]] == (GameValue)player &&
+        board[pattern[1]] == (GameValue)player &&
+        board[pattern[2]] == (GameValue)player) {
       return true;
     }
   }
   return false;
 }
-bool is_board_filled(const char board[static BOARD_SIZE]) {
+bool is_board_filled(const GameValue board[static BOARD_SIZE]) {
   for (int i = 0; i < BOARD_SIZE; i++) {
-    if (board[i] != 'X' && board[i] != 'O') {
+    if (is_unoccupied(board[i])) {
       return false;
     }
   }
   return true;
 }
-char swap_player(char player) {
-  if (player == 'X') {
-    return 'O';
+PlayerValue swap_player(PlayerValue player) {
+  if (player == PLAYER_X) {
+    return PLAYER_O;
   }
-  return 'X';
+  return PLAYER_X;
 }
 
-void show_board(const char board[static BOARD_SIZE]) {
+void show_board(const GameValue board[static BOARD_SIZE]) {
   printf(" %c | %c | %c \n", board[0], board[1], board[2]);
   printf("---+---+---\n");
   printf(" %c | %c | %c \n", board[3], board[4], board[5]);
@@ -86,11 +112,18 @@ void show_board(const char board[static BOARD_SIZE]) {
   printf(" %c | %c | %c \n", board[6], board[7], board[8]);
 }
 
-void play_game(void) {
-  char board[BOARD_SIZE] = {'0', '1', '2', '3', '4', '5', '6', '7', '8'};
-  char player = 'X';
+void play_game(int playerX_strength, int playerO_strength) {
+  GameValue board[BOARD_SIZE] = {ZERO, ONE, TWO,   THREE, FOUR,
+                                 FIVE, SIX, SEVEN, EIGHT};
+  PlayerValue player = PLAYER_X;
   while (true) {
-    player_turn(player, board);
+    if (player == PLAYER_X && playerX_strength >= 0) {
+      ai_turn(player, board, playerX_strength);
+    } else if (player == PLAYER_O && playerO_strength >= 0) {
+      ai_turn(player, board, playerO_strength);
+    } else {
+      player_turn(player, board);
+    }
 
     if (is_player_win(player, board)) {
       printf("Player %c wins the game!\n", player);

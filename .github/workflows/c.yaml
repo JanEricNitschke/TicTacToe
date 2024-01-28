@@ -23,3 +23,6 @@ jobs:
     - name: Test
       run: |
         make test
+    - name: Run
+      run: |
+        ./bin/tictactoe_c -X 0 -O 0
