@@ -187,6 +187,18 @@ sbcl.exe --core C:\\lispstick\\Steel\ Bank\ Common\ Lisp\\1.1.12\\sbcl.core  --l
 sbcl.exe --core C:\\lispstick\\Steel\ Bank\ Common\ Lisp\\1.1.12\\sbcl.core  --non-interactive --load run-tests.lisp
 ```
 
+## TicTacToe-C
+
+Simple tictactoe game with [C](https://www.iso-9899.info/wiki/The_Standard).
+
+AI player settings via command line.
+
+To compile and run:
+```bash
+make
+./bin/tictactoe_c -X 0
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
