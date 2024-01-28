@@ -25,7 +25,7 @@ void player_turn(const char player, char board[static BOARD_SIZE]) {
     }
     // Check if the value is in range
     if (chr >= '0' && (chr <= '9')) {
-      position = chr - '0';
+      position = (size_t)(chr - '0');
     } else {
       printf("Unexpected character: %c\n", chr);
       continue;
@@ -49,13 +49,13 @@ void player_turn(const char player, char board[static BOARD_SIZE]) {
 }
 
 bool is_player_win(const char player, const char board[static BOARD_SIZE]) {
-  const char win_patterns[8][3] = {
+  const size_t win_patterns[8][3] = {
       {0, 1, 2}, {3, 4, 5}, {6, 7, 8},  // horizontal
       {0, 3, 6}, {1, 4, 7}, {2, 5, 8},  // vertical
       {0, 4, 8}, {2, 4, 6}              // diagonal
   };
   for (int i = 0; i < 8; i++) {
-    const char* pattern = win_patterns[i];
+    const size_t* pattern = win_patterns[i];
     if (board[pattern[0]] == player && board[pattern[1]] == player &&
         board[pattern[2]] == player) {
       return true;
