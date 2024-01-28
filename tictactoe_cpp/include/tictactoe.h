@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Jan-Eric Nitschke. All rights reserved.
+// Copyright 2022-2024 Jan-Eric Nitschke. All rights reserved.
 
 #ifndef TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
 #define TICTACTOE_CPP_INCLUDE_TICTACTOE_H_

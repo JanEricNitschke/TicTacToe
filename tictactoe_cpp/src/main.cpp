@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Jan-Eric Nitschke. All rights reserved.
+// Copyright 2022-2024 Jan-Eric Nitschke. All rights reserved.
 
 #include <tictactoe.h>
 
@@ -6,8 +6,8 @@ auto main() -> int {
   auto board{createBoard<4>()};
   char player{'X'};
 
-  AISettings xSettings = getAISettings('X');
-  AISettings oSettings = getAISettings('O');
+  AISettings xSettings{getAISettings('X')};
+  AISettings oSettings{getAISettings('O')};
 
   while (true) {
     if (player == 'X' && xSettings.isAI) {
