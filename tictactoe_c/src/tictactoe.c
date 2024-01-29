@@ -8,23 +8,50 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-bool is_occupied(const GameValue spot_value) {
+enum { BOARD_SIZE = 9 };
+// Sadly 1 = '1' doesnt work.
+enum GameValue {
+  X = 'X',
+  O = 'O',
+  ONE = '1',
+  TWO = '2',
+  THREE = '3',
+  FOUR = '4',
+  FIVE = '5',
+  SIX = '6',
+  SEVEN = '7',
+  EIGHT = '8',
+  ZERO = '0'
+};
+typedef enum GameValue GameValue;
+enum PlayerValue { PLAYER_X = X, PLAYER_O = O };
+typedef enum PlayerValue PlayerValue;
+
+static bool is_occupied(const GameValue spot_value) {
   return spot_value == X || spot_value == O;
 }
 
-bool is_unoccupied(const GameValue spot_value) {
+static bool is_unoccupied(const GameValue spot_value) {
   return !is_occupied(spot_value);
 }
 
-void flush_output(void) {
+static void flush_output(void) {
   if (fflush(stdout) != 0) {
     perror("Error flushing stdout");
     exit(EXIT_FAILURE);
   }
 }
 
-void ai_turn(const PlayerValue player, GameValue board[static BOARD_SIZE],
-             const int strength) {
+static void show_board(const GameValue board[static BOARD_SIZE]) {
+  printf(" %c | %c | %c \n", board[0], board[1], board[2]);
+  printf("---+---+---\n");
+  printf(" %c | %c | %c \n", board[3], board[4], board[5]);
+  printf("---+---+---\n");
+  printf(" %c | %c | %c \n", board[6], board[7], board[8]);
+}
+
+static void ai_turn(const PlayerValue player,
+                    GameValue board[static BOARD_SIZE], const int strength) {
   printf("AI turn as player %c with strength %d.\n", player, strength);
   show_board(board);
   flush_output();
@@ -37,7 +64,8 @@ void ai_turn(const PlayerValue player, GameValue board[static BOARD_SIZE],
   sleep(1);
 }
 
-void player_turn(const PlayerValue player, GameValue board[static BOARD_SIZE]) {
+static void player_turn(const PlayerValue player,
+                        GameValue board[static BOARD_SIZE]) {
   size_t position = 0;
   while (true) {
     printf("Player %c turn:\n", player);
@@ -72,8 +100,8 @@ void player_turn(const PlayerValue player, GameValue board[static BOARD_SIZE]) {
   board[position] = (GameValue)player;
 }
 
-bool is_player_win(const PlayerValue player,
-                   const GameValue board[static BOARD_SIZE]) {
+static bool is_player_win(const PlayerValue player,
+                          const GameValue board[static BOARD_SIZE]) {
   const size_t win_patterns[8][3] = {
       {0, 1, 2}, {3, 4, 5}, {6, 7, 8},  // horizontal
       {0, 3, 6}, {1, 4, 7}, {2, 5, 8},  // vertical
@@ -89,7 +117,7 @@ bool is_player_win(const PlayerValue player,
   }
   return false;
 }
-bool is_board_filled(const GameValue board[static BOARD_SIZE]) {
+static bool is_board_filled(const GameValue board[static BOARD_SIZE]) {
   for (int i = 0; i < BOARD_SIZE; i++) {
     if (is_unoccupied(board[i])) {
       return false;
@@ -102,14 +130,6 @@ PlayerValue swap_player(PlayerValue player) {
     return PLAYER_O;
   }
   return PLAYER_X;
-}
-
-void show_board(const GameValue board[static BOARD_SIZE]) {
-  printf(" %c | %c | %c \n", board[0], board[1], board[2]);
-  printf("---+---+---\n");
-  printf(" %c | %c | %c \n", board[3], board[4], board[5]);
-  printf("---+---+---\n");
-  printf(" %c | %c | %c \n", board[6], board[7], board[8]);
 }
 
 void play_game(int playerX_strength, int playerO_strength) {
