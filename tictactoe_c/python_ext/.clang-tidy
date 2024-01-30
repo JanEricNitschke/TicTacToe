@@ -1,0 +1,19 @@
+---
+# The last is effectively required by Python i think.
+Checks: "bugprone-*,cert-*,cppcoreguidelines-*,google-*,linuxkernel-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-include-cleaner"
+WarningsAsErrors: "*"
+HeaderFilterRegex: ""
+AnalyzeTemporaryDtors: false
+FormatStyle: google
+User: Jan-Eric
+CheckOptions:
+  - key: readability-function-size.StatementThreshold
+    value: "800"
+  - key: readability-function-size.LineThreshold
+    value: "60"
+  - key: bugprone-unused-return-value.AllowCastToVoid
+    value: true
+  - key: readability-magic-numbers.IgnoredIntegerValues
+    value: '1;2;3;4;5;6;7;8'
+  - key: cppcoreguidelines-avoid-magic-numbers.IgnoredIntegerValues
+    value: '1;2;3;4;5;6;7;8'

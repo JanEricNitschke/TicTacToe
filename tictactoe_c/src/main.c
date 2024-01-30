@@ -70,9 +70,8 @@ int main(const int argc, const char* argv[argc + 1]) {
     return EXIT_FAILURE;
   }
 
-  printf("Player X strength: %d\n", playerX_strength);
-  printf("Player O strength: %d\n", playerO_strength);
-
-  play_game(playerX_strength, playerO_strength);
+  if (!play_game(playerX_strength, playerO_strength)) {
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }

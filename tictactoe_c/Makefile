@@ -11,7 +11,21 @@ INCLUDE_DIR = include
 BUILD_DIR = build
 OBJ = $(BUILD_DIR)/main.o $(BUILD_DIR)/tictactoe.o
 
-all: $(BUILD_DIR) $(TARGET_DIR) $(TARGET)
+PYTHON_CMD = python
+
+ifeq ($(OS),Windows_NT)
+    # Windows-specific setup
+    PYTHON_CMD = python
+    EXTENSION_CMD = $(PYTHON_CMD) setup.py build_ext --inplace --compiler=mingw32
+else
+    # Non-Windows setup
+    EXTENSION_CMD = $(PYTHON_CMD) setup.py build_ext --inplace
+endif
+
+all: $(BUILD_DIR) $(TARGET_DIR) $(TARGET) extension
+
+extension:
+	$(EXTENSION_CMD)
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -28,5 +42,11 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 test:
 	@echo "Running tests..."
 
+run_python:
+	$(PYTHON_CMD) tictactoe_c.py
+
+run_c:
+	./$(TARGET)
+
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET_DIR)
+	rm -rf $(BUILD_DIR) $(TARGET_DIR) *.o *.a *.so *.pyd

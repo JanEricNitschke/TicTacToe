@@ -125,7 +125,7 @@ repos:
         files: ^tictactoe_cpp/|^tictactoe_c/
       # I want to enforce JPL 10 rules in the C version only
       - id: clang-tidy
-        args: ["-warnings-as-errors=*", -header-filter=.*", "--", "-Itictactoe_c/include/"]
+        args: ["-warnings-as-errors=*", -header-filter=.*", "--", "-Itictactoe_c/include/", "-isystemC:/Users/Jan-Eric/AppData/Local/Programs/Python/Python311/include/"]
         types_or: [c]
         files: ^tictactoe_c/
       - id: cppcheck

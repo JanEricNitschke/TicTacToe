@@ -3,6 +3,8 @@
 #ifndef TICTACTOE_C_INCLUDE_TICTACTOE_H_
 #define TICTACTOE_C_INCLUDE_TICTACTOE_H_
 
-void play_game(int playerX_strength, int playerO_strength);
+#include <stdbool.h>
+
+bool play_game(int playerX_strength, int playerO_strength);
 
 #endif  // TICTACTOE_C_INCLUDE_TICTACTOE_H_

@@ -5,8 +5,15 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+
+#define FLUSH_STDOUT_OR_RETURN_FALSE() \
+  do {                                 \
+    if (fflush(stdout) != 0) {         \
+      perror("Error flushing stdout"); \
+      return false;                    \
+    }                                  \
+  } while (0)
 
 enum { BOARD_SIZE = 9 };
 // Sadly 1 = '1' doesnt work.
@@ -35,13 +42,6 @@ static bool is_unoccupied(const GameValue spot_value) {
   return !is_occupied(spot_value);
 }
 
-static void flush_output(void) {
-  if (fflush(stdout) != 0) {
-    perror("Error flushing stdout");
-    exit(EXIT_FAILURE);
-  }
-}
-
 static void show_board(const GameValue board[static BOARD_SIZE]) {
   printf(" %c | %c | %c \n", board[0], board[1], board[2]);
   printf("---+---+---\n");
@@ -50,11 +50,11 @@ static void show_board(const GameValue board[static BOARD_SIZE]) {
   printf(" %c | %c | %c \n", board[6], board[7], board[8]);
 }
 
-static void ai_turn(const PlayerValue player,
+static bool ai_turn(const PlayerValue player,
                     GameValue board[static BOARD_SIZE], const int strength) {
   printf("AI turn as player %c with strength %d.\n", player, strength);
   show_board(board);
-  flush_output();
+  FLUSH_STDOUT_OR_RETURN_FALSE();
   for (int i = 0; i < BOARD_SIZE; i++) {
     if (is_unoccupied(board[i])) {
       board[i] = (GameValue)player;
@@ -62,16 +62,17 @@ static void ai_turn(const PlayerValue player,
     }
   }
   sleep(1);
+  return true;
 }
 
-static void player_turn(const PlayerValue player,
+static bool player_turn(const PlayerValue player,
                         GameValue board[static BOARD_SIZE]) {
   size_t position = 0;
   while (true) {
     printf("Player %c turn:\n", player);
     show_board(board);
     printf("Where to make your next move? [0-8]\n");
-    flush_output();
+    FLUSH_STDOUT_OR_RETURN_FALSE();
 
     int chr = fgetc(stdin);
     int discard = 0;
@@ -98,6 +99,7 @@ static void player_turn(const PlayerValue player,
     break;  // Break out of the loop if all conditions are satisfied
   }
   board[position] = (GameValue)player;
+  return true;
 }
 
 static bool is_player_win(const PlayerValue player,
@@ -132,17 +134,23 @@ PlayerValue swap_player(PlayerValue player) {
   return PLAYER_X;
 }
 
-void play_game(int playerX_strength, int playerO_strength) {
+bool play_game(int playerX_strength, int playerO_strength) {
   GameValue board[BOARD_SIZE] = {ZERO, ONE, TWO,   THREE, FOUR,
                                  FIVE, SIX, SEVEN, EIGHT};
   PlayerValue player = PLAYER_X;
   while (true) {
     if (player == PLAYER_X && playerX_strength >= 0) {
-      ai_turn(player, board, playerX_strength);
+      if (!ai_turn(player, board, playerX_strength)) {
+        return false;
+      }
     } else if (player == PLAYER_O && playerO_strength >= 0) {
-      ai_turn(player, board, playerO_strength);
+      if (!ai_turn(player, board, playerO_strength)) {
+        return false;
+      }
     } else {
-      player_turn(player, board);
+      if (!player_turn(player, board)) {
+        return false;
+      }
     }
 
     if (is_player_win(player, board)) {
@@ -158,4 +166,6 @@ void play_game(int playerX_strength, int playerO_strength) {
     player = swap_player(player);
   }
   show_board(board);
+  FLUSH_STDOUT_OR_RETURN_FALSE();
+  return true;
 }
