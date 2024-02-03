@@ -59,7 +59,7 @@ int parseOptions(const int argc, const char* argv[argc + 1],
   return EXIT_SUCCESS;
 }
 
-// Add command line parsing for Human vs AI player later
+// Strength could be turned into an enum here.
 int main(const int argc, const char* argv[argc + 1]) {
   int playerX_strength = -1;
   int playerO_strength = -1;
