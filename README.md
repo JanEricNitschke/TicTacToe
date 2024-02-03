@@ -199,6 +199,15 @@ make
 ./bin/tictactoe_c -X 0
 ```
 
+## TicTacToe-Smalltalk
+
+Simple version with 2 player in [Smalltalk](https://squeak.org/).
+
+To run in Squeak once installed:
+```bash
+Game new playGame.
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
