@@ -16,6 +16,7 @@
   } while (0)
 
 enum { BOARD_SIZE = 9 };
+
 // Sadly 1 = '1' doesnt work.
 enum GameValue {
   X = 'X',
@@ -31,6 +32,7 @@ enum GameValue {
   ZERO = '0'
 };
 typedef enum GameValue GameValue;
+
 enum PlayerValue { PLAYER_X = X, PLAYER_O = O };
 typedef enum PlayerValue PlayerValue;
 
@@ -119,6 +121,7 @@ static bool is_player_win(const PlayerValue player,
   }
   return false;
 }
+
 static bool is_board_filled(const GameValue board[static BOARD_SIZE]) {
   for (int i = 0; i < BOARD_SIZE; i++) {
     if (is_unoccupied(board[i])) {
@@ -127,6 +130,7 @@ static bool is_board_filled(const GameValue board[static BOARD_SIZE]) {
   }
   return true;
 }
+
 PlayerValue swap_player(PlayerValue player) {
   if (player == PLAYER_X) {
     return PLAYER_O;
