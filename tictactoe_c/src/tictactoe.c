@@ -123,6 +123,19 @@ static void predictable_move(const PlayerValue player,
   }
 }
 
+/**
+ * @brief Checks the pattern on the game board for a specific player.
+ *
+ * This function checks a specific pattern on the game board for a given player.
+ * It counts the number of spots already occupied by the player and identifies
+ * open spots.
+ *
+ * @param board The game board to check.
+ * @param pattern The pattern to check, represented by an array of three
+ * indices.
+ * @param player The player value to match.
+ * @param result Pointer to a ConditionResult structure to store the result.
+ */
 static void check_pattern(const GameValue board[static BOARD_SIZE],
                           const size_t pattern[3], const PlayerValue player,
                           ConditionResult* result) {
@@ -136,8 +149,18 @@ static void check_pattern(const GameValue board[static BOARD_SIZE],
   }
 }
 
-static int get_blocking_spot(const PlayerValue player,
-                             GameValue board[static BOARD_SIZE]) {
+/**
+ * @brief Gets the winning spot for a player if available.
+ *
+ * This function searches for a winning spot for the specified player by
+ * analyzing different winning patterns on the game board.
+ *
+ * @param player The player value to find the winning spot for.
+ * @param board The game board.
+ * @return The winning spot index if found, or -1 if not found.
+ */
+static int get_winning_spot(const PlayerValue player,
+                            GameValue board[static BOARD_SIZE]) {
   for (int i = 0; i < WIN_PATTERNS_COUNT; i++) {
     ConditionResult result = {.done = 0, .open = 0, .open_spots = {-1, -1, -1}};
     check_pattern(board, WIN_PATTERNS[i], player, &result);
@@ -148,9 +171,47 @@ static int get_blocking_spot(const PlayerValue player,
   return -1;
 }
 
+/**
+ * @brief Makes a blocking move for the AI player on the game board.
+ *
+ * This function makes a blocking move for the AI player by checking if the
+ * opponent is about to win and placing a move to block the winning path. If no
+ * winning spot is identified, it falls back to a predictable move.
+ *
+ * @param player The player value representing the AI player.
+ * @param board The game board.
+ */
 static void blocking_move(const PlayerValue player,
                           GameValue board[static BOARD_SIZE]) {
-  const int blocking_spot = get_blocking_spot(swap_player(player), board);
+  const int blocking_spot = get_winning_spot(swap_player(player), board);
+  if (blocking_spot != -1) {
+    board[blocking_spot] = (GameValue)player;
+    return;
+  }
+  predictable_move(player, board);
+}
+
+/**
+ * @brief Makes a move for the AI player to either win or block the opponent.
+ *
+ * This function aims to make a move for the AI player with the goal of either
+ * winning the game or blocking the opponent from winning. It first checks if
+ * there's a winning spot for the AI player, and if found, it places the move
+ * there. If no winning spot is found, it then checks for a blocking spot to
+ * prevent the opponent from winning. If both checks fail, it resorts to making
+ * a predictable move.
+ *
+ * @param player The player value representing the AI player.
+ * @param board The game board.
+ */
+static void winning_blocking_move(const PlayerValue player,
+                                  GameValue board[static BOARD_SIZE]) {
+  const int winning_spot = get_winning_spot(player, board);
+  if (winning_spot != -1) {
+    board[winning_spot] = (GameValue)player;
+    return;
+  }
+  const int blocking_spot = get_winning_spot(swap_player(player), board);
   if (blocking_spot != -1) {
     board[blocking_spot] = (GameValue)player;
     return;
@@ -179,9 +240,11 @@ static bool ai_turn(const PlayerValue player,
     case 0:
       predictable_move(player, board);
       break;
-
-    default:
+    case 1:
       blocking_move(player, board);
+      break;
+    default:
+      winning_blocking_move(player, board);
       break;
   }
   sleep(1);
