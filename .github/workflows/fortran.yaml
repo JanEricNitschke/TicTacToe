@@ -1,0 +1,28 @@
+# This workflow will run compile the fortran version of tictactoe
+
+name: Fortran
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_fortran
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Build
+      run: |
+        make
+    - name: Test
+      run: |
+        make test
+    # - name: Run
+    #   run: |
+    #     ./bin/tictactoe -X 0 -O 0
