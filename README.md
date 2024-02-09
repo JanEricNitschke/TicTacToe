@@ -193,6 +193,8 @@ Simple tictactoe game with [C](https://www.iso-9899.info/wiki/The_Standard).
 
 AI player settings via command line.
 
+Also creates Python bindings and gives an example of how to use them.
+
 To compile and run:
 ```bash
 make
@@ -206,6 +208,16 @@ Simple version with 2 player in [Smalltalk](https://squeak.org/).
 To run in Squeak once installed:
 ```bash
 Game new playGame.
+```
+
+## TicTacToe-Fortran
+
+Simple version with (currently) 2 players in [Fortran](https://fortran-lang.org/).
+
+To compile and run:
+```bash
+make
+./bin/tictactoe.exe
 ```
 
 ## TicTacToe-scratch

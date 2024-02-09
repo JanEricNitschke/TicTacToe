@@ -127,13 +127,21 @@ class TestTicTacToe:
 
     @patch("builtins.print")
     def test_show_board(self, print_mock: MagicMock):
-        """Tests show_board."""
+        """Tests show_board.
+
+        Args:
+            print_mock (MagicMock): Mock out print
+        """
         self.tictactoe.show_board()
         assert print_mock.call_count == 3 * 3 + 3 + 1
 
     @patch("builtins.input")
     def test_get_player_input(self, input_mock: MagicMock):
-        """Tests get_player_input."""
+        """Tests get_player_input.
+
+        Args:
+            input_mock (MagicMock): Mock out user input
+        """
         input_mock.side_effect = ["1 0", "1", "", "1 1 1", "-1 1", "3 1", "a 1", "2 2"]
         assert self.tictactoe.get_player_input() == (1, 0)
         assert self.tictactoe.get_player_input() is None
@@ -157,7 +165,11 @@ class TestTicTacToe:
 
     @patch("builtins.input")
     def test_get_player_number(self, input_mock: MagicMock):
-        """Tests get_player_number."""
+        """Tests get_player_number.
+
+        Args:
+            input_mock (MagicMock): Mock out user input
+        """
         input_mock.side_effect = ["y", "n", "", "Y", 1, "N"]
         self.tictactoe.get_player_number()
         assert self.tictactoe.ai_opponent is True
@@ -174,7 +186,11 @@ class TestTicTacToe:
 
     @patch("builtins.input")
     def test_get_ai_start(self, input_mock: MagicMock):
-        """Tests get_ai_start."""
+        """Tests get_ai_start.
+
+        Args:
+            input_mock (MagicMock): Mock out user input
+        """
         input_mock.side_effect = ["y", "n", "", "Y", 1, "N"]
         self.tictactoe.get_ai_start()
         assert self.tictactoe.ai_marker == "X"
@@ -191,7 +207,11 @@ class TestTicTacToe:
 
     @patch("builtins.input")
     def test_get_ai_strength(self, input_mock: MagicMock):
-        """Tests get_ai_start."""
+        """Tests get_ai_start.
+
+        Args:
+            input_mock (MagicMock): Mock out user input
+        """
         input_mock.side_effect = ["1", "2", "", "3", "X", "4"]
         self.tictactoe.get_ai_strength()
         assert self.tictactoe.ai_function == self.tictactoe.random_move
@@ -253,7 +273,12 @@ class TestTicTacToe:
     @patch("tictactoe.tictactoe_python.TicTacToe.minmax")
     @patch("tictactoe.tictactoe_python.TicTacToe.show_board")
     def test_ai_turn(self, show_mock: MagicMock, minmax_mock: MagicMock):
-        """Tests ai_turn."""
+        """Tests ai_turn.
+
+        Args:
+            show_mock (MagicMock): Mock out show_board
+            minmax_mock (MagicMock): Mock out minmax
+        """
         minmax_mock.side_effect = [[0, 0, 1], [1, 0, 0], [2, 2, 1]]
         self.tictactoe.ai_function = minmax_mock
         self.tictactoe.create_board()
@@ -279,7 +304,13 @@ class TestTicTacToe:
     def test_player_turn(
         self, show_mock: MagicMock, input_mock: MagicMock, fix_mock: MagicMock
     ):
-        """Tests player_turn."""
+        """Tests player_turn.
+
+        Args:
+            show_mock (MagicMock): Mock put show_board
+            input_mock (MagicMock): Mock out user input
+            fix_mock (MagicMock): Mock out making the move
+        """
         input_mock.side_effect = [False, (1, 1), (3, 3)]
         fix_mock.side_effect = [False, True]
         self.tictactoe.player_turn("X")
@@ -325,7 +356,12 @@ class TestTicTacToe:
     @patch("tictactoe.tictactoe_python.TicTacToe._get_winning_move")
     @patch("tictactoe.tictactoe_python.TicTacToe.random_move")
     def test_win_move(self, random_move_mock: MagicMock, winning_move_mock: MagicMock):
-        """Tests win_move."""
+        """Tests win_move.
+
+        Args:
+            random_move_mock (MagicMock): Mock out the random move
+            winning_move_mock (MagicMock): Mock out the actual calculating function
+        """
         winning_move_mock.side_effect = [[0, 0, 1], None]
         random_move_mock.side_effect = [[1, 1, 1]]
         assert self.tictactoe.win_move([], "X") == [0, 0, 1]
@@ -362,7 +398,13 @@ class TestTicTacToe:
         blocking_move_mock: MagicMock,
         winning_move_mock: MagicMock,
     ):
-        """Tests block_win_move."""
+        """Tests block_win_move.
+
+        Args:
+            random_move_mock (MagicMock): Mock out the random move
+            blocking_move_mock (MagicMock): Mock out the move calculating function 1
+            winning_move_mock (MagicMock): Mock out the move calculating function 2
+        """
         winning_move_mock.side_effect = [[0, 0, 1], None, None]
         blocking_move_mock.side_effect = [[2, 2, -1], None]
         random_move_mock.side_effect = [[1, 1, 0]]

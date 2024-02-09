@@ -369,7 +369,7 @@ bool play_game(int playerX_strength, int playerO_strength) {
     }
 
     if (is_board_filled(board)) {
-      printf("Match Draw\n");
+      printf("Match Drawn!\n");
       break;
     }
 
