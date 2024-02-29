@@ -8,6 +8,9 @@ import (
 	"golang.org/x/exp/slices"
 )
 
+const randomMoveConstraint = "RandomMove should always be made on an empty cell containing '-'" +
+	" but cell contained %c instead"
+
 func TestGetEmptyCells(t *testing.T) {
 	t.Parallel()
 	tictactoe := NewTicTacToe()
@@ -128,8 +131,7 @@ func TestWinMoveWorksWithoutWin(t *testing.T) {
 		t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
 	}
 	if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
-		t.Errorf("RandomMove should always be made on an empty cell containing '-'"+
-			" but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
+		t.Errorf(randomMoveConstraint, tictactoe.board[resultingMove.row][resultingMove.col])
 	}
 }
 
@@ -210,8 +212,7 @@ func TestBlockWinMoveWorksWithoutWin(t *testing.T) {
 		t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
 	}
 	if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
-		t.Errorf("RandomMove should always be made on an empty cell containing '-'"+
-			" but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
+		t.Errorf(randomMoveConstraint, tictactoe.board[resultingMove.row][resultingMove.col])
 	}
 }
 
@@ -245,8 +246,7 @@ func FuzzRandomMove(f *testing.F) {
 				t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
 			}
 			if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
-				t.Errorf("RandomMove should always be made on an empty cell containing '-'"+
-					" but cell contained %c instead", tictactoe.board[resultingMove.row][resultingMove.col])
+				t.Errorf(randomMoveConstraint, tictactoe.board[resultingMove.row][resultingMove.col])
 			}
 		}
 	})

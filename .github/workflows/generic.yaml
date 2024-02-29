@@ -16,12 +16,12 @@ jobs:
         working-directory: main/tictactoe_generic
     steps:
     - name: Checkout generic
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: JanEricNitschke/generic-lang
         path: generic-lang
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: main
     - name: Install generic

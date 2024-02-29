@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_dart
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - uses: subosito/flutter-action@v2
       with:
         cache: true
@@ -39,7 +39,7 @@ jobs:
         flutter test --coverage
         perl C:\ProgramData\chocolatey\lib\lcov\tools\bin\genhtml -o coverage\html coverage\lcov.info
     - name: Archive code coverage results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: code-coverage-report
         path: ./tictactoe_dart/coverage/html/
