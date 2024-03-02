@@ -1,0 +1,26 @@
+# This workflow will run? the brainfuck version
+
+name: Brainfuck
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_brainfuck
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        cargo install brainfuck-exe
+    - name: Run
+      run: |
+        brainfuck -f tictactoe.bf --print-info -i 0123456
+        brainfuck -f tictactoe.bf --print-info -i 048176253
