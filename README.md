@@ -220,6 +220,35 @@ make
 ./bin/tictactoe.exe
 ```
 
+## TicTacToe-Assembly
+
+Simple version with 2 players in [x86 Assembly](https://en.wikipedia.org/wiki/X86_assembly_language).
+Uses [NASM](https://cs.lmu.edu/~ray/notes/nasmtutorial/).
+
+To compile and run:
+```bash
+make
+```
+
+## TicTacToe-Brainfuck
+
+Simple version with 2 players in [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck).
+
+Useful sites to run and debug:
+
+https://kvbc.github.io/bf-ide/
+
+https://copy.sh/brainfuck/
+
+To run use any brainfuck interpreter.
+Example using [brainfuck-exe](https://crates.io/crates/brainfuck-exe):
+
+```bash
+cargo install brainfuck-exe
+brainfuck -f tictactoe.bf --print-info
+```
+
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
