@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """Script to play ticatactoe."""
 
-
 import itertools
 import random
 import sys

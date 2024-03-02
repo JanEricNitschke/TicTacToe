@@ -39,18 +39,14 @@ repos:
       - id: pymend
         language: python
         args: ["--write", "--check", "--output-style=google"]
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
+  - repo: "https://github.com/charliermarsh/ruff-pre-commit"
     rev: v0.3.0
     hooks:
       - id: ruff
         args:
-          - --fix
-          - --exit-non-zero-on-fix
-  - repo: https://github.com/psf/black
-    rev: 24.2.0
-    hooks:
-      - id: black
-        language: python
+          - "--fix"
+          - "--exit-non-zero-on-fix"
+      - id: ruff-format
   - repo: local
     hooks:
       - id: pyright
