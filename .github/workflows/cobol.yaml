@@ -1,0 +1,25 @@
+# This workflow will compile the cobol version of tictactoe
+
+name: cobol
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_cobol
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Setup Cobol
+      uses: fabasoad/setup-cobol-action@main
+    - name: Run script
+      run: |
+        cobc -x tictactoe_cobol.cob
+        ./tictactoe_cobol

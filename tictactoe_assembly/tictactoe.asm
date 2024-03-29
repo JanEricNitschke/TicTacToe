@@ -55,7 +55,7 @@ check_input:
 	; Expected input is one character + newline
 	cmp byte [buffer + 1], 10    ; Second value should be newline
 	jne invalid_input            ; If not, jump to invalid_input
-    movzx rax, byte [buffer]     ; Return the first character
+	movzx rax, byte [buffer]     ; Return the first character
 	ret
 
 

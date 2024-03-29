@@ -248,6 +248,18 @@ cargo install brainfuck-exe
 brainfuck -f tictactoe.bf --print-info
 ```
 
+## TicTacToe-Cobol
+
+Game written in [GnuCobol](https://gnucobol.sourceforge.io/).
+
+To compile and run:
+```bash
+cobc -x tictactoe_cobol.cob
+./tictactoe_cobol
+```
+
+Depending on the setup first run `./set_env.cmd`.
+
 
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
