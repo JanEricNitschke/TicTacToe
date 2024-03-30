@@ -31,7 +31,14 @@
         01 EMPTY-CELLS-AREA.
                03 EMPTY-CELLS OCCURS 9 TIMES PIC 9(1).
 
-       01  RANDOM-IDX  PIC 9 COMP.
+        01 RANDOM-IDX  PIC 9 COMP.
+        01 SPOTS-DONE PIC 9(1).
+        01 SPOTS-OPEN-INDEX PIC 9(1) VALUE 1.
+        01 SPOTS-OPEN-AREA.
+           03 SPOTS-OPEN OCCURS 3 TIMES PIC 9(1).
+        01 MOVE-TO-MAKE PIC 9(1).
+        01 SPOT-AS-CHAR PIC X(1).
+
        PROCEDURE DIVISION.
       *    Initialize win conditions
            MOVE 123456789147258369159357 TO WIN-CONDITIONS.
@@ -111,15 +118,6 @@
                END-IF
            END-PERFORM.
 
-       RANDOM-MOVE.
-           PERFORM SET-EMPTY-CELLS
-           MOVE 0 TO RANDOM-IDX
-           PERFORM UNTIL RANDOM-IDX > 0 AND EMPTY-CELLS (RANDOM-IDX) = 1
-               COMPUTE RANDOM-IDX =
-               FUNCTION RANDOM(FUNCTION CURRENT-DATE (9:7)) * 9 + 1
-           END-PERFORM
-           MOVE ACTIVE-PLAYER TO GAME-SPOT (RANDOM-IDX).
-
        SWAP-ACTIVE-PLAYER.
            IF ACTIVE-PLAYER = "X"
                MOVE "O" TO ACTIVE-PLAYER
@@ -172,6 +170,68 @@
                END-IF
            END-PERFORM.
 
+       MAKE-RANDOM-MOVE.
+           PERFORM SET-EMPTY-CELLS
+           MOVE 0 TO RANDOM-IDX
+           PERFORM UNTIL RANDOM-IDX > 0 AND EMPTY-CELLS (RANDOM-IDX) = 1
+               COMPUTE RANDOM-IDX =
+               FUNCTION RANDOM(FUNCTION CURRENT-DATE (9:7)) * 9 + 1
+           END-PERFORM
+           MOVE ACTIVE-PLAYER TO GAME-SPOT (RANDOM-IDX).
+
+       SET-WINNING-MOVE.
+           MOVE 0 TO MOVE-TO-MAKE
+      *    Loop over win conditions
+           PERFORM VARYING LOOP-IDX-1 FROM 1 BY 1 UNTIL LOOP-IDX-1 > 8
+               MOVE 000 TO SPOTS-OPEN-AREA
+               MOVE 1 TO SPOTS-OPEN-INDEX
+               MOVE 0 TO SPOTS-DONE
+      *        Check every spot in the condition
+               PERFORM VARYING LOOP-IDX-2 FROM 1 BY 1
+               UNTIL LOOP-IDX-2 > 3
+      *            If the spot is empty, we have to add it to the list
+      *            of open spots
+                   MOVE WIN-VALUE(LOOP-IDX-1, LOOP-IDX-2) TO
+                       SPOT-AS-CHAR
+                   EVALUATE GAME-SPOT(WIN-VALUE(LOOP-IDX-1, LOOP-IDX-2))
+      *            Spot is still open
+                   WHEN SPOT-AS-CHAR
+                       MOVE WIN-VALUE(LOOP-IDX-1, LOOP-IDX-2) TO
+                           SPOTS-OPEN (SPOTS-OPEN-INDEX)
+                       COMPUTE SPOTS-OPEN-INDEX = SPOTS-OPEN-INDEX + 1
+                   WHEN ACTIVE-PLAYER
+                       COMPUTE SPOTS-DONE = SPOTS-DONE + 1
+                   END-EVALUATE
+               END-PERFORM
+               IF SPOTS-DONE = 2 AND SPOTS-OPEN-INDEX = 2
+                   MOVE SPOTS-OPEN (1) TO MOVE-TO-MAKE
+               END-IF
+           END-PERFORM.
+
+       MAKE-WINNING-MOVE.
+           PERFORM SET-WINNING-MOVE.
+           IF MOVE-TO-MAKE > 0
+               MOVE ACTIVE-PLAYER TO GAME-SPOT (MOVE-TO-MAKE)
+           ELSE
+               PERFORM MAKE-RANDOM-MOVE
+           END-IF.
+
+       MAKE-WINNING-BLOCKING-MOVE.
+           PERFORM SET-WINNING-MOVE.
+           IF MOVE-TO-MAKE > 0
+               MOVE ACTIVE-PLAYER TO GAME-SPOT (MOVE-TO-MAKE)
+           ELSE
+               PERFORM SWAP-ACTIVE-PLAYER
+               PERFORM SET-WINNING-MOVE
+               PERFORM SWAP-ACTIVE-PLAYER
+               IF MOVE-TO-MAKE > 0
+                   MOVE ACTIVE-PLAYER TO GAME-SPOT (MOVE-TO-MAKE)
+               ELSE
+                   PERFORM MAKE-RANDOM-MOVE
+               END-IF
+           END-IF.
+
+
        AI-MOVE.
            IF X-TURN
                MOVE X-AI-STRENGTH TO AI-STRENGTH
@@ -183,8 +243,10 @@
            PERFORM DISPLAY-BOARD
            EVALUATE AI-STRENGTH
                WHEN 0
-                   PERFORM RANDOM-MOVE
+                   PERFORM MAKE-RANDOM-MOVE
+               WHEN 1
+                   PERFORM MAKE-WINNING-MOVE
                WHEN OTHER
-                   PERFORM RANDOM-MOVE
+                   PERFORM MAKE-WINNING-BLOCKING-MOVE
            END-EVALUATE
            CONTINUE AFTER 1 SECONDS.
