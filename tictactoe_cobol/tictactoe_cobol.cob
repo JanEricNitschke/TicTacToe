@@ -31,13 +31,22 @@
         01 EMPTY-CELLS-AREA.
                03 EMPTY-CELLS OCCURS 9 TIMES PIC 9(1).
 
-        01 RANDOM-IDX  PIC 9 COMP.
+        01 RND-IDX  PIC 9 COMP.
         01 SPOTS-DONE PIC 9(1).
         01 SPOTS-OPEN-INDEX PIC 9(1) VALUE 1.
         01 SPOTS-OPEN-AREA.
            03 SPOTS-OPEN OCCURS 3 TIMES PIC 9(1).
         01 MOVE-TO-MAKE PIC 9(1).
         01 SPOT-AS-CHAR PIC X(1).
+
+        01 BEST-MOVE-AREA.
+           03 BEST-SPOT PIC 9(1) VALUE is 0.
+      *    1 is loss, 2 is draw and 3 is win
+      *    0 is not set
+           03 BEST-STATE PIC 9(1) VALUE is 0.
+
+        01 ALL-EMPTY-FLAG PIC X(1).
+           88 ALL-EMPTY VALUE "Y".
 
        PROCEDURE DIVISION.
       *    Initialize win conditions
@@ -157,7 +166,6 @@
            DISPLAY "0: Easy"
            DISPLAY "1: Medium"
            DISPLAY "2: Hard"
-           DISPLAY "3: Impossible"
            DISPLAY "How strong should the AI be?".
 
        SET-EMPTY-CELLS.
@@ -172,12 +180,12 @@
 
        MAKE-RANDOM-MOVE.
            PERFORM SET-EMPTY-CELLS
-           MOVE 0 TO RANDOM-IDX
-           PERFORM UNTIL RANDOM-IDX > 0 AND EMPTY-CELLS (RANDOM-IDX) = 1
-               COMPUTE RANDOM-IDX =
+           MOVE 0 TO RND-IDX
+           PERFORM UNTIL RND-IDX > 0 AND EMPTY-CELLS (RND-IDX) = 1
+               COMPUTE RND-IDX =
                FUNCTION RANDOM(FUNCTION CURRENT-DATE (9:7)) * 9 + 1
            END-PERFORM
-           MOVE ACTIVE-PLAYER TO GAME-SPOT (RANDOM-IDX).
+           MOVE ACTIVE-PLAYER TO GAME-SPOT (RND-IDX).
 
        SET-WINNING-MOVE.
            MOVE 0 TO MOVE-TO-MAKE
@@ -230,7 +238,6 @@
                    PERFORM MAKE-RANDOM-MOVE
                END-IF
            END-IF.
-
 
        AI-MOVE.
            IF X-TURN

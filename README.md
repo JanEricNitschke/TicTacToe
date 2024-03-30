@@ -251,6 +251,7 @@ brainfuck -f tictactoe.bf --print-info
 ## TicTacToe-Cobol
 
 Game written in [GnuCobol](https://gnucobol.sourceforge.io/).
+No minmax algorithm as highest PC strength as recursion seems annoying.
 
 To compile and run:
 ```bash
