@@ -131,7 +131,6 @@ dmypy.json
 .vscode/
 .eslintrc
 node_modules/
-package.json
 package-lock.json
 # Prerequisites
 *.d

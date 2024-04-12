@@ -164,10 +164,10 @@ repos:
         args:
           - --fix
         additional_dependencies:
-          - eslint@8.46.0
+          - eslint@9.0.0
           - eslint-config-google@0.14.0
-          - "@babel/eslint-parser"
-          - eslint-config-prettier@9.0.0
+          - "@babel/eslint-parser@7.24.5-pre.2"
+          - eslint-config-prettier@9.1.0
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
     hooks:

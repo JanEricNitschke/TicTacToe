@@ -15,16 +15,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Prettier
-        uses: actionsx/prettier@v2
+        uses: actionsx/prettier@v3
         with:
           # prettier CLI arguments.
           args: --check "./tictactoe_javascript/**.{css,js}"
       - name: Install eslint
         run: |
           npm i eslint --save-dev
-          npm init @eslint/config
-          npm install --save-dev eslint eslint-config-google
-          npm install eslint @babel/core @babel/eslint-parser --save-dev
-          npm install --save-dev eslint-config-prettier
+          npm install @babel/core @babel/eslint-parser --save-dev
+          npm install
       - name: Lint
-        run: ./node_modules/.bin/eslint ./tictactoe_javascript/ --ext .js,.jsx,.ts,.tsx
+        run: ./node_modules/.bin/eslint .

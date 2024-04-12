@@ -1,4 +1,7 @@
 // @ts-check
+/* global document, HTMLButtonElement */
+// The above shouldnt be needed as i have already set `...globals.browser`
+// in the eslint.config.js file, but that does not seem to work...
 
 /**
  * Contains the current state of the board
@@ -30,7 +33,7 @@ let gameMode = "";
  */
 let difficultySetting = 4;
 
-/* eslint-disable no-unused-vars, valid-jsdoc */
+/* eslint-disable no-unused-vars */
 /**
  * Propagates the difficulty whenever the player changes
  * it in the select element.
@@ -41,7 +44,7 @@ let difficultySetting = 4;
 function handleSelectChange(event) {
   difficultySetting = parseInt(event.target.value);
 }
-/* eslint-enable no-unused-vars, valid-jsdoc */
+/* eslint-enable no-unused-vars */
 
 /**
  * Swap the player between X and O
