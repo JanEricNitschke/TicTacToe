@@ -1,6 +1,6 @@
 // Copyright 2022-2024 Jan-Eric Nitschke. All rights reserved.
 
-#include <tictactoe.h>
+#include <tictactoe.hpp>
 
 auto main() -> int {
   auto board{createBoard<4>()};

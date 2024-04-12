@@ -125,9 +125,13 @@ repos:
         types_or: [c]
         files: ^tictactoe_c/
       - id: cppcheck
-        types_or: [c, c++]
-        files: ^tictactoe_cpp/|^tictactoe_c/
-        args: ["--std=c++20", "--enable=all", "--language=c++", "--inline-suppr", "-Itictactoe_c/include/"]
+        types_or: [c++]
+        files: ^tictactoe_cpp/
+        args: ["--std=c++23", "--enable=all", "--language=c++", "--inline-suppr"]
+      - id: cppcheck
+        types_or: [c]
+        files: ^tictactoe_c/
+        args: ["--enable=all", "--language=c", "--inline-suppr", "-Itictactoe_c/include/"]
 
   # dart specific
   - repo: https://github.com/dluksza/flutter-analyze-pre-commit

@@ -1,13 +1,12 @@
 // Copyright 2022-2024 Jan-Eric Nitschke. All rights reserved.
 
-#include <Random.h>
-#include <tictactoe.h>
-
+#include <Random.hpp>
 #include <algorithm>
 #include <chrono>  // NOLINT [build/c++11]
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <tictactoe.hpp>
 #include <tuple>
 #include <unordered_map>
 #include <vector>

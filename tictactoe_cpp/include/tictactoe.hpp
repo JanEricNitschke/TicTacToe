@@ -15,7 +15,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "Random.h"
+#include "Random.hpp"
 
 // Yes, this could just be a vector and then we could set the
 // size at runtime too. But i wanted to do something with templates.
@@ -39,7 +39,7 @@ concept Hashable = requires(T a) {
 // Specialization for unordered_set
 template <Hashable T>
 struct std::hash<std::tuple<T, T>> {
-  constexpr std::size_t operator()(
+  [[nodiscard]] constexpr std::size_t operator()(
       const std::tuple<T, T> &tuple) const noexcept {
     std::size_t h1 = std::hash<T>{}(std::get<0>(tuple));
     std::size_t h2 = std::hash<T>{}(std::get<1>(tuple));
@@ -54,7 +54,7 @@ enum class GameState {
   win = 3,
 };
 
-constexpr GameState operator-(GameState const &state) {
+[[nodiscard]] constexpr GameState operator-(GameState const &state) {
   switch (state) {
     case GameState::win:
       return GameState::loss;
@@ -73,7 +73,7 @@ struct Spot {
   std::size_t row{};
   std::size_t col{};
 
-  constexpr bool operator==(const Spot &other) const {
+  [[nodiscard]] constexpr bool operator==(const Spot &other) const {
     return (row == other.row && col == other.col);
   }
 };
@@ -82,7 +82,7 @@ struct Move {
   Spot spot{};
   GameState state{};
 
-  constexpr bool operator==(const Move &other) const {
+  [[nodiscard]] constexpr bool operator==(const Move &other) const {
     return (spot == other.spot && state == other.state);
   }
 };
@@ -99,7 +99,7 @@ struct BestMoves {
 
 template <std::size_t N>
 // Initialize an empty game board
-constexpr auto createBoard() -> GameBoard<N> {
+[[nodiscard]] constexpr auto createBoard() -> GameBoard<N> {
   GameBoard<N> board{};
   for (auto &row : board) {
     std::ranges::fill(row, '-');
@@ -108,34 +108,35 @@ constexpr auto createBoard() -> GameBoard<N> {
 }
 
 // Get AI settings for the given player
-AISettings getAISettings(char player);
+[[nodiscard]] AISettings getAISettings(char player);
 
 // Function to get yes/no response from the player
-bool getPlayerYesNo(std::string_view question);
+[[nodiscard]] bool getPlayerYesNo(std::string_view question);
 
 // Get information whether it is a
 // 1 person or 2 person game
-bool getPlayerNumber();
+[[nodiscard]] bool getPlayerNumber();
 
 // Get information whether the AI should make
 // the first move.
 // Player 'X' makes odd moves so if AI
 // should make the first it needs to be player 'X'
-char getAIStart();
+[[nodiscard]] char getAIStart();
 
 // Ask user for AI strength
 // 1 is Random
 // 2 wins if possible
 // 3 wins or blocks if possible
 // 4 plays perfect
-int getAIStrength();
+[[nodiscard]] int getAIStrength();
 
 // Checks if the given player
 // has won on the given board
 // Checks if the given player
 // has won on the given board
 template <std::size_t N>
-constexpr auto isPlayerWin(char player, const GameBoard<N> &board) -> bool {
+[[nodiscard]] constexpr auto isPlayerWin(char player, const GameBoard<N> &board)
+    -> bool {
   // Checking rows
   for (size_t i = 0; i < N; ++i) {
     if (std::all_of(board[i].begin(), board[i].end(),
@@ -181,7 +182,7 @@ constexpr auto isPlayerWin(char player, const GameBoard<N> &board) -> bool {
 // Will be used to check for draw after checking
 // for either player win first
 template <std::size_t N>
-constexpr auto isBoardFilled(const GameBoard<N> &board) -> bool {
+[[nodiscard]] constexpr auto isBoardFilled(const GameBoard<N> &board) -> bool {
   for (size_t i{0}; i < N; i++) {
     for (size_t j{0}; j < N; j++) {
       if (board[j][i] == '-') {
@@ -194,12 +195,15 @@ constexpr auto isBoardFilled(const GameBoard<N> &board) -> bool {
 
 // Swap between player X and O
 // Only expected X or O as input
-constexpr char swapPlayer(char player) { return (player == 'X') ? 'O' : 'X'; }
+[[nodiscard]] constexpr char swapPlayer(char player) {
+  return (player == 'X') ? 'O' : 'X';
+}
 
 // Get all currently unoccupied cells
 // Used for random move and minmax
 template <std::size_t N>
-constexpr std::vector<Spot> getEmptyCells(const GameBoard<N> &board) {
+[[nodiscard]] constexpr std::vector<Spot> getEmptyCells(
+    const GameBoard<N> &board) {
   std::vector<Spot> empty_cells{};
   for (size_t i{0}; i < N; i++) {
     for (size_t j{0}; j < N; j++) {
@@ -213,7 +217,7 @@ constexpr std::vector<Spot> getEmptyCells(const GameBoard<N> &board) {
 
 // Performs any random valid move
 template <std::size_t N>
-Move randomMove(const GameBoard<N> &board) {
+[[nodiscard]] Move randomMove(const GameBoard<N> &board) {
   // Get all the empty cells
   const std::vector<Spot> empty_cells{getEmptyCells(board)};
   // Pick a random number in range 0, length of the list and take that element
@@ -275,7 +279,8 @@ constexpr void checkWinconditions(
 // given board. So any line that contains the player twice
 // and an empty cell as the last slot
 template <std::size_t N>
-constexpr Move getWinningMove(char player, const GameBoard<N> &board) {
+[[nodiscard]] constexpr Move getWinningMove(char player,
+                                            const GameBoard<N> &board) {
   // Build  all of the possible lines
   std::unordered_map<std::string,
                      std::unordered_set<std::tuple<std::size_t, std::size_t>>>
@@ -311,7 +316,8 @@ constexpr Move getWinningMove(char player, const GameBoard<N> &board) {
 // Tries to find a move that would block the opponent
 // winning on their next move
 template <std::size_t N>
-constexpr Move getBlockingMove(char player, const GameBoard<N> &board) {
+[[nodiscard]] constexpr Move getBlockingMove(char player,
+                                             const GameBoard<N> &board) {
   // Just find a move that would make the opponent win
   return getWinningMove(swapPlayer(player), board);
 }
@@ -319,7 +325,7 @@ constexpr Move getBlockingMove(char player, const GameBoard<N> &board) {
 // Try to perform a winning move
 // If there is none return a random one instead
 template <std::size_t N>
-Move winMove(char player, const GameBoard<N> &board) {
+[[nodiscard]] Move winMove(char player, const GameBoard<N> &board) {
   Move winningMove{getWinningMove(player, board)};
   if (winningMove.state != GameState::undecided) {
     return winningMove;
@@ -330,7 +336,7 @@ Move winMove(char player, const GameBoard<N> &board) {
 // Try to find a winning or blocking move
 // If neither exists do a random one instead
 template <std::size_t N>
-Move blockWinMove(char player, const GameBoard<N> &board) {
+[[nodiscard]] Move blockWinMove(char player, const GameBoard<N> &board) {
   Move winningMove{getWinningMove(player, board)};
   if (winningMove.state != GameState::undecided) {
     return winningMove;
@@ -344,10 +350,10 @@ Move blockWinMove(char player, const GameBoard<N> &board) {
 
 // The coordinates of the optimal moves for the player on the board
 template <std::size_t N>
-BestMoves getBestMoves(char player, GameBoard<N> *board,
-                       GameState bestX = GameState::loss,
-                       GameState bestO = GameState::loss,
-                       std::size_t max_depth = 10) {
+[[nodiscard]] BestMoves getBestMoves(char player, GameBoard<N> *board,
+                                     GameState bestX = GameState::loss,
+                                     GameState bestO = GameState::loss,
+                                     std::size_t max_depth = 10) {
   BestMoves best_moves{.spots{}, .state = GameState::undecided};
   // Base cases
   // Player won
@@ -405,7 +411,7 @@ BestMoves getBestMoves(char player, GameBoard<N> *board,
 
 // The coordinates of the one optimal move for the player on the board
 template <std::size_t N>
-Move minmax(char player, GameBoard<N> *board) {
+[[nodiscard]] Move minmax(char player, GameBoard<N> *board) {
   BestMoves best_moves{
       getBestMoves(player, board, GameState::undecided, GameState::undecided)};
   if (best_moves.spots.empty()) {

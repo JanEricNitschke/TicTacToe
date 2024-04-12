@@ -2,7 +2,8 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <tictactoe.h>
+
+#include <tictactoe.hpp>
 
 // Demonstrate some basic assertions.
 TEST(createBoardTest /*unused*/, createBoard /*unused*/) {
