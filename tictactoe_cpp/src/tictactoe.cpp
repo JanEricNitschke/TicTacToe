@@ -1,15 +1,17 @@
 // Copyright 2022-2024 Jan-Eric Nitschke. All rights reserved.
 
-#include <Random.hpp>
+#include <tictactoe.hpp>
+
 #include <algorithm>
 #include <chrono>  // NOLINT [build/c++11]
 #include <iostream>
 #include <string>
 #include <string_view>
-#include <tictactoe.hpp>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
+
+#include <Random.hpp>
 
 std::ostream &operator<<(std::ostream &os, const GameState &obj) {
   os << static_cast<std::underlying_type<GameState>::type>(obj);

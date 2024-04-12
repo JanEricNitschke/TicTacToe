@@ -1,9 +1,9 @@
 // Copyright 2022-2023 Jan-Eric Nitschke. All rights reserved.
 
+#include <tictactoe.hpp>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include <tictactoe.hpp>
 
 // Demonstrate some basic assertions.
 TEST(createBoardTest /*unused*/, createBoard /*unused*/) {

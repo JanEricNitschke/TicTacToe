@@ -1,7 +1,7 @@
 // Copyright 2022-2024 Jan-Eric Nitschke. All rights reserved.
 
-#ifndef TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
-#define TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
+#ifndef TICTACTOE_CPP_INCLUDE_TICTACTOE_HPP_
+#define TICTACTOE_CPP_INCLUDE_TICTACTOE_HPP_
 
 #include <algorithm>
 #include <array>
@@ -73,18 +73,14 @@ struct Spot {
   std::size_t row{};
   std::size_t col{};
 
-  [[nodiscard]] constexpr bool operator==(const Spot &other) const {
-    return (row == other.row && col == other.col);
-  }
+  [[nodiscard]] constexpr bool operator==(const Spot &other) const = default;
 };
 
 struct Move {
   Spot spot{};
   GameState state{};
 
-  [[nodiscard]] constexpr bool operator==(const Move &other) const {
-    return (spot == other.spot && state == other.state);
-  }
+  [[nodiscard]] constexpr bool operator==(const Move &other) const = default;
 };
 
 struct AISettings {
@@ -515,4 +511,4 @@ void playerTurn(char player, GameBoard<N> *board) {
   }
   (*board)[row - 1][col - 1] = player;
 }
-#endif  // TICTACTOE_CPP_INCLUDE_TICTACTOE_H_
+#endif  // TICTACTOE_CPP_INCLUDE_TICTACTOE_HPP_

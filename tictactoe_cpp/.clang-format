@@ -1,0 +1,4 @@
+---
+BasedOnStyle: Google
+IncludeIsMainSourceRegex: ".*\\.(c|cc|cpp|cu|m|mm|C|CC|CPP|c++|cp|cxx|h|hh|hpp|hxx|H)$"
+SortIncludes: Never

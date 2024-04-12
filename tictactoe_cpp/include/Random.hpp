@@ -1,7 +1,7 @@
 // Copyright 2022-2023 Jan-Eric Nitschke. All rights reserved.
 
-#ifndef TICTACTOE_CPP_INCLUDE_RANDOM_H_
-#define TICTACTOE_CPP_INCLUDE_RANDOM_H_
+#ifndef TICTACTOE_CPP_INCLUDE_RANDOM_HPP_
+#define TICTACTOE_CPP_INCLUDE_RANDOM_HPP_
 
 #include <chrono>  // NOLINT [build/c++11]
 #include <random>
@@ -78,4 +78,4 @@ R get(S min, T max) {
 }
 }  // namespace Random
 
-#endif  // TICTACTOE_CPP_INCLUDE_RANDOM_H_
+#endif  // TICTACTOE_CPP_INCLUDE_RANDOM_HPP_
