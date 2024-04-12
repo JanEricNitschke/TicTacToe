@@ -39,7 +39,8 @@ concept Hashable = requires(T a) {
 // Specialization for unordered_set
 template <Hashable T>
 struct std::hash<std::tuple<T, T>> {
-  std::size_t operator()(const std::tuple<T, T> &tuple) const noexcept {
+  constexpr std::size_t operator()(
+      const std::tuple<T, T> &tuple) const noexcept {
     std::size_t h1 = std::hash<T>{}(std::get<0>(tuple));
     std::size_t h2 = std::hash<T>{}(std::get<1>(tuple));
     return h1 ^ (h2 << 1);  // or use boost::hash_combine
@@ -53,7 +54,18 @@ enum class GameState {
   win = 3,
 };
 
-GameState operator-(GameState const &state);
+constexpr GameState operator-(GameState const &state) {
+  switch (state) {
+    case GameState::win:
+      return GameState::loss;
+    case GameState::loss:
+      return GameState::win;
+    case GameState::draw:
+      return GameState::draw;
+    default:
+      return GameState::undecided;
+  }
+}
 
 std::ostream &operator<<(std::ostream &os, const GameState &obj);
 
@@ -61,7 +73,7 @@ struct Spot {
   std::size_t row{};
   std::size_t col{};
 
-  bool operator==(const Spot &other) const {
+  constexpr bool operator==(const Spot &other) const {
     return (row == other.row && col == other.col);
   }
 };
@@ -70,7 +82,7 @@ struct Move {
   Spot spot{};
   GameState state{};
 
-  bool operator==(const Move &other) const {
+  constexpr bool operator==(const Move &other) const {
     return (spot == other.spot && state == other.state);
   }
 };
@@ -123,7 +135,7 @@ int getAIStrength();
 // Checks if the given player
 // has won on the given board
 template <std::size_t N>
-auto isPlayerWin(char player, const GameBoard<N> &board) -> bool {
+constexpr auto isPlayerWin(char player, const GameBoard<N> &board) -> bool {
   // Checking rows
   for (size_t i = 0; i < N; ++i) {
     if (std::all_of(board[i].begin(), board[i].end(),
@@ -169,7 +181,7 @@ auto isPlayerWin(char player, const GameBoard<N> &board) -> bool {
 // Will be used to check for draw after checking
 // for either player win first
 template <std::size_t N>
-auto isBoardFilled(const GameBoard<N> &board) -> bool {
+constexpr auto isBoardFilled(const GameBoard<N> &board) -> bool {
   for (size_t i{0}; i < N; i++) {
     for (size_t j{0}; j < N; j++) {
       if (board[j][i] == '-') {
@@ -182,12 +194,12 @@ auto isBoardFilled(const GameBoard<N> &board) -> bool {
 
 // Swap between player X and O
 // Only expected X or O as input
-char swapPlayer(char player);
+constexpr char swapPlayer(char player) { return (player == 'X') ? 'O' : 'X'; }
 
 // Get all currently unoccupied cells
 // Used for random move and minmax
 template <std::size_t N>
-std::vector<Spot> getEmptyCells(const GameBoard<N> &board) {
+constexpr std::vector<Spot> getEmptyCells(const GameBoard<N> &board) {
   std::vector<Spot> empty_cells{};
   for (size_t i{0}; i < N; i++) {
     for (size_t j{0}; j < N; j++) {
@@ -213,7 +225,7 @@ Move randomMove(const GameBoard<N> &board) {
 
 // Adjust wincondition requirements according to board state.
 template <std::size_t N>
-void checkWinconditions(
+constexpr void checkWinconditions(
     char player, const GameBoard<N> &board,
     // Yes, with these sizes the ordered one is probably faster
     // But i wanted to do something more with templates.
@@ -263,7 +275,7 @@ void checkWinconditions(
 // given board. So any line that contains the player twice
 // and an empty cell as the last slot
 template <std::size_t N>
-Move getWinningMove(char player, const GameBoard<N> &board) {
+constexpr Move getWinningMove(char player, const GameBoard<N> &board) {
   // Build  all of the possible lines
   std::unordered_map<std::string,
                      std::unordered_set<std::tuple<std::size_t, std::size_t>>>
@@ -299,7 +311,7 @@ Move getWinningMove(char player, const GameBoard<N> &board) {
 // Tries to find a move that would block the opponent
 // winning on their next move
 template <std::size_t N>
-Move getBlockingMove(char player, const GameBoard<N> &board) {
+constexpr Move getBlockingMove(char player, const GameBoard<N> &board) {
   // Just find a move that would make the opponent win
   return getWinningMove(swapPlayer(player), board);
 }

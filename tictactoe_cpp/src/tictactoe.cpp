@@ -12,19 +12,6 @@
 #include <unordered_map>
 #include <vector>
 
-GameState operator-(GameState const &state) {
-  switch (state) {
-    case GameState::win:
-      return GameState::loss;
-    case GameState::loss:
-      return GameState::win;
-    case GameState::draw:
-      return GameState::draw;
-    default:
-      return GameState::undecided;
-  }
-}
-
 std::ostream &operator<<(std::ostream &os, const GameState &obj) {
   os << static_cast<std::underlying_type<GameState>::type>(obj);
   return os;
@@ -92,7 +79,3 @@ auto getAIStrength() -> int {
   }
   return strength;
 }
-
-// Swap between player X and O
-// Only expected X or O as input
-char swapPlayer(char player) { return (player == 'X') ? 'O' : 'X'; }
