@@ -24,7 +24,7 @@ auto main() -> int {
     }
 
     if (isBoardFilled(board)) {
-      std::cout << "Match Draw" << std::endl;
+      std::cout << "Match drawn!" << std::endl;
       break;
     }
 
