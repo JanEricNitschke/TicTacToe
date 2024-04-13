@@ -262,6 +262,17 @@ cobc -x tictactoe_cobol.cob
 Depending on the setup first run `./set_env.cmd`.
 
 
+## TicTacToe-Julia
+
+Version with [Julia](https://julialang.org/).
+
+To test and run:
+```bash
+julia --project=. test/runtests.jl
+julia --project=. test/runexample.jl -X 3 -O 3
+```
+
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

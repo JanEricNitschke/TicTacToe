@@ -1,0 +1,4 @@
+name = "TicTacToe_julia"
+uuid = "bdc4e1bc-6fce-4725-9c53-640c700d208e"
+authors = ["Jan-Eric Nitschke <47750513+JanEricNitschke@users.noreply.github.com>"]
+version = "0.1.0"
