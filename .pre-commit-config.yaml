@@ -191,6 +191,16 @@ repos:
     hooks:
       - id: rubocop
 
+  # php specific
+  - repo: local
+    hooks:
+      - id: php-lint
+        name: php-lint
+        entry: php -l
+        language: system
+        types: [php]
+
+
   # swift specific
   # NONE
 

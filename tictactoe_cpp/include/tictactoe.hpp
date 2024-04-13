@@ -131,8 +131,8 @@ template <std::size_t N>
 // Checks if the given player
 // has won on the given board
 template <std::size_t N>
-[[nodiscard]] constexpr auto isPlayerWin(char player, const GameBoard<N> &board)
-    -> bool {
+[[nodiscard]] constexpr auto isPlayerWin(char player,
+                                         const GameBoard<N> &board) -> bool {
   // Checking rows
   for (size_t i = 0; i < N; ++i) {
     if (std::all_of(board[i].begin(), board[i].end(),
