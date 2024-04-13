@@ -21,6 +21,7 @@ ifeq ($(OS),Windows_NT)
 else
     # Non-Windows setup
     EXTENSION_CMD = $(PYTHON_CMD) setup.py build_ext --inplace
+	CFLAGS += -fsanitize=address,undefined,leak
 endif
 
 all: $(BUILD_DIR) $(TARGET_DIR) $(TARGET) extension
