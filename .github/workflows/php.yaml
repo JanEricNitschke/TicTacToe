@@ -1,0 +1,34 @@
+# This workflow will do stuff with the php version of tictactoe
+
+name: php
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_php
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Setup PHP with PECL extension
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+    - name: Lint
+      run: |
+        php -l src/tictactoe.php
+    - name: Test
+      run: |
+        wget -O phpunit https://phar.phpunit.de/phpunit-11.phar
+        chmod +x phpunit
+        ./phpunit --testdox tests
+    - name: Run
+      run: |
+        php tests/runTicTacToe.php -X 4 -O 4

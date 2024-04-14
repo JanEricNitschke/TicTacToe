@@ -272,6 +272,15 @@ julia --project=. test/runtests.jl
 julia --project=. test/runexample.jl -X 3 -O 3
 ```
 
+## TicTacToe-PHP
+
+Version using [PHP](https://www.php.net/).
+
+To test and run:
+```bash
+phpunit --testdox tests
+php tests/runTicTacToe.php -X 4 -O 4
+```
 
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
