@@ -1,0 +1,23 @@
+# This workflow does stuff for the analog version
+
+name: analog_polarization_WZ
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_analog_polarization_WZ
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Check pictures
+      run: |
+       ls -s ./couch.png
+       ls -s ./window.png

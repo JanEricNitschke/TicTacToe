@@ -293,6 +293,19 @@ nimble test
 ./tictactoe_nim --X=4 --O=4
 ```
 
+## TicTacToe-Analog-Polarization-WZ
+
+Analog version leveraging the quantum properties of light using polarization filters.
+
+To get and play:
+```bash
+./get_bachelor_of_science_degree_in_physics
+./get_master_of_science_degree_in_physics
+./study_polarization_of_WZ_bosons
+./get_doctor_rerum_naturalium_in_physics
+./have_great_colleagues --Erik --Frank --Lisa --Mareen --Maren --Max --Orçun --Tim
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
