@@ -1,0 +1,29 @@
+# This workflow will do stuff for the nim version.
+
+name: nim
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_nim
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - uses: jiro4989/setup-nim-action@v1
+      with:
+        nim-version: 'stable'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Compile
+      run: nimble build
+    - name: Test
+      run: nimble test
+    - name: Run
+      run: ./tictactoe_nim --X=4 --O=4

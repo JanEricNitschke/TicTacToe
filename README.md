@@ -282,6 +282,17 @@ phpunit --testdox tests
 php tests/runTicTacToe.php -X 4 -O 4
 ```
 
+## TicTacToe-Nim
+
+Version using [Nim](https://nim-lang.org/).
+
+To compile, test and run:
+```
+nimble build
+nimble test
+./tictactoe_nim --X=4 --O=4
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

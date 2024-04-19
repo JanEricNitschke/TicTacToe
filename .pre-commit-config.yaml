@@ -3,7 +3,7 @@ exclude: docs/|fibonacci/
 repos:
   # General
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-yaml
         language: python
@@ -28,7 +28,7 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.19.0
+    rev: v1.20.8
     hooks:
       - id: typos
         args: []
@@ -40,7 +40,7 @@ repos:
         language: python
         args: ["--write", "--check", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.3.4
+    rev: v0.3.7
     hooks:
       - id: ruff
         args:
@@ -157,7 +157,7 @@ repos:
 
   # javascript specific
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.0.0-rc.0
+    rev: v9.0.0
     hooks:
       - id: eslint
         files: ^tictactoe_javascript/
@@ -182,8 +182,6 @@ repos:
     hooks:
       - id: csslint
 
-  # lua specific lints
-  # NONE
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
@@ -199,6 +197,31 @@ repos:
         entry: php -l
         language: system
         types: [php]
+
+  # Nim specific
+  - repo: https://github.com/juancarlospaco/pre-commit-nim
+    rev: "f3e8249a482c72d02654e2babaa733782bca6175"
+    hooks:
+    - id: nim-check
+
+
+  - repo: local
+    hooks:
+      - id: nimpretty
+        name: nimpretty
+        entry: nimpretty
+        language: system
+        types: [nim]
+      - id: nimble-check
+        name: nimble check
+        entry: bash -c 'cd tictactoe_nim && nimble check .'
+        language: system
+        types: [nim]
+        pass_filenames: false
+
+
+  # lua specific lints
+  # NONE
 
 
   # swift specific
