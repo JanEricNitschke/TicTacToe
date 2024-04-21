@@ -1,21 +1,21 @@
 #!/usr/bin/env generic
 
 class ConditionResult {
-    init() {
+    __init__() {
         this.spots_done = 0;
         this.spots_open = [];
     }
 }
 
 class Move {
-    init(spot, end_state) {
+    __init__(spot, end_state) {
         this.spot = spot;
         this.end_state = end_state;
     }
 }
 
 class TicTacToe {
-    init() {
+    __init__() {
         this.board = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
         this.win_conditions = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8], # Rows
