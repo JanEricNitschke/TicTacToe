@@ -1,4 +1,4 @@
-import "../tictactoe_generic.gen";
+from "../tictactoe_generic.gen" import TicTacToe;
 
 
 fun test_fix_spot() {
