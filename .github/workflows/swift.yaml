@@ -17,9 +17,9 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
-    - uses: swift-actions/setup-swift@v1
+    - uses: swift-actions/setup-swift@v2
       with:
-        swift-version: "5.8"
+        swift-version: "5.10"
     - name: Build
       run: swift build
     - name: Test
