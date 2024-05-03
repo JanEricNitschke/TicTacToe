@@ -72,7 +72,7 @@ jobs:
         with:
           api-level: 29
           target: default
-          arch: x86_64
+          arch: arm64-v8a
           working-directory: ./tictactoe_kotlin
           script: ./gradlew connectedCheck
       #  Generates tests reports as an artifact
