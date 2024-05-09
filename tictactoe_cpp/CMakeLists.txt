@@ -12,14 +12,21 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 if (WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pedantic -Wall -Wextra -Wcast-align \
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++23 -pedantic -Wall -Wextra -Wcast-align \
   -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self \
   -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast \
   -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo \
   -Wstrict-null-sentinel -Wstrict-overflow=5 -Werror -Wfloat-equal -Werror=narrowing")
+  # Include the experimental library
+  find_library(STDCXXEXP stdc++exp)
+  if (NOT STDCXXEXP)
+      message(FATAL_ERROR "stdc++exp library not found!")
+  else()
+      message("stdc++exp library found at ${STDCXXEXP}")
+  endif()
   message("On Windows, not using sanitizers")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pedantic -Wall -Wextra -Wcast-align \
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++23 -pedantic -Wall -Wextra -Wcast-align \
   -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self \
   -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast \
   -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo \
@@ -35,6 +42,8 @@ add_executable(
   tictactoe
   ${SOURCES}
 )
+
+target_link_libraries(tictactoe stdc++exp)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -59,6 +68,7 @@ target_link_libraries(
   tictactoe_test
   GTest::gtest_main
   GTest::gmock_main
+  stdc++exp
 )
 
 
