@@ -32,7 +32,6 @@ using TicTacToeBoard = GameBoard<3>;
 // compiles and its result is convertible to std::size_t
 // From: https://en.cppreference.com/w/cpp/language/constraints
 template <typename T>
-template <typename T>
 concept Hashable = requires(T a) {
   { std::hash<T>{}(a) } -> std::convertible_to<std::size_t>;
 };  // NOLINT [readability/braces]
