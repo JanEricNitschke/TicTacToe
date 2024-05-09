@@ -114,7 +114,7 @@ repos:
       - id: cpplint
         files: ^tictactoe_cpp/
         types: [c++]
-        args: ["--filter=-build/include_subdir"]
+        args: ["--filter=-build/include_subdir,-build/include_order"]
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
     hooks:

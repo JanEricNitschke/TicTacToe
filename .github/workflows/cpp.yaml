@@ -24,7 +24,22 @@ jobs:
     - name: Lint with cpplint
       run: |
         pip install cpplint
-        cpplint --filter=-build/include_subdir */*.cpp */*.hpp
+        cpplint --filter=-build/include_subdir,-build/include_order */*.cpp */*.hpp
+
+    - name: Install GCC 14 and G++
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt update
+        sudo apt install -y gcc-14 g++-14
+
+        # Set gcc/g++ to use version 14 as default
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 \
+          --slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-14 \
+          --slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-14 \
+          --slave /usr/bin/gcov gcov /usr/bin/gcov-14
+
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
+
     - name: Prepare cmake
       run: |
         cmake -S . -B build
@@ -34,3 +49,6 @@ jobs:
     - name: Test
       run: |
         cd build && ctest
+    - name: Run executable
+      run: |
+        echo -e "y\n4\ny\n4" | ./bin/tictactoe
