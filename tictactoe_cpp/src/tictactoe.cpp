@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <chrono>  // NOLINT [build/c++11]
 #include <iostream>
+#include <print>
 #include <string>
 #include <string_view>
 #include <tuple>

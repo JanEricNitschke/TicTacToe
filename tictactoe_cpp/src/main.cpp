@@ -2,6 +2,8 @@
 
 #include <tictactoe.hpp>
 
+#include <print>
+
 auto main() -> int {
   auto board{createBoard<4>()};
   char player{'X'};

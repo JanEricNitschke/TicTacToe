@@ -7,6 +7,7 @@
 #include <array>
 #include <iostream>
 #include <limits>
+#include <print>
 #include <string>
 #include <string_view>
 #include <thread>  // NOLINT [build/c++11]
