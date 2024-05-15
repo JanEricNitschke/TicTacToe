@@ -12,14 +12,14 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 if (WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pedantic -Wall -Wextra -Wcast-align \
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++23 -pedantic -Wall -Wextra -Wcast-align \
   -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self \
   -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast \
   -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo \
   -Wstrict-null-sentinel -Wstrict-overflow=5 -Werror -Wfloat-equal -Werror=narrowing")
   message("On Windows, not using sanitizers")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pedantic -Wall -Wextra -Wcast-align \
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++23 -pedantic -Wall -Wextra -Wcast-align \
   -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self \
   -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast \
   -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo \
@@ -27,6 +27,14 @@ else()
   -fsanitize=address,undefined,leak")
   message("Not on Windows, using sanitizers")
 endif (WIN32)
+
+# Include the experimental library
+find_library(STDCXXEXP stdc++exp)
+if (NOT STDCXXEXP)
+    message(FATAL_ERROR "stdc++exp library not found!")
+else()
+    message("stdc++exp library found at ${STDCXXEXP}")
+endif()
 
 
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp ${PROJECT_SOURCE_DIR}/src/tictactoe.cpp)
@@ -55,10 +63,13 @@ add_executable(
 
 target_include_directories(tictactoe_test PRIVATE "${PROJECT_SOURCE_DIR}/tests")
 
+link_libraries(stdc++exp)
+
 target_link_libraries(
   tictactoe_test
   GTest::gtest_main
   GTest::gmock_main
+  stdc++exp
 )
 
 
