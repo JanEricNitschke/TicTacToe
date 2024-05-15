@@ -20,3 +20,5 @@ jobs:
         uses: actions/setup-dotnet@v4
       - name: Build
         run: dotnet build tictactoe_csharp.csproj
+      - name: Run
+        run: dotnet run -- -X 4 -O 4
