@@ -261,7 +261,6 @@ cobc -x tictactoe_cobol.cob
 
 Depending on the setup first run `./set_env.cmd`.
 
-
 ## TicTacToe-Julia
 
 Version with [Julia](https://julialang.org/).
@@ -287,11 +286,26 @@ php tests/runTicTacToe.php -X 4 -O 4
 Version using [Nim](https://nim-lang.org/).
 
 To compile, test and run:
-```
+```bash
 nimble build
 nimble test
 ./tictactoe_nim --X=4 --O=4
 ```
+
+## TicTacToe-C#
+
+Version using [C#](https://learn.microsoft.com/en-us/dotnet/csharp/).
+
+To compile and run:
+```bash
+dotnet build
+dotnet run
+```
+
+## TicTacToe-scratch
+Very simple two player tictactoe game with Scratch.
+
+To play load it on the [Scratch website](https://scratch.mit.edu/)
 
 ## TicTacToe-Analog-Polarization-WZ
 
@@ -305,8 +319,3 @@ To get and play:
 ./get_doctor_rerum_naturalium_in_physics
 ./have_great_colleagues --Erik --Frank --Lisa --Mareen --Maren --Max --Orçun --Tim
 ```
-
-## TicTacToe-scratch
-Very simple two player tictactoe game with Scratch.
-
-To play load it on the [Scratch website](https://scratch.mit.edu/)

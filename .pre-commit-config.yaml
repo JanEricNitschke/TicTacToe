@@ -219,7 +219,6 @@ repos:
         types: [nim]
         pass_filenames: false
 
-
   # lua specific lints
   # NONE
 
