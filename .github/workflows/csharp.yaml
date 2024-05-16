@@ -19,6 +19,10 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
       - name: Build
-        run: dotnet build tictactoe_csharp.csproj
+        run: dotnet build Tictactoe.Lib
+      - name: Test
+        run: dotnet test Tictactoe.Tests
       - name: Run
-        run: dotnet run -- -X 4 -O 4
+        run: |
+          cd Tictactoe.Prog
+          dotnet run -- -X 4 -O 4

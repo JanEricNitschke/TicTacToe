@@ -1,25 +1,42 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.002.0
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tictactoe_csharp", "tictactoe_csharp.csproj", "{3C562497-1E2C-4334-9A4E-CBDE350002C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tictactoe.Lib", "Tictactoe\Tictactoe.Lib.csproj", "{E0CCD9FB-2F85-4E45-B0DC-23B95AD59D33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tictactoe.Tests", "Tictactoe.Tests\Tictactoe.Tests.csproj", "{F25A2096-B20E-42A2-B0E2-A83B2A3C0BE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tictactoe.Prog", "Tictactoe.Prog\Tictactoe.Prog.csproj", "{836CF361-0A81-4361-8B91-5580C5A07A7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3C562497-1E2C-4334-9A4E-CBDE350002C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C562497-1E2C-4334-9A4E-CBDE350002C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C562497-1E2C-4334-9A4E-CBDE350002C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C562497-1E2C-4334-9A4E-CBDE350002C2}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6BBF1E00-06F2-4A48-A74B-66970292768C}
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAC140D3-D352-4143-BA7F-04373B7E4147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAC140D3-D352-4143-BA7F-04373B7E4147}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAC140D3-D352-4143-BA7F-04373B7E4147}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAC140D3-D352-4143-BA7F-04373B7E4147}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0CCD9FB-2F85-4E45-B0DC-23B95AD59D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0CCD9FB-2F85-4E45-B0DC-23B95AD59D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0CCD9FB-2F85-4E45-B0DC-23B95AD59D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0CCD9FB-2F85-4E45-B0DC-23B95AD59D33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F25A2096-B20E-42A2-B0E2-A83B2A3C0BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F25A2096-B20E-42A2-B0E2-A83B2A3C0BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F25A2096-B20E-42A2-B0E2-A83B2A3C0BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F25A2096-B20E-42A2-B0E2-A83B2A3C0BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD212130-AF44-4450-BCFE-F612EC98E5CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD212130-AF44-4450-BCFE-F612EC98E5CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD212130-AF44-4450-BCFE-F612EC98E5CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD212130-AF44-4450-BCFE-F612EC98E5CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{836CF361-0A81-4361-8B91-5580C5A07A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{836CF361-0A81-4361-8B91-5580C5A07A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{836CF361-0A81-4361-8B91-5580C5A07A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{836CF361-0A81-4361-8B91-5580C5A07A7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
