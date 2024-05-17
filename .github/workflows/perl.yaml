@@ -1,0 +1,23 @@
+# This workflow will run stuff on the perl version of tictactoe
+
+name: Perl
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_perl
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.38"
+      - name: Check
+        run: perl -c tictactoe.pl

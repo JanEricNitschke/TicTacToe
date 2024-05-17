@@ -219,9 +219,17 @@ repos:
         types: [nim]
         pass_filenames: false
 
+
+  - repo: https://github.com/perltidy/perltidy
+    rev: "20240511.02"
+    hooks:
+      - id: perltidy
+        files: ^tictactoe_perl/
+        types: [perl]
+
+
   # lua specific lints
   # NONE
-
 
   # swift specific
   # NONE
@@ -251,4 +259,7 @@ repos:
   # None
 
   # Julia specific
+  # None
+
+  # C# specific
   # None
