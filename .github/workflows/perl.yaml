@@ -21,3 +21,7 @@ jobs:
           perl-version: "5.38"
       - name: Check
         run: perl -c tictactoe.pl
+      - name: Test
+        run: perl test_tictactoe.pl
+      - name: Run
+        run: perl tictactoe.pl -X 4 -O 4
