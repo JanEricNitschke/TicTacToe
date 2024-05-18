@@ -298,8 +298,19 @@ Version using [C#](https://learn.microsoft.com/en-us/dotnet/csharp/).
 
 To compile and run:
 ```bash
-dotnet build
-dotnet run
+dotnet build Tictactoe.Lib
+dotnet test Tictactoe.Tests
+cd Tictactoe.Prog
+dotnet run -- -X 4 -O 4
+```
+
+## TicTacToe-Perl
+
+Version using [Perl](https://www.perl.org/).
+
+To  run:
+```bash
+perl tictactoe.pl -X 4 -O 4
 ```
 
 ## TicTacToe-scratch
