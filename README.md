@@ -313,6 +313,16 @@ To  run:
 perl tictactoe.pl -X 4 -O 4
 ```
 
+## TicTacToe-Nix
+
+Version using [Nix](https://nixos.org/).
+
+This one is only the PC playing against itself with hard coded strength settings.
+
+```bash
+nix-instantiate --eval tictactoe.nix --read-write-mode | xargs printf "%b"
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

@@ -219,7 +219,7 @@ repos:
         types: [nim]
         pass_filenames: false
 
-
+  # Perl specific
   - repo: https://github.com/perltidy/perltidy
     rev: "20240511.02"
     hooks:
@@ -227,6 +227,11 @@ repos:
         files: ^tictactoe_perl/
         types: [perl]
 
+  # Nix specific, currently fails to install
+  # - repo: https://github.com/nix-community/nixpkgs-fmt
+  #   rev: master
+  #   hooks:
+  #     - id: nixpkgs-fmt
 
   # lua specific lints
   # NONE
