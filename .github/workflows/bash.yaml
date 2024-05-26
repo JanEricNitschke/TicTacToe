@@ -1,0 +1,20 @@
+# This workflow will run stuff on the bash version of tictactoe
+
+name: Bash
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run
+        run: ./tictactoe_bash.sh 4 4

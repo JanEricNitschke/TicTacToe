@@ -323,6 +323,16 @@ This one is only the PC playing against itself with hard coded strength settings
 nix-instantiate --eval tictactoe.nix --read-write-mode | xargs printf "%b"
 ```
 
+## TicTacToe-Bash
+
+Version using [Bash](https://www.gnu.org/software/bash/manual/bash.html).
+
+Run with:
+
+```bash
+./tictactoe_bash.sh
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
