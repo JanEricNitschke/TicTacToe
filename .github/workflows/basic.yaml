@@ -1,0 +1,31 @@
+# This workflow will run stuff on the basic version of tictactoe
+
+name: Basic
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_basic
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install fbc
+        run: |
+          sudo apt-get install libtinfo5
+          wget -O FreeBASIC-1.10.1-linux-x86_64.tar.gz 'http://downloads.sourceforge.net/fbc/FreeBASIC-1.10.1-linux-x86_64.tar.gz?download'
+          ls
+          tar xzf FreeBASIC-1.10.1-linux-x86_64.tar.gz
+          cd FreeBASIC-1.10.1-linux-x86_64
+          sudo ./install.sh -i
+          fbc --version
+      - name: Compile
+        run: fbc tictactoe_basic.bas
+      - name: Run
+        run: ./tictactoe_basic 4 4

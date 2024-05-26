@@ -333,6 +333,16 @@ Run with:
 ./tictactoe_bash.sh
 ```
 
+## TicTacToe-Basic
+
+Version using [Basic](https://www.freebasic.net/).
+
+Compile and run with:
+```bash
+fbc tictactoe_basic.bas
+./tictactoe_basic
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
