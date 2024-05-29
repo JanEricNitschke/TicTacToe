@@ -330,7 +330,7 @@ Version using [Bash](https://www.gnu.org/software/bash/manual/bash.html).
 Run with:
 
 ```bash
-./tictactoe_bash.sh
+./tictactoe_bash.sh 4 4
 ```
 
 ## TicTacToe-Basic
@@ -340,7 +340,7 @@ Version using [Basic](https://www.freebasic.net/).
 Compile and run with:
 ```bash
 fbc tictactoe_basic.bas
-./tictactoe_basic
+./tictactoe_basic 4 4
 ```
 
 ## TicTacToe-scratch
