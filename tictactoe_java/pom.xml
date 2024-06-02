@@ -49,7 +49,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>tictactoe.tictactoe</mainClass>
+                            <mainClass>tictactoe.TicTacToe</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
