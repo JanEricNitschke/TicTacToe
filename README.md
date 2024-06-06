@@ -343,6 +343,15 @@ fbc tictactoe_basic.bas
 ./tictactoe_basic 4 4
 ```
 
+## TicTacToe-Clojure
+
+Version using [Clojure](https://clojure.org/)
+
+Run:
+```
+clj -M tictactoe.clj 4 4
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

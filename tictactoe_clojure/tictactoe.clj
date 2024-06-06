@@ -52,14 +52,43 @@
     (do (println (str "Player " player " wins!")) true)
     false))
 
-(defn play [board]
+(defn ai-turn [player board strength]
+  (println (str "AI turn as player " player " with strength " strength))
+  board)
+
+(defn ai-turn? [player X-strength O-strength]
+  (if (= player "X")
+    (> X-strength 0)
+    (> O-strength 0)))
+
+(defn strength-for-player [player X-strength O-strength]
+  (if (= player "X")
+    X-strength
+    O-strength))
+
+(defn play [board X-strength O-strength]
   (loop [game-board board player "X"]
     (if (or (game-won game-board (swap-player player)) (board-full game-board))
-      (show-board board)
-      (recur (player-turn player game-board) (swap-player player)))))
+      (show-board game-board)
+      (let
+       [new-board (if (ai-turn? player X-strength O-strength)
+                    (ai-turn player game-board (strength-for-player player X-strength O-strength))
+                    (player-turn player game-board))]
+        (recur new-board (swap-player player))))))
 
+(defn parse-args
+  "Parses command line arguments and returns a map with X-strength and O-strength."
+  [args]
+  (let [default-x-strength 0
+        default-o-strength 0
+        x-strength (if (and (>= (count args) 1) (re-matches #"\d+" (nth args 0))) (Integer. (nth args 0)) default-x-strength)
+        o-strength (if (and (>= (count args) 2) (re-matches #"\d+" (nth args 1))) (Integer. (nth args 1)) default-o-strength)]
+    {:x-strength x-strength
+     :o-strength o-strength}))
 
 (defn -main []
-  (play ["0" "1" "2" "3" "4" "5" "6" "7" "8"]))
+  (let [{:keys [x-strength o-strength]} (parse-args *command-line-args*)]
+    (play ["0" "1" "2" "3" "4" "5" "6" "7" "8"] x-strength o-strength)))
+
 
 (-main)
