@@ -345,7 +345,7 @@ fbc tictactoe_basic.bas
 
 ## TicTacToe-Clojure
 
-Version using [Clojure](https://clojure.org/)
+Version using [Clojure](https://clojure.org/).
 
 Run:
 ```
