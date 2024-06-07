@@ -26,4 +26,4 @@ jobs:
         with:
           cli: latest
       - name: Run
-        run: clojure -M tictactoe.clj
+        run: clojure -M tictactoe.clj 4 4

@@ -6,6 +6,8 @@
     "O"
     "X"))
 
+(defn empty-cells [board]
+  (map #(Integer. %) (filter #(not (or (= % "X") (= % "O"))) board)))
 
 (defn show-board [board]
   (println (str (nth board 0) " | " (nth board 1) " | " (nth board 2)))
@@ -20,7 +22,7 @@
     (println (str "Player " player " turn"))
     (show-board board)
     (let [player-input (read-string (read-line))]
-      (if (and (number? player-input) (<= 0 player-input 8))
+      (if (and (number? player-input) (<= 0 player-input 8) (#(not (or (= % "X") (= % "O"))) (get board player-input)))
         (assoc board player-input player)
         (do
           (println "Invalid input")
@@ -42,22 +44,26 @@
     (do (println (str "Player " player " wins!")) true)
     false))
 
+(defn random-open-spot [board]
+  (let [empty-spaces (empty-cells board)]
+    (nth empty-spaces (rand-int (count empty-spaces)))))
+
 (defn ai-turn-easy [player board]
-  (let [empty-spaces (filter #(not (or (= % "X") (= % "O"))) board)
-        random-space (nth empty-spaces (rand-int (count empty-spaces)))]
-    (assoc board (Integer. random-space) player)))
+  (let [empty-spaces (empty-cells board)
+        random-space (random-open-spot empty-spaces)]
+    (assoc board random-space player)))
 
 (defn try-win-move [player board]
-  (let [empty-spaces (filter #(not (or (= % "X") (= % "O"))) board)]
+  (let [empty-spaces (empty-cells board)]
     (some (fn [space]
-            (let [new-board (assoc board (Integer. space) player)]
+            (let [new-board (assoc board space player)]
               (if (is-win player new-board)
-                (Integer. space)
+                space
                 false)))
           empty-spaces)))
 
 (defn ai-turn-medium [player board]
-  (let [ win-move-spot (try-win-move player board)]
+  (let [win-move-spot (try-win-move player board)]
     (if (nil? win-move-spot)
       (ai-turn-easy player board)
       (assoc board win-move-spot player))))
@@ -71,8 +77,27 @@
           (assoc board block-move-spot player)))
       (assoc board win-move-spot player))))
 
+(defn ai-best-spot [player board]
+  (let [empty-cells (empty-cells board)]
+    (cond
+      (is-win player board) {:spot -1 :score 1}
+      (is-win (swap-player player) board) {:spot -1 :score -1}
+      (empty? empty-cells) {:spot -1 :score 0}
+      (= (count empty-cells) 9) {:spot (random-open-spot board) :score 0}
+      :else
+      (reduce
+       (fn [best-move cell]
+         (let [new-board (assoc board cell player)
+               score (- (:score (ai-best-spot (swap-player player) new-board)))]
+           (if (>= score (:score best-move))
+             {:spot cell :score score}
+             best-move)))
+       {:spot -1 :score -1}
+       empty-cells))))
+
+
 (defn ai-turn-best [player board]
-  board)
+  (let [spot (:spot (ai-best-spot player board))]  (assoc board spot player)))
 
 (defn ai-turn [player board strength]
   (println (str "AI turn as player " player " with strength " strength))
