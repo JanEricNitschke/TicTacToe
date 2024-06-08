@@ -352,6 +352,15 @@ Run:
 clj -M tictactoe.clj 4 4
 ```
 
+## TicTacToe-ClojureScript
+
+Version using [ClojureScript](https://clojurescript.org/).
+
+Run and go to `localhost:9000`:
+```
+clj -M --main cljs.main --compile tictactoe.core --repl
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

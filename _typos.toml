@@ -1,6 +1,8 @@
 [default.extend-words]
 # Don't correct the acronym ot for overtime
 ba = "ba"
+# Clojure settings.
+edn = "edn"
 
 
 [default]

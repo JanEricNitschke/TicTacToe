@@ -15,5 +15,8 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsdoc": "^48.2.3",
     "globals": "^15.0.0"
+  },
+  "dependencies": {
+    "source-map-support": "^0.5.21"
   }
 }

@@ -1,3 +1,7 @@
+(ns tictactoe.core
+  (:require [cljs.reader :as reader]))
+
+
 (def win-conditions [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]])
 
 
@@ -7,31 +11,29 @@
     "X"))
 
 (defn empty-cells [board]
-  (map #(Integer. %) (filter #(not (or (= % "X") (= % "O"))) board)))
+  (map #(js/parseInt %) (filter #(not (or (= % "X") (= % "O"))) board)))
 
 (defn show-board [board]
-  (println (str (nth board 0) " | " (nth board 1) " | " (nth board 2)))
-  (println "---------")
-  (println (str (nth board 3) " | " (nth board 4) " | " (nth board 5)))
-  (println "---------")
-  (println (str (nth board 6) " | " (nth board 7) " | " (nth board 8))))
+  (str (nth board 0) " | " (nth board 1) " | " (nth board 2) "\n"
+       "---------\n"
+       (nth board 3) " | " (nth board 4) " | " (nth board 5) "\n"
+       "---------\n"
+       (nth board 6) " | " (nth board 7) " | " (nth board 8)))
+
 
 (defn player-turn [player board]
-
   (loop []
-    (println (str "Player " player " turn"))
-    (show-board board)
-    (println "Enter a number between 0 and 8")
-    (let [player-input (read-string (read-line))]
+    (js/alert (str "Player " player " turn" "\n" (show-board board)))
+    (let [player-input (reader/read-string (js/prompt "Enter a number between 0 and 8"))]
       (if (and (number? player-input) (<= 0 player-input 8) (#(not (or (= % "X") (= % "O"))) (get board player-input)))
         (assoc board player-input player)
         (do
-          (println "Invalid input")
+          (js/alert "Invalid input")
           (recur))))))
 
 (defn board-full [board]
   (if (every? #(or (= % "X") (= % "O")) board)
-    (do (println "Game drawn!") true)
+    (do (js/alert (str "Game drawn!" "\n" (show-board board))) true)
     false))
 
 (defn won-win-condition [player board win-condition]
@@ -42,7 +44,7 @@
 
 (defn game-won [player board]
   (if (is-win player board)
-    (do (println (str "Player " player " wins!")) true)
+    (do (js/alert (str "Player " player " wins!" "\n" (show-board board))) true)
     false))
 
 (defn random-open-spot [board]
@@ -101,14 +103,12 @@
   (let [spot (:spot (ai-best-spot player board))]  (assoc board spot player)))
 
 (defn ai-turn [player board strength]
-  (println (str "AI turn as player " player " with strength " strength))
-  (show-board board)
+  (js/alert (str "AI turn as player " player " with strength " strength "." "\n" (show-board board)))
   (let [board-after-ai-move (case strength
                               1 (ai-turn-easy player board)
                               2 (ai-turn-medium player board)
                               3 (ai-turn-hard player board)
                               (ai-turn-best player board))]
-    (Thread/sleep 1000)
     board-after-ai-move))
 
 (defn ai-turn? [player X-strength O-strength]
@@ -124,26 +124,27 @@
 (defn play [board X-strength O-strength]
   (loop [player "X" game-board board]
     (if (or (game-won (swap-player player) game-board) (board-full game-board))
-      (show-board game-board)
+      :default
       (let
        [new-board (if (ai-turn? player X-strength O-strength)
                     (ai-turn player game-board (strength-for-player player X-strength O-strength))
                     (player-turn player game-board))]
         (recur (swap-player player) new-board)))))
 
-(defn parse-args
-  "Parses command line arguments and returns a map with X-strength and O-strength."
-  [args]
-  (let [default-x-strength 0
-        default-o-strength 0
-        x-strength (if (and (>= (count args) 1) (re-matches #"\d+" (nth args 0))) (Integer. (nth args 0)) default-x-strength)
-        o-strength (if (and (>= (count args) 2) (re-matches #"\d+" (nth args 1))) (Integer. (nth args 1)) default-o-strength)]
-    {:x-strength x-strength
-     :o-strength o-strength}))
+(defn ai-options []
+  (str "AI options:" "\n"
+       "0: Human" "\n"
+       "1: Easy" "\n"
+       "2: Medium" "\n"
+       "3: Hard" "\n"
+       "4: Impossible"))
+
 
 (defn -main []
-  (let [{:keys [x-strength o-strength]} (parse-args *command-line-args*)]
-    (play ["0" "1" "2" "3" "4" "5" "6" "7" "8"] x-strength o-strength)))
+  (play
+   ["0" "1" "2" "3" "4" "5" "6" "7" "8"]
+   (reader/read-string (js/prompt (ai-options)))
+   (reader/read-string (js/prompt (ai-options)))))
 
 
 (-main)

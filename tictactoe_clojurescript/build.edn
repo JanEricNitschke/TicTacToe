@@ -1,0 +1,9 @@
+{:output-to "output/main.js"
+ :optimizations :advanced
+ :warning-handlers [cljs.analyzer.api/default-warning-handler
+                    (fn [warn-type env warn-info]
+                      (when (= warn-type cljs.analyzer/*cljs-warnings*)
+                        (throw
+                         (cljs.analyzer/error
+                          env
+                          (cljs.analyzer/error-message warn-type warn-info)))))]}
