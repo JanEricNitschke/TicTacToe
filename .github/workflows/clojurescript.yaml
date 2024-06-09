@@ -26,4 +26,4 @@ jobs:
         with:
           cli: latest
       - name: Run
-        run: clj -M -m cljs.main -co build.edn  -c tictactoe.core
+        run: clojure -M -m cljs.main -co build.edn -c tictactoe.core

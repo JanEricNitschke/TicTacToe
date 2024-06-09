@@ -234,3 +234,4 @@ msbuild.wrn
 
 .cljs_node_repl/
 .cpcache/
+tictactoe_clojurescript/output/
