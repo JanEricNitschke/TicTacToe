@@ -83,6 +83,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "40ants/setup-lisp"
     groups:
       actions-all:
         patterns:
