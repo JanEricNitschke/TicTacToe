@@ -24,9 +24,7 @@ jobs:
       # setup-lisp requires an env variable to be set, not matrix.lisp
     - name: Set LISP env var
       run: echo "LISP=${{ matrix.lisp }}" >> $GITHUB_ENV
-    - uses: 40ants/setup-lisp@v4
-      # with:
-      #   asdf-system: tictactoe_common-lisp
+    - uses: 40ants/setup-lisp@v2
     - name: Compile
       run: |
         ros -L sbcl-bin run -- --eval "(let ((warning (nth-value 1 (compile-file \"src/tictactoe_common-lisp.lisp\")))) (if warning (sb-ext:exit :code 1) (sb-ext:exit)))"
