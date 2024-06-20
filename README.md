@@ -361,6 +361,15 @@ Run and go to `localhost:9000`:
 clj -M --main cljs.main --compile tictactoe.core --repl
 ```
 
+## TicTacToe-CoffeeScript
+
+Version using [CoffeeScript](https://coffeescript.org/).
+
+Run with:
+```bash
+coffee tictactoe.coffee
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

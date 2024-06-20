@@ -1,0 +1,33 @@
+# This workflow will run stuff on the coffeescript version of tictactoe
+
+name: coffeescript
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_coffeescript
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    - name: Install CoffeeScript and CoffeeLint
+      run: |
+        npm install --global coffeescript
+        npm install -g @coffeelint/cli
+    - name: Lint
+      run: coffeelint tictactoe.coffee
+    - name: Compile
+      run: coffee --compile tictactoe.coffee
+    - name: Run
+      run: coffee tictactoe.coffee
