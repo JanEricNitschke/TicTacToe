@@ -96,6 +96,44 @@ ai_win_block_move = (board, player) ->
   spot = try_win_move board, swap_player player
   if spot isnt null then spot else ai_random_move board
 
+
+minmax = (board, player) ->
+  best_move =
+    score: -1
+    spot: null
+
+  if game_won board, player
+    best_move.score = 1
+    return best_move
+
+  if game_won board, swap_player player
+    best_move.score = -1
+    return best_move
+
+  empty_cells = get_empty_cells board
+
+  if empty_cells.length is 0
+    best_move.score = 0
+    return best_move
+
+  if empty_cells.length is board.length
+    best_move.spot = ai_random_move board
+    return best_move
+
+  for spot in empty_cells
+    board[spot] = player
+    score = -minmax(board, swap_player(player)).score
+    board[spot] = spot.toString()
+    if score >= best_move.score
+      best_move.score = score
+      best_move.spot = spot
+  best_move
+
+
+ai_best_move = (board, player) ->
+  minmax(board, player).spot
+
+
 ai_turn = (board, player, strength) ->
   console.log "AI turn as player #{player} with strength #{strength}"
   show_board board
@@ -126,4 +164,4 @@ play = (X_strength, O_strength) ->
   show_board board
   rl.close()
 
-play(3, 0)
+play(0, 4)
