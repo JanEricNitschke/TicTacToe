@@ -23,17 +23,11 @@ blockReadLine = () ->
   new Promise (resolve) ->
     rl.once 'line', (line) -> resolve(line)
 
-get_user_input = () ->
-  console.log("Enter your move:")
-  result = await blockReadLine()
-  console.log("Got result #{result}")
-  result
-
 player_turn = (board, player) ->
   while true
     console.log "Player #{player}, enter your move (0-8): "
     show_board board
-    input = parseInt await get_user_input()
+    input = parseInt await blockReadLine()
     if isNaN input
       console.log "Enter a number."
       continue
@@ -45,7 +39,6 @@ player_turn = (board, player) ->
       continue
     board[input] = player
     break
-
 
 game_won = (board, player) ->
   for condition in win_conditions
@@ -67,9 +60,39 @@ show_board = (board) ->
   console.log "---------"
   console.log "#{board[6]} | #{board[7]} | #{board[8]}"
 
-play = () ->
+sleep = (ms) ->
+  new Promise (resolve) ->
+    setTimeout(resolve, ms)
+
+
+get_empty_cells = (board) ->
+  (i for cell, i in board when cell == i.toString())
+
+ai_random_move = (board) ->
+  empty_cells = get_empty_cells board
+  empty_cells[Math.floor(Math.random() * empty_cells.length)]
+
+
+
+ai_turn = (board, player, strength) ->
+  console.log "AI turn as player #{player} with strength #{strength}"
+  show_board board
+  move = switch strength
+    when 1 then ai_random_move board
+    when 2 then ai_win board, player
+    when 3 then ai_win_block board, player
+    else ai_best_move board, player
+  board[move] = player
+  await sleep 1000
+
+play = (X_strength, O_strength) ->
   while true
-    await player_turn board, player
+    if player is "X" and X_strength > 0
+      await ai_turn board, player, X_strength
+    else if player is "O" and O_strength > 0
+      await ai_turn board, player, O_strength
+    else
+      await player_turn board, player
     if game_won board, player
       console.log "Player #{player} wins the game!"
       break
@@ -81,4 +104,4 @@ play = () ->
   show_board board
   rl.close()
 
-play()
+play(0, 1)
