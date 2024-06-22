@@ -72,15 +72,37 @@ ai_random_move = (board) ->
   empty_cells = get_empty_cells board
   empty_cells[Math.floor(Math.random() * empty_cells.length)]
 
+try_win_move = (board, player) ->
+  for condition in win_conditions
+    done = 0
+    open = []
+    for spot in condition
+      if board[spot] == spot.toString()
+        open.push spot
+      else if board[spot] == player
+        done += 1
+    if done is 2 and open.length is 1
+      return open[0]
+  null
 
+ai_win_move = (board, player) ->
+  spot = try_win_move board, player
+  if spot isnt null then spot else ai_random_move board
+
+ai_win_block_move = (board, player) ->
+  spot = try_win_move board, player
+  if spot isnt null
+    return spot
+  spot = try_win_move board, swap_player player
+  if spot isnt null then spot else ai_random_move board
 
 ai_turn = (board, player, strength) ->
   console.log "AI turn as player #{player} with strength #{strength}"
   show_board board
   move = switch strength
     when 1 then ai_random_move board
-    when 2 then ai_win board, player
-    when 3 then ai_win_block board, player
+    when 2 then ai_win_move board, player
+    when 3 then ai_win_block_move board, player
     else ai_best_move board, player
   board[move] = player
   await sleep 1000
@@ -104,4 +126,4 @@ play = (X_strength, O_strength) ->
   show_board board
   rl.close()
 
-play(0, 1)
+play(3, 0)
