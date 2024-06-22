@@ -146,6 +146,7 @@ ai_turn = (board, player, strength) ->
   await sleep 1000
 
 play = (X_strength, O_strength) ->
+  console.log "X: #{X_strength}, O: #{O_strength}"
   while true
     if player is "X" and X_strength > 0
       await ai_turn board, player, X_strength
@@ -164,4 +165,10 @@ play = (X_strength, O_strength) ->
   show_board board
   rl.close()
 
-play(0, 4)
+X_strength = 0
+O_strength = 0
+if process.argv.length > 2
+  X_strength = parseInt process.argv[2]
+if process.argv.length > 3
+  O_strength = parseInt process.argv[3]
+play(X_strength, O_strength)

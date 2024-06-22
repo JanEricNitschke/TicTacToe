@@ -29,5 +29,5 @@ jobs:
       run: coffeelint tictactoe.coffee
     - name: Compile
       run: coffee --compile tictactoe.coffee
-    # - name: Run
-    #   run: coffee tictactoe.coffee
+    - name: Run
+      run: coffee tictactoe.coffee 4 4
