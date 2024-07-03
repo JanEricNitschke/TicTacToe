@@ -1,6 +1,8 @@
 # TODO: Write documentation for `TictactoeCrystal`
 #
 require "option_parser"
+require "./tictactoe_crystal_lib"
+include TictactoeCrystalLib
 
 module TictactoeCrystal
   VERSION = "0.1.0"
@@ -31,4 +33,5 @@ module TictactoeCrystal
   puts "Hello World"
   puts typeof(x_strength), x_strength
   puts typeof(o_strength), o_strength
+  puts add(1, 2)
 end

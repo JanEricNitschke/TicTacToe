@@ -1,9 +1,10 @@
 require "./spec_helper"
+include TictactoeCrystalLib
 
-describe TictactoeCrystal do
+describe TictactoeCrystalLib do
   # TODO: Write tests
 
   it "works" do
-    false.should eq(false)
+    add(1, 2).should eq(3)
   end
 end
