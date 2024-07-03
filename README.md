@@ -370,6 +370,16 @@ Run with:
 coffee tictactoe.coffee
 ```
 
+## TicTacToe-Crystal
+
+Version using [Crystal]().
+
+Test and run with:
+```bash
+crystal spec
+crystal run src/tictactoe_crystal.cr -- --X-strength=4 --O-strength=4
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

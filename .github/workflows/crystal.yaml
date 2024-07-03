@@ -1,0 +1,29 @@
+# This workflow will run the tests on the crystal version of tictactoe
+
+name: crystal
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_crystal
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Install Crystal
+      uses: crystal-lang/install-crystal@v1
+    - name: Check formatting
+      run: crystal tool format --check
+    - name: Build
+      run: crystal build src/tictactoe_crystal.cr
+    - name: Run tests
+      run: crystal spec
+    - name: Run
+      run: crystal run src/tictactoe_crystal.cr -- --X-strength=4 --O-strength=4

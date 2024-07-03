@@ -1,0 +1,13 @@
+name: tictactoe_crystal
+version: 0.1.0
+
+authors:
+  - Jan-Eric Nitschke <47750513+JanEricNitschke@users.noreply.github.com>
+
+targets:
+  tictactoe_crystal:
+    main: src/tictactoe_crystal.cr
+
+crystal: '>= 1.12.2'
+
+license: MIT
