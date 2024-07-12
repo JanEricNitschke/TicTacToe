@@ -146,7 +146,6 @@ ai_turn = (board, player, strength) ->
   await sleep 1000
 
 play = (X_strength, O_strength) ->
-  console.log "X: #{X_strength}, O: #{O_strength}"
   while true
     if player is "X" and X_strength > 0
       await ai_turn board, player, X_strength

@@ -13,10 +13,22 @@ module TictactoeCrystal
     parser.banner = "Welcome to The Beatles App!"
 
     parser.on "-x X", "--X-strength=X", "Strength of AI playing as X" do |x|
-      x_strength = x.to_i
+      x_strength = x.to_i?
+      if x_strength.nil?
+        STDERR.puts "ERROR: X-strength must be an integer."
+        STDERR.puts ""
+        STDERR.puts parser
+        exit(1)
+      end
     end
     parser.on "-o=O", "--O-strength=O", "Strength of AI playing as O" do |o|
-      o_strength = o.to_i
+      o_strength = o.to_i?
+      if o_strength.nil?
+        STDERR.puts "ERROR: O-strength must be an integer."
+        STDERR.puts ""
+        STDERR.puts parser
+        exit(1)
+      end
     end
     parser.missing_option do |option_flag|
       STDERR.puts "ERROR: #{option_flag} is missing something."
@@ -30,8 +42,5 @@ module TictactoeCrystal
       exit(1)
     end
   end
-  puts "Hello World"
-  puts typeof(x_strength), x_strength
-  puts typeof(o_strength), o_strength
-  puts add(1, 2)
+  play(x_strength, o_strength)
 end
