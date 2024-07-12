@@ -28,7 +28,7 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.22.9
+    rev: v1.23.2
     hooks:
       - id: typos
         args: []
@@ -40,7 +40,7 @@ repos:
         language: python
         args: ["--write", "--check", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.5.0
+    rev: v0.5.1
     hooks:
       - id: ruff
         args:
@@ -198,7 +198,7 @@ repos:
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
-    rev: v1.64.1
+    rev: v1.65.0
     hooks:
       - id: rubocop
 
@@ -233,7 +233,7 @@ repos:
 
   # Perl specific
   - repo: https://github.com/perltidy/perltidy
-    rev: "20240511.04"
+    rev: "20240511.05"
     hooks:
       - id: perltidy
         files: ^tictactoe_perl/
