@@ -132,8 +132,6 @@ dmypy.json
 .eslintrc
 node_modules/
 package-lock.json
-# Prerequisites
-*.d
 
 # Compiled Object files
 *.slo

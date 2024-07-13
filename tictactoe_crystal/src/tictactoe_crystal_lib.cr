@@ -73,10 +73,9 @@ module TictactoeCrystalLib
       if board[move] != int_to_char(move)
         puts "Spot is already taken."
         next
-      else
-        board[move] = player
-        break
       end
+      board[move] = player
+      break
     end
   end
 

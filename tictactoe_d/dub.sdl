@@ -1,0 +1,5 @@
+name "tictactoe"
+description "TicTacToe in D."
+authors "JanEricNitschke"
+copyright "Copyright © 2024, JanEricNitschke"
+license "MIT"
