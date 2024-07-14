@@ -372,12 +372,22 @@ coffee tictactoe.coffee
 
 ## TicTacToe-Crystal
 
-Version using [Crystal]().
+Version using [Crystal](https://crystal-lang.org/).
 
 Test and run with:
 ```bash
 crystal spec
 crystal run src/tictactoe_crystal.cr -- --X-strength=4 --O-strength=4
+```
+
+## TicTacToe-D
+
+Version using [D](https://dlang.org/).
+
+Test and run with:
+```
+dub test
+dub run -- --X-strength=4 --O-strength=4
 ```
 
 ## TicTacToe-scratch
