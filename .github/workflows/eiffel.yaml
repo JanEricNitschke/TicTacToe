@@ -1,0 +1,28 @@
+# This workflow will run stuff on the eiffel version of tictactoe
+
+name: eiffel
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_eiffel
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Install Eiffel
+      run: |
+        echo "deb [trusted=yes] http://apt.liberty-eiffel.org/ release main" | sudo tee -a /etc/apt/sources.list
+        sudo apt-get update
+        sudo apt-get install liberty-eiffel-all
+    - name: Compile
+      run: se c TICTACTOE make -o tictactoe
+    - name: Run
+      run: ./tictactoe

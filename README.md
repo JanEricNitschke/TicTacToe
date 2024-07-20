@@ -390,6 +390,16 @@ dub test
 dub run -- --X-strength=4 --O-strength=4
 ```
 
+## TicTacToe-Eiffel
+
+Version using [LibertyEiffel](https://www.liberty-eiffel.org/).
+
+Run with:
+```
+se c TICTACTOE make -o tictactoe
+./tictactoe
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
