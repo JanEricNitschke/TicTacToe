@@ -20,6 +20,7 @@ jobs:
     - name: Install Eiffel
       run: |
         echo "deb [trusted=yes] http://apt.liberty-eiffel.org/ release main" | sudo tee -a /etc/apt/sources.list
+        echo "deb [trusted=yes] http://gb.archive.ubuntu.com/ubuntu xenial-updates main" | sudo tee -a /etc/apt/sources.list
         sudo apt-get update
         sudo apt-get install liberty-eiffel-all
     - name: Compile
