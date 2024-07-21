@@ -55,7 +55,7 @@ feature {ANY} -- Status report
     is_full: BOOLEAN
             -- Is the board full?
         do
-            Result := cells.occurrences('X') + cells.occurrences('O') = 9
+            Result := cells.occurrences('X') + cells.occurrences('O') = cells.count
         end
 
     game_won (a_player: PLAYER; win_conditions: ARRAY [ARRAY [INTEGER]]): BOOLEAN
@@ -125,9 +125,44 @@ feature {ANY} -- Status report
             io.put_string(line_3)
         end
 
+    empty_cells: ARRAY [INTEGER]
+            -- Return the indices of empty cells.
+        local
+            i: INTEGER
+            empty: ARRAY [INTEGER]
+        do
+            create empty.with_capacity(9, 1)
+            from
+                i := 1
+            until
+                i > 9
+            loop
+                if cells.item(i).is_digit then
+                    empty.add_last(i)
+                end
+                i := i + 1
+            end
+            Result := empty
+        ensure
+            all_empty: Result.for_all(
+                agent (x: INTEGER): BOOLEAN
+                do
+                    Result := cells.item(x).is_digit
+                end (?)
+            )
+        end
+
 feature {} -- Implementation
 
     cells: ARRAY [CHARACTER]
             -- Array to store board cells.
+
+invariant
+    all_cells_valid: cells.for_all(
+        agent (c: CHARACTER): BOOLEAN
+        do
+            Result := (c = 'X' or else c = 'O' or else c.is_digit)
+        end (?)
+    )
 
 end

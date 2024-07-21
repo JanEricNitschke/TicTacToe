@@ -6,17 +6,16 @@ create {ANY}
 
 feature {ANY} -- Initialization
 
-    make
+    make (x_strength: INTEGER; o_strength: INTEGER)
             -- Initialize the game with a board and two players.
         local
             temp_x_player: HUMAN_PLAYER
             temp_o_player: HUMAN_PLAYER
+            temp_x_ai: AI_PLAYER
+            temp_o_ai: AI_PLAYER
             row1, row2, row3, col1, col2, col3, diag1, diag2: ARRAY [INTEGER]
         do
-            create temp_x_player.make('X')
-            create temp_o_player.make('O')
-            x_player := temp_x_player
-            o_player := temp_o_player
+
 
             create board.make
 
@@ -28,9 +27,25 @@ feature {ANY} -- Initialization
             col3 := << {INTEGER_32 3}, {INTEGER_32 6}, {INTEGER_32 9} >>
             diag1 := << {INTEGER_32 1}, {INTEGER_32 5}, {INTEGER_32 9} >>
             diag2 := << {INTEGER_32 3}, {INTEGER_32 5}, {INTEGER_32 7} >>
-
             win_conditions := << row1, row2, row3, col1, col2, col3, diag1, diag2 >>
-            io.put_string("Game initialized.%N")
+
+            if x_strength > 0 then
+                create temp_x_ai.make('X', x_strength, win_conditions)
+                x_player := temp_x_ai
+            else
+                create temp_x_player.make('X')
+                x_player := temp_x_player
+            end
+
+            if o_strength > 0 then
+                create temp_o_ai.make('O', o_strength, win_conditions)
+                o_player := temp_o_ai
+            else
+                create temp_o_player.make('O')
+                o_player := temp_o_player
+            end
+
+
         end
 
 feature {ANY} -- Game Logic

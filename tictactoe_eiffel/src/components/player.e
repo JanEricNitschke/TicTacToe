@@ -17,6 +17,7 @@ feature {ANY} -- Element change
         deferred
         ensure
             marker_count_increased: a_board.markers_count(marker) = old a_board.markers_count(marker) + 1
+            marker_unchanged: marker = old marker
         end
 
     swapped_player: PLAYER

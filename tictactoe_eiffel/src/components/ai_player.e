@@ -9,23 +9,28 @@ create {ANY}
 
 feature {ANY} -- Initialization
 
-    make (a_marker: CHARACTER, a_strength: INTEGER)
+    make (a_marker: CHARACTER; a_strength: INTEGER; some_win_conditions: ARRAY [ARRAY [INTEGER]])
             -- Create a player with the given marker.
         require
             valid_marker: a_marker = 'X' or else a_marker = 'O'
-            valid_strength: a_strength > 0 and then a_strength <= 4
+            valid_strength: a_strength > 0
         do
             marker := a_marker
             strength := a_strength
+            win_conditions := some_win_conditions
         ensure
             marker_set: marker = a_marker
             strength_set: strength = a_strength
+            win_conditions_set: win_conditions = some_win_conditions
         end
 
-feature {ANY} -- Access
+feature {} -- Access
 
     strength: INTEGER
             -- Player's marker, should be either 'X' or 'O'.
+
+    win_conditions: ARRAY [ARRAY [INTEGER]]
+            -- The win conditions for the game.
 
 feature {ANY} -- Element change
 
@@ -33,8 +38,48 @@ feature {ANY} -- Element change
             -- Place the player's marker in the first free space on the board.
         local
             position: INTEGER
+            exts: EXTERNALS
+            left: NATURAL_32
         do
+            io.put_string("AI turns as player " + marker.out + " with strength " + strength.out + "%N")
+            a_board.show
             -- Find the first free position.
+
+            inspect strength
+            when 1 then
+                position := next_move(a_board)
+            when 2 then
+                position := random_move(a_board)
+            when 3 then
+                position := win_move(a_board)
+            when 4 then
+                position := win_block_move(a_board)
+            else
+                position := best_move(a_board)
+            end
+
+            -- Place the marker at the found position.
+            a_board.add_marker(position, marker)
+            create exts
+            left := exts.sleep(1.to_natural_32)
+        ensure then
+            strength_unchanged: strength = old strength
+        end
+
+    swapped_player: AI_PLAYER
+            -- Return an identical instance with the marker swapped.
+        do
+            create Result.make(swap_marker, strength, win_conditions)
+        ensure then
+            marker_swapped: Result.marker /= marker and then (Result.marker = 'X' or else Result.marker = 'O')
+        end
+
+feature {AI_PLAYER} -- Implementation
+
+    next_move(a_board: BOARD): INTEGER
+        local
+            position: INTEGER
+        do
             from
                 position := 1
             until
@@ -42,18 +87,93 @@ feature {ANY} -- Element change
             loop
                 position := position + 1
             end
-
-            -- Place the marker at the found position.
-            a_board.add_marker(position, marker)
+            Result := position
         end
 
-    swapped_player: AI_PLAYER
-            -- Return an identical instance with the marker swapped.
+    random_integer (lower, upper: INTEGER): INTEGER
+            -- Return a random integer between lower and upper bounds.
+        require
+            lower <= upper
+        local
+            random: MINIMAL_RANDOM_NUMBER_GENERATOR
         do
-            create Result.make(swap_marker, strength)
-        ensure
-            marker_swapped: Result.marker /= marker and then (Result.marker = 'X' or else Result.marker = 'O')
-            strength_same: Result.strength = strength
+            create random.make
+            random.next
+            Result := lower + random.last_integer(upper - lower)
+        end
+
+    random_move(a_board: BOARD): INTEGER
+        local
+            open_spots: ARRAY [INTEGER]
+        do
+            open_spots := a_board.empty_cells
+            Result := open_spots.item(random_integer(1, open_spots.count))
+        end
+
+    try_win_move(a_board: BOARD): INTEGER
+        local
+            done_spots, i, j: INTEGER
+            open_spots: ARRAY [INTEGER]
+            condition: ARRAY [INTEGER]
+        do
+            Result := 0
+            create open_spots.with_capacity(3, 1)
+            from
+                i := win_conditions.lower
+            until
+                i > win_conditions.upper or else Result > 0
+            loop
+                condition := win_conditions.item(i)
+                done_spots := 0
+                open_spots.clear_count
+                from
+                    j := condition.lower
+                until
+                    j > condition.upper
+                loop
+                    if a_board.cell(condition.item(j)) = marker then
+                        done_spots := done_spots + 1
+                    elseif a_board.cell(condition.item(j)).is_digit then
+                        open_spots.add_last(condition.item(j))
+                    end
+                    j := j + 1
+                end
+                if done_spots = 2 and open_spots.count = 1 then
+                    Result := open_spots.item(1)
+                end
+                i := i + 1
+            end
+        end
+
+    win_move(a_board: BOARD): INTEGER
+        local
+            position: INTEGER
+        do
+            position := try_win_move(a_board)
+            if position = 0 then
+                Result := random_move(a_board)
+            else
+                Result := position
+            end
+        end
+
+    win_block_move(a_board: BOARD): INTEGER
+        local
+            position: INTEGER
+        do
+            position := try_win_move(a_board)
+            if position = 0 then
+                position := swapped_player.try_win_move(a_board)
+            end
+            if position = 0 then
+                position := random_move(a_board)
+            end
+            Result := position
+        end
+
+    best_move(a_board: BOARD): INTEGER
+        do
+            Result := 9
         end
 
 end
