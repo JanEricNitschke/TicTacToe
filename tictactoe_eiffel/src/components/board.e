@@ -58,6 +58,53 @@ feature {ANY} -- Status report
             Result := cells.occurrences('X') + cells.occurrences('O') = 9
         end
 
+    game_won (a_player: PLAYER; win_conditions: ARRAY [ARRAY [INTEGER]]): BOOLEAN
+            -- Has the given player won the game?
+        require
+            a_player_not_void: a_player /= Void
+            conditions_within_bounds:
+                win_conditions.for_all (
+                    agent (wc: ARRAY [INTEGER_32]): BOOLEAN
+                    do
+                        Result := wc.for_all (
+                            agent (x: INTEGER_32): BOOLEAN
+                            do
+                                Result := x >= 1 and x <= 9
+                            end (?)
+                        )
+                    end (?)
+                )
+
+        local
+            condition: ARRAY [INTEGER_32]
+            i, j: INTEGER
+            won: BOOLEAN
+        do
+            from
+                i := win_conditions.lower
+            until
+                i > win_conditions.upper or else Result
+            loop
+                condition := win_conditions.item(i)
+                won := True
+                from
+                    j := condition.lower
+                until
+                    j > condition.upper or else not won
+                loop
+                    if cells.item(condition.item(j)) /= a_player.marker then
+                        won := False
+                    end
+                    j := j + 1
+                end
+                if won then
+                    Result := True
+                end
+                i := i + 1
+            end
+        end
+
+
     show
             -- Pretty print the board with separators.
         local
@@ -66,21 +113,9 @@ feature {ANY} -- Status report
             line_3: STRING
             sep_line: STRING
         do
-            line_1 := "1 | 2 | 3%N"
-            line_1.replace_all('1', cells.item(1))
-            line_1.replace_all('2', cells.item(2))
-            line_1.replace_all('3', cells.item(3))
-
-            line_2 := "4 | 5 | 6%N"
-            line_2.replace_all('4', cells.item(4))
-            line_2.replace_all('5', cells.item(5))
-            line_2.replace_all('6', cells.item(6))
-
-            line_3 := "7 | 8 | 9%N"
-            line_3.replace_all('7', cells.item(7))
-            line_3.replace_all('8', cells.item(8))
-            line_3.replace_all('9', cells.item(9))
-
+            line_1 := cells.item(1).out + " | " + cells.item(2).out + " | " + cells.item(3).out + "%N"
+            line_2 := cells.item(4).out + " | " + cells.item(5).out + " | " + cells.item(6).out + "%N"
+            line_3 := cells.item(7).out + " | " + cells.item(8).out + " | " + cells.item(9).out + "%N"
             sep_line := "--------- %N"
 
             io.put_string(line_1)

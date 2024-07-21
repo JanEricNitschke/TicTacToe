@@ -25,18 +25,41 @@ feature {ANY} -- Element change
             -- Place the player's marker in the first free space on the board.
         local
             position: INTEGER
+            input: STRING
+            done: BOOLEAN
+            possible: BOOLEAN
         do
-            -- Find the first free position.
-            a_board.show
             from
-                position := 1
+                done := False
             until
-                position > 9 or else a_board.cell(position).is_digit
+                done
             loop
-                position := position + 1
+                io.put_string("Player " + marker.out + "'s turn. Enter a number between 1 and 9: %N")
+                a_board.show
+                possible := True
+                std_input.read_line
+                input := std_input.last_string
+                if not input.is_integer then
+                    io.put_string("Please enter a number.%N")
+                    possible := False
+                else
+                    position := input.to_integer
+                end
+                if possible and (position < 1 or position > 9) then
+                    io.put_string("Please enter a number between 1 and 9.%N")
+                    possible := False
+                end
+                if possible then
+                    -- Needed because it does not short-circuit.
+                    if not a_board.cell(position).is_digit then
+                        io.put_string("Spot already taken. Please use another one.%N")
+                        possible := False
+                    end
+                end
+                if possible then
+                    done := True
+                end
             end
-
-            -- Place the marker at the found position.
             a_board.add_marker(position, marker)
         end
 
