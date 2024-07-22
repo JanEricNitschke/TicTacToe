@@ -396,8 +396,10 @@ Version using [LibertyEiffel](https://www.liberty-eiffel.org/).
 
 Run with:
 ```
-se c TICTACTOE make -o tictactoe
-./tictactoe
+se c -style_warning -all_check TICTACTOE make -o tictactoe
+./tictactoe --x-strength=4 --o-strength=4
+se c -style_warning -no_check TICTACTOE make -o tictactoe
+./tictactoe --x-strength=5 --o-strength=5
 ```
 
 ## TicTacToe-scratch

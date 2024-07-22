@@ -36,6 +36,18 @@ feature {ANY} -- Access
             count_in_range: Result >= 0 and Result <= 9
         end
 
+    count: INTEGER
+            -- Return the total number of cells on the board.
+        do
+            Result := cells.count
+        end
+
+    is_empty: BOOLEAN
+            -- Is the board empty?
+        do
+            Result := cells.occurrences('X') + cells.occurrences('O') = 0
+        end
+
 feature {ANY} -- Element change
 
     add_marker (index: INTEGER; a_marker: CHARACTER)
@@ -48,6 +60,17 @@ feature {ANY} -- Element change
             cells.put(a_marker, index)
         ensure
             marker_added: cells.item(index) = a_marker
+        end
+
+    remove_marker (index: INTEGER)
+            -- Remove the marker at the given index.
+        require
+            valid_index: index >= 1 and index <= 9
+            cell_not_empty: cells.item(index).out /= index.out
+        do
+            cells.put((index + 48).to_character, index)
+        ensure
+            marker_removed: cells.item(index).out.is_equal(index.out)
         end
 
 feature {ANY} -- Status report

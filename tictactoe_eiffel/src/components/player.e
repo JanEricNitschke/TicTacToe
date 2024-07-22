@@ -29,7 +29,7 @@ feature {ANY} -- Element change
 
 feature {} -- Implementation
 
-    swap_marker: CHARACTER
+    swapped_marker: CHARACTER
             -- Return the swapped marker.
         do
             if marker = 'X' then
@@ -40,6 +40,19 @@ feature {} -- Implementation
         ensure
             valid_swapped: Result = 'X' or else Result = 'O'
             swapped: Result /= marker
+        end
+
+    swap_marker
+            -- Return the swapped marker.
+        do
+            if marker = 'X' then
+                marker := 'O'
+            else
+                marker := 'X'
+            end
+        ensure
+            valid_swapped: marker = 'X' or else marker = 'O'
+            swapped: marker /= old marker
         end
 
 invariant

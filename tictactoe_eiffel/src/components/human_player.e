@@ -66,7 +66,7 @@ feature {ANY} -- Element change
     swapped_player: HUMAN_PLAYER
             -- Return an identical instance with the marker swapped.
         do
-            create Result.make(swap_marker)
+            create Result.make(swapped_marker)
         end
 
 end
