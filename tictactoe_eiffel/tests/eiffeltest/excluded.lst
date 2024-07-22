@@ -1,0 +1,6 @@
+-all_check
+-loop_check
+-invariant_check
+-ensure_check
+-require_check
+-bdw_gc

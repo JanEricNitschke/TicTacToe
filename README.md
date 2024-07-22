@@ -394,8 +394,9 @@ dub run -- --X-strength=4 --O-strength=4
 
 Version using [LibertyEiffel](https://www.liberty-eiffel.org/).
 
-Run with:
+Test and run with:
 ```
+se test tests
 se c -style_warning -all_check TICTACTOE make -o tictactoe
 ./tictactoe --x-strength=4 --o-strength=4
 se c -style_warning -no_check TICTACTOE make -o tictactoe

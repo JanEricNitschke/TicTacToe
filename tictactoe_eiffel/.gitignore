@@ -2,4 +2,6 @@
 *.h
 *.o
 *.id
+**/log.new
+**/time_info.txt
 tictactoe

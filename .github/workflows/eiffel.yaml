@@ -31,3 +31,5 @@ jobs:
       run: |
         se c -style_warning -no_check TICTACTOE make -o tictactoe
         ./tictactoe --x-strength=5 --o-strength=5
+    - name: Test
+      run: se test tests
