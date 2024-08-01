@@ -403,6 +403,16 @@ se c -style_warning -no_check TICTACTOE make -o tictactoe
 ./tictactoe --x-strength=5 --o-strength=5
 ```
 
+# TicTacToe-Elixir
+
+Version using [Elixir](https://elixir-lang.org/).
+
+Test and run with:
+```
+mix test
+mix run
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

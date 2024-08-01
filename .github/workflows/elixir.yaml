@@ -1,0 +1,30 @@
+# This workflow will run the tests on the Elixir version of tictactoe
+
+name: Elixir
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_elixir
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.16.3'
+      - name: Run formatter
+        run: mix format --check-formatted
+      - name: Install dependencies
+        run: mix deps.get
+      - name: Run tests
+        run: mix test
+      - name: Run the game
+        run: mix run
