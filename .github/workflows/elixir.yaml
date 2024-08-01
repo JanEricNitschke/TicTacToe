@@ -20,6 +20,7 @@ jobs:
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16.3'
+          otp-version: '26'
       - name: Run formatter
         run: mix format --check-formatted
       - name: Install dependencies
