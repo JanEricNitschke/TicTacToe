@@ -27,5 +27,5 @@ jobs:
         run: mix deps.get
       - name: Run tests
         run: mix test --no-start
-      # - name: Run the game
-      #   run: mix run
+      - name: Run the game
+        run: mix run -- --x-strength 4 --o-strength 4

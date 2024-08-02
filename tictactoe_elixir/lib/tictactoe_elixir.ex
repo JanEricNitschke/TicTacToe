@@ -3,6 +3,10 @@ defmodule TictactoeElixir do
   A simple Tic Tac Toe game in Elixir.
   """
 
+  defmodule Move do
+    defstruct score: 0, index: 0
+  end
+
   @board_size 3
   @winning_combinations [
     # Rows
@@ -122,8 +126,88 @@ defmodule TictactoeElixir do
     end
   end
 
-  def loop(board, player) do
-    board = player_turn(board, player)
+  def empty_spots(board) do
+    Enum.filter(0..8, &spot_free?(board, &1))
+  end
+
+  def ai_random_move(board) do
+    Enum.random(empty_spots(board))
+  end
+
+  def try_win_move(board, player) do
+    Enum.find(empty_spots(board), &winner?(make_move(board, &1, player), player))
+  end
+
+  def ai_win_move(board, player) do
+    try_win_move(board, player) || ai_random_move(board)
+  end
+
+  def ai_win_block_move(board, player) do
+    try_win_move(board, player) || try_win_move(board, swap_player(player)) ||
+      ai_random_move(board)
+  end
+
+  @doc """
+  Get the best move for the AI.
+
+  ## Examples
+
+      iex> TictactoeElixir.minmax(["X", "1", "2", "3", "4", "5", "6", "7", "8"], "O")
+      %TictactoeElixir.Move{score: 0, index: 4}
+  """
+  def minmax(board, player) do
+    cond do
+      winner?(board, player) ->
+        %Move{score: 1}
+
+      winner?(board, swap_player(player)) ->
+        %Move{score: -1}
+
+      board_full?(board) ->
+        %Move{score: 0}
+
+      length(empty_spots(board)) == @board_size * @board_size ->
+        %Move{score: 0, index: ai_random_move(board)}
+
+      true ->
+        moves =
+          for move <- empty_spots(board) do
+            new_board = make_move(board, move, player)
+            %Move{score: score} = minmax(new_board, swap_player(player))
+            %Move{score: -score, index: move}
+          end
+
+        Enum.max_by(moves, & &1.score)
+    end
+  end
+
+  def ai_best_move(board, player) do
+    minmax(board, player).index
+  end
+
+  def ai_turn(board, player, strength) do
+    IO.puts("AI turn as player #{player} with strength #{strength}")
+    display_board(board)
+
+    move =
+      case strength do
+        1 -> ai_random_move(board)
+        2 -> ai_win_move(board, player)
+        3 -> ai_win_block_move(board, player)
+        _ -> ai_best_move(board, player)
+      end
+
+    :timer.sleep(1000)
+    make_move(board, move, player)
+  end
+
+  def loop(board, player, x_strength, o_strength) do
+    board =
+      case {player, x_strength, o_strength} do
+        {"X", x, _} when x > 0 -> ai_turn(board, player, x)
+        {"O", _, o} when o > 0 -> ai_turn(board, player, o)
+        _ -> player_turn(board, player)
+      end
 
     cond do
       winner?(board, player) ->
@@ -135,13 +219,13 @@ defmodule TictactoeElixir do
         display_board(board)
 
       true ->
-        loop(board, swap_player(player))
+        loop(board, swap_player(player), x_strength, o_strength)
     end
   end
 
-  def play do
+  def play(x_strength, o_strength) do
     board = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
     player = "X"
-    loop(board, player)
+    loop(board, player, x_strength, o_strength)
   end
 end

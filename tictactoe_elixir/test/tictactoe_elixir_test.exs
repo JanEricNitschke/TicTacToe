@@ -12,4 +12,12 @@ defmodule TictactoeElixirTest do
     assert TictactoeElixir.swap_player("X") == "O"
     assert TictactoeElixir.swap_player("O") == "X"
   end
+
+  test "Finds optimal move at max depth" do
+    assert TictactoeElixir.minmax(["X", "1", "2", "3", "4", "5", "6", "7", "8"], "O") ==
+             %TictactoeElixir.Move{
+               score: 0,
+               index: 4
+             }
+  end
 end

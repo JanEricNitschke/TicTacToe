@@ -410,7 +410,7 @@ Version using [Elixir](https://elixir-lang.org/).
 Test and run with:
 ```
 mix test --no-start
-mix run
+mix run -- --x-strength 4 --o-strength 4
 ```
 
 ## TicTacToe-scratch
