@@ -409,7 +409,7 @@ Version using [Elixir](https://elixir-lang.org/).
 
 Test and run with:
 ```
-mix test
+mix test --no-start
 mix run
 ```
 
