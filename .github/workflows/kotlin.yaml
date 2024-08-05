@@ -24,7 +24,7 @@ jobs:
         java-version: '20'
         cache: 'gradle'
     - name: Setup Gradle 8.7
-      uses: gradle/actions/setup-gradle@v3
+      uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: 8.7
     - name: Make gradle executable
@@ -70,7 +70,7 @@ jobs:
           distribution: 'oracle'
           cache: 'gradle'
       - name: Setup Gradle 8.7
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.7
       - name: Make gradle executable
