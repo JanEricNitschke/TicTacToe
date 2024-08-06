@@ -1,0 +1,28 @@
+# This workflow will run the tests on the Elm version of tictactoe
+
+name: Elm
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_elm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elm, elm-format and cache the ELM_HOME directory
+        uses: mpizenberg/elm-tooling-action@v1.2
+        with:
+          cache-key: elm-home-${{ hashFiles('elm-tooling.json', 'elm.json') }}
+          cache-restore-key: elm-home
+          elm-tooling-dir: tictactoe_elm
+      - name: Check formatting
+        run: elm-format --validate .
+      - name: Compile
+        run: elm make src/Main.elm
