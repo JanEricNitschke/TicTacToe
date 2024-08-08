@@ -417,6 +417,9 @@ mix run -- --x-strength 4 --o-strength 4
 
 Minimal two player version using [Elm](https://elm-lang.org/).
 
+Hosted [here](https://main.d2csemwu9ce7sg.amplifyapp.com/) on AWS.
+
+
 Compile with:
 ```
 elm make src/Main.elm
