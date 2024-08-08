@@ -9,11 +9,16 @@ module Main exposing (..)
 import Array
 import Browser
 import Cell
+import Element exposing (Element, centerX, column, el, height, layout, mouseDown, mouseOver, padding, px, rgb255, row, spacing, text, width)
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
+import Element.Input as Input
 import GameState
-import Html exposing (Html, button, div, text)
-import Html.Attributes exposing (class, disabled)
-import Html.Events exposing (onClick)
+import Html exposing (Html)
+import Html.Attributes exposing (disabled)
 import Player
+import Set
 
 
 
@@ -88,13 +93,35 @@ swapModelPlayer model =
 updateModelGameState : Model -> Model
 updateModelGameState model =
     if playerWon model.board model.player then
-        { model | gameState = GameState.Win model.player }
+        { model | gameState = GameState.Win model.player (winningCells model.board model.player) }
 
     else if boardFull model.board then
         { model | gameState = GameState.Draw }
 
     else
         model
+
+
+winningCells : Array.Array Cell.Cell -> Player.Player -> Set.Set Int
+winningCells board player =
+    let
+        winningLines =
+            [ -- Rows
+              [ 0, 1, 2 ]
+            , [ 3, 4, 5 ]
+            , [ 6, 7, 8 ]
+
+            -- Columns
+            , [ 0, 3, 6 ]
+            , [ 1, 4, 7 ]
+            , [ 2, 5, 8 ]
+
+            -- Diagonals
+            , [ 0, 4, 8 ]
+            , [ 2, 4, 6 ]
+            ]
+    in
+    Set.fromList (List.concat (List.filter (\line -> List.all (\index -> getWithDefault Cell.Empty index board == Cell.Player player) line) winningLines))
 
 
 playerWon : Array.Array Cell.Cell -> Player.Player -> Bool
@@ -165,23 +192,145 @@ makeModelMove msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "grid-container" ]
-        (List.append
-            [ div [] [ text (GameState.toString model.gameState) ] ]
-            (Array.toList
-                (Array.indexedMap
-                    (\index cell ->
-                        button
-                            [ class "grid-item"
-                            , disabled
-                                ((getWithDefault Cell.Empty index model.board /= Cell.Empty)
-                                    || (model.gameState /= GameState.Playing)
-                                )
-                            , onClick (getWithDefault One index indexes)
-                            ]
-                            [ text (Cell.toString cell) ]
-                    )
-                    model.board
-                )
-            )
-        )
+    layout [ padding 50, centerX ] <|
+        column [ spacing 40, centerX ]
+            [ el [ Font.bold, Font.size 50, centerX ] (text (GameState.toString model.gameState))
+            , row [ spacing 40, centerX ]
+                [ tictactoeButton 0 model
+                , tictactoeButton 1 model
+                , tictactoeButton 2 model
+                ]
+            , row
+                [ spacing 40, centerX ]
+                [ tictactoeButton 3 model
+                , tictactoeButton 4 model
+                , tictactoeButton 5 model
+                ]
+            , row
+                [ spacing 40, centerX ]
+                [ tictactoeButton 6 model
+                , tictactoeButton 7 model
+                , tictactoeButton 8 model
+                ]
+            ]
+
+
+tictactoeButton : Int -> Model -> Element Msg
+tictactoeButton index model =
+    let
+        disabled =
+            (getWithDefault Cell.Empty index model.board /= Cell.Empty)
+                || (model.gameState /= GameState.Playing)
+
+        inWinningSet =
+            case model.gameState of
+                GameState.Win _ winningSet ->
+                    Set.member index winningSet
+
+                _ ->
+                    False
+
+        nominalBorder =
+            if inWinningSet then
+                color.red
+
+            else if disabled then
+                color.lightGrey
+
+            else
+                color.blue
+
+        nominalBackground =
+            if inWinningSet then
+                color.red
+
+            else if disabled then
+                color.white
+
+            else
+                color.lightBlue
+
+        downBorder =
+            if inWinningSet then
+                color.red
+
+            else if disabled then
+                color.lightGrey
+
+            else
+                color.blue
+
+        downBackground =
+            if inWinningSet then
+                color.red
+
+            else if disabled then
+                color.white
+
+            else
+                color.blue
+
+        downFont =
+            if not disabled then
+                color.red
+
+            else
+                color.white
+
+        overBorder =
+            if inWinningSet then
+                color.red
+
+            else
+                color.lightGrey
+
+        overBackground =
+            if inWinningSet then
+                color.red
+
+            else
+                color.white
+    in
+    Input.button
+        [ padding 10
+        , height (px 100)
+        , width (px 100)
+        , Border.width 3
+        , Border.rounded 6
+        , Border.color nominalBorder
+        , Background.color nominalBackground
+        , Font.center
+        , Font.size 40
+
+        -- The order of mouseDown/mouseOver can be significant when changing
+        -- the same attribute in both
+        , mouseDown
+            [ Background.color downBackground
+            , Border.color downBorder
+            , Font.color downFont
+            ]
+        , mouseOver
+            [ Background.color overBackground
+            , Border.color overBorder
+            ]
+        ]
+        { onPress =
+            if disabled then
+                Nothing
+
+            else
+                Just (getWithDefault One index indexes)
+        , label = text (Cell.toString (getWithDefault Cell.Empty index model.board))
+        }
+
+
+color : { blue : Element.Color, darkCharcoal : Element.Color, lightBlue : Element.Color, lightGrey : Element.Color, white : Element.Color, black : Element.Color, red : Element.Color }
+color =
+    { blue = rgb255 0x72 0x9F 0xCF
+    , darkCharcoal = rgb255 0x2E 0x34 0x36
+    , lightBlue = rgb255 0xC5 0xE8 0xF7
+    , lightGrey = rgb255 0xE0 0xE0 0xE0
+    , white = rgb255 0xFF 0xFF 0xFF
+    , black = rgb255 0x00 0x00 0x00
+    , red = rgb255 0xFF 0x00 0x00
+    }

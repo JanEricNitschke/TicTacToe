@@ -1,11 +1,12 @@
 module GameState exposing (..)
 
 import Player
+import Set exposing (Set)
 
 
 type GameState
     = Playing
-    | Win Player.Player
+    | Win Player.Player (Set Int)
     | Draw
 
 
@@ -15,7 +16,7 @@ toString gameState =
         Playing ->
             "Playing"
 
-        Win player ->
+        Win player _ ->
             "Player " ++ Player.toString player ++ " wins!"
 
         Draw ->

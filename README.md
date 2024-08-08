@@ -413,6 +413,15 @@ mix test --no-start
 mix run -- --x-strength 4 --o-strength 4
 ```
 
+# TicTacToe-Elm
+
+Minimal two player version using [Elm](https://elm-lang.org/).
+
+Compile with:
+```
+elm make src/Main.elm
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
