@@ -23,4 +23,4 @@ jobs:
       - name: Compile lib
         run: erlc tictactoe.erl
       - name: Run script
-        run: escript tictactoe.escript
+        run: escript tictactoe.escript 4 4

@@ -432,7 +432,7 @@ Version using [Erlang](https://www.erlang.org/).
 Run with:
 ```
 erlc tictactoe.erl
-escript tictactoe.escript
+escript tictactoe.escript 4 4
 ```
 
 ## TicTacToe-scratch
