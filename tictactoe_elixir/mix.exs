@@ -8,7 +8,9 @@ defmodule TictactoeElixir.MixProject do
       elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [flags: [:unmatched_returns, :error_handling, :underspecs, :extra_return, :missing_return]]
+      dialyzer: [
+        flags: [:unmatched_returns, :error_handling, :underspecs, :extra_return, :missing_return]
+      ]
     ]
   end
 
