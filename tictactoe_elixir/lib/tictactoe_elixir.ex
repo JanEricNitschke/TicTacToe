@@ -3,8 +3,15 @@ defmodule TictactoeElixir do
   A simple Tic Tac Toe game in Elixir.
   """
 
+  @type board_t() :: list(String.t())
+  @dialyzer {:nowarn_function, [{:ai_win_move, 2}, {:ai_win_block_move, 2}]}
   defmodule Move do
     defstruct score: 0, index: 0
+
+    @type t :: %__MODULE__{
+            score: integer(),
+            index: integer()
+          }
   end
 
   @board_size 3
@@ -34,6 +41,7 @@ defmodule TictactoeElixir do
       iex> TictactoeElixir.spot_free?(["0", "X", "O"], 2)
       false
   """
+  @spec spot_free?(board_t(), integer()) :: boolean()
   def spot_free?(board, move) do
     Enum.at(board, move) not in ["X", "O"]
   end
@@ -46,6 +54,7 @@ defmodule TictactoeElixir do
       iex> TictactoeElixir.make_move(["0", "X", "O"], 0, "Y")
       ["Y", "X", "O"]
   """
+  @spec make_move(board_t(), integer(), String.t()) :: board_t()
   def make_move(board, move, player) do
     List.replace_at(board, move, player)
   end
@@ -60,9 +69,11 @@ defmodule TictactoeElixir do
       iex> TictactoeElixir.swap_player("O")
       "X"
   """
+  @spec swap_player(String.t()) :: String.t()
   def swap_player("X"), do: "O"
   def swap_player("O"), do: "X"
 
+  @spec display_board(board_t()) :: :ok
   def display_board(board) do
     IO.puts("--+---+--")
 
@@ -70,6 +81,8 @@ defmodule TictactoeElixir do
       IO.puts(Enum.join(row, " | "))
       IO.puts("--+---+--")
     end
+
+    :ok
   end
 
   @doc """
@@ -82,6 +95,7 @@ defmodule TictactoeElixir do
       iex> TictactoeElixir.winner?(["O", "1", "O", "3", "4", "5", "6", "7", "8"], "X")
       false
   """
+  @spec winner?(board_t(), String.t()) :: boolean()
   def winner?(board, player) do
     Enum.any?(@winning_combinations, fn [a, b, c] ->
       Enum.at(board, a) == player and Enum.at(board, b) == player and Enum.at(board, c) == player
@@ -98,10 +112,12 @@ defmodule TictactoeElixir do
       iex> TictactoeElixir.board_full?(["X", "X", "X", "X", "X", "X", "X", "X", "8"])
       false
   """
+  @spec board_full?(board_t()) :: boolean()
   def board_full?(board) do
     Enum.all?(board, &(&1 in ["X", "O"]))
   end
 
+  @spec player_turn(board_t(), String.t()) :: board_t()
   def player_turn(board, player) do
     IO.puts("Player #{player}, enter your move (0-8): ")
     display_board(board)
@@ -126,22 +142,27 @@ defmodule TictactoeElixir do
     end
   end
 
+  @spec empty_spots(board_t()) :: list(integer())
   def empty_spots(board) do
     Enum.filter(0..8, &spot_free?(board, &1))
   end
 
+  @spec ai_random_move(board_t()) :: integer()
   def ai_random_move(board) do
     Enum.random(empty_spots(board))
   end
 
+  @spec try_win_move(board_t(), String.t()) :: integer() | nil
   def try_win_move(board, player) do
     Enum.find(empty_spots(board), &winner?(make_move(board, &1, player), player))
   end
 
+  @spec ai_win_move(board_t(), String.t()) :: integer()
   def ai_win_move(board, player) do
     try_win_move(board, player) || ai_random_move(board)
   end
 
+  @spec ai_win_block_move(board_t(), String.t()) :: integer()
   def ai_win_block_move(board, player) do
     try_win_move(board, player) || try_win_move(board, swap_player(player)) ||
       ai_random_move(board)
@@ -155,6 +176,7 @@ defmodule TictactoeElixir do
       iex> TictactoeElixir.minmax(["X", "1", "2", "3", "4", "5", "6", "7", "8"], "O")
       %TictactoeElixir.Move{score: 0, index: 4}
   """
+  @spec minmax(board_t(), String.t()) :: Move.t()
   def minmax(board, player) do
     cond do
       winner?(board, player) ->
@@ -171,20 +193,22 @@ defmodule TictactoeElixir do
 
       true ->
         moves =
-          for move <- empty_spots(board) do
-            new_board = make_move(board, move, player)
+          for spot <- empty_spots(board) do
+            new_board = make_move(board, spot, player)
             %Move{score: score} = minmax(new_board, swap_player(player))
-            %Move{score: -score, index: move}
+            %Move{score: -score, index: spot}
           end
 
         Enum.max_by(moves, & &1.score)
     end
   end
 
+  @spec ai_best_move(board_t(), String.t()) :: integer()
   def ai_best_move(board, player) do
     minmax(board, player).index
   end
 
+  @spec ai_turn(board_t(), String.t(), integer()) :: board_t()
   def ai_turn(board, player, strength) do
     IO.puts("AI turn as player #{player} with strength #{strength}")
     display_board(board)
@@ -201,6 +225,7 @@ defmodule TictactoeElixir do
     make_move(board, move, player)
   end
 
+  @spec loop(board_t(), String.t(), integer(), integer()) :: :ok
   def loop(board, player, x_strength, o_strength) do
     board =
       case {player, x_strength, o_strength} do
@@ -223,6 +248,7 @@ defmodule TictactoeElixir do
     end
   end
 
+  @spec play(integer(), integer()) :: :ok
   def play(x_strength, o_strength) do
     board = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
     player = "X"

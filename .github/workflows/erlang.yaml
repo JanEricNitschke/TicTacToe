@@ -1,0 +1,26 @@
+# This workflow will run stuff on the Erlang version of tictactoe
+
+name: Erlang
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_erlang
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Erlang
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: '26'
+      - name: Compile lib
+        run: erlc tictactoe.erl
+      - name: Run script
+        run: escript tictactoe.escript

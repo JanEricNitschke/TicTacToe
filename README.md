@@ -425,6 +425,16 @@ Compile with:
 elm make src/Main.elm
 ```
 
+# TicTacToe-Erlang
+
+Version using [Erlang](https://www.erlang.org/).
+
+Run with:
+```
+erlc tictactoe.erl
+escript tictactoe.escript
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
