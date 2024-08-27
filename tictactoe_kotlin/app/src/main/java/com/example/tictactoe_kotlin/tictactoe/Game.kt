@@ -1,6 +1,7 @@
 package com.example.tictactoe_kotlin.tictactoe
 
 import androidx.annotation.VisibleForTesting
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
@@ -21,7 +22,7 @@ object Game {
     )
     var winningSpots = mutableStateListOf<Int>()
     var aiOpponent = mutableStateOf(false)
-    var aiStrength = mutableStateOf(0)
+    var aiStrength = mutableIntStateOf(0)
 
     fun swapPlayer(currentPlayer: String): String {
         if (currentPlayer == "X") {
@@ -169,10 +170,7 @@ object Game {
     fun makeMove(spot: Int): Boolean {
         if (gameState.value == GameState.Playing && _board[spot] == "") {
             _board[spot] = player.value
-            if (gameOver()) {
-                return false
-            }
-            return true
+            return !gameOver()
         }
         return false
     }
