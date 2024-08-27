@@ -21,7 +21,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'oracle' # See 'Supported distributions' for available options
-        java-version: '20'
+        java-version: '22'
         cache: 'maven'
     - name: Check style
       run: mvn checkstyle:check
