@@ -21,8 +21,6 @@ jobs:
       # Install and setup Alire package manager
       - name: Setup alire
         uses: alire-project/setup-alire@v3
-        with:
-          version: 1.2.2
 
       # Build the project using the validation build profile to enforce static analysis and coding style.
       - name: Build
