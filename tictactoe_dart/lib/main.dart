@@ -557,7 +557,7 @@ class BoardTile extends StatelessWidget {
           child: ElevatedButton(
             onPressed: buttonFunction,
             style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ),

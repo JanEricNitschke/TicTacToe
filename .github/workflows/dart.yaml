@@ -21,7 +21,6 @@ jobs:
       with:
         cache: true
         channel: stable
-        flutter-version: 3.19.0
     - name: Setup flutter dependencies
       run: |
         flutter --version
