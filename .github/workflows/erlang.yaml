@@ -19,7 +19,7 @@ jobs:
       - name: Setup Erlang
         uses: erlef/setup-beam@v1
         with:
-          otp-version: '26'
+          otp-version: latest
       - name: Compile lib
         run: erlc tictactoe.erl
       - name: Run script
