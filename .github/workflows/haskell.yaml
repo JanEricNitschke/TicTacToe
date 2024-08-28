@@ -20,7 +20,7 @@ jobs:
     - name: Setup haskell
       uses: haskell-actions/setup@v2
       with:
-        ghc-version: '9.4.2' # Exact version of ghc to use
+        ghc-version: '9.10.1'
     - name: Build
       run: cabal build
     - name: Test
@@ -29,4 +29,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: code-coverage-report
-        path: ./tictactoe_haskell/dist-newstyle/build/x86_64-linux/ghc-9.4.2/tictactoe-haskell-0.1.0.0/hpc/vanilla/html/tictactoe-haskell-0.1.0.0
+        path: ./tictactoe_haskell/dist-newstyle/build/x86_64-linux/ghc-9.10.1/tictactoe-haskell-0.1.0.0/t/testing-tictactoe/hpc/vanilla/html
