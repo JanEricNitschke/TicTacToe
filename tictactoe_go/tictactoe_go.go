@@ -167,7 +167,6 @@ func (tictactoe *TicTacToe) getPlayerYesNo(question string) bool {
 // Play starts the game of TicTacToe initializing the player
 // and performing the game loop.
 func (tictactoe *TicTacToe) Play() {
-	rand.Seed(time.Now().UnixNano())
 	// The rune representing the currently active player
 	var player = 'X'
 	for {

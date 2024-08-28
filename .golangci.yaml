@@ -16,10 +16,9 @@ linters:
     - errchkjson
     - errname
     - errorlint
-    - execinquery
     - exhaustive
     - exhaustruct   # Should be useful in the future. No time now
-    - exportloopref
+    - copyloopvar
     - forcetypeassert
     - funlen  # Should be usefull in the future. No time atm
     - ginkgolinter
@@ -32,9 +31,9 @@ linters:
     - gocyclo
     - godot
     - godox
-    - goerr113
+    - err113
     - goheader
-    - gomnd
+    - mnd
     - gomoddirectives
     - gomodguard
     - goprintffuncname
