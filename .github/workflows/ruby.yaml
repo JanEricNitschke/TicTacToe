@@ -20,7 +20,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: "3.2.4"
+        ruby-version: ruby
         bundler-cache: False
         working-directory: ./tictactoe_ruby
     - name: Install dependencies
