@@ -8,9 +8,8 @@ from collections.abc import Callable, Iterable, Iterator, Sized
 from dataclasses import dataclass
 from enum import Enum
 from time import sleep
-from typing import Self
 
-from typing_extensions import override
+from typing_extensions import Self, override
 
 
 class Board(Iterable[list[str]], Sized):
