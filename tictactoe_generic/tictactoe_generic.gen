@@ -50,8 +50,7 @@ class TicTacToe {
 
     check_win_condition(player, win_condition) {
         var result = ConditionResult();
-        for (var i = 0; i < len(win_condition); i += 1) {
-            const spot = win_condition[i];
+        foreach (const spot in win_condition) {
             if this.board[spot] == player {
                 result.spots_done += 1;
             }
@@ -63,8 +62,8 @@ class TicTacToe {
     }
 
     is_player_win(player) {
-        for (var i = 0; i < len(this.win_conditions); i += 1) {
-            const result = this.check_win_condition(player, this.win_conditions[i]);
+        foreach (const win_condition in this.win_conditions) {
+            const result = this.check_win_condition(player, win_condition);
             if result.spots_done == 3 {
                 return true;
             }
@@ -73,8 +72,8 @@ class TicTacToe {
     }
 
     board_filled() {
-        for (var spot = 0; spot < len(this.board); spot += 1) {
-            unless this.player_markers.contains(this.board[spot]) {
+        foreach (const spot in this.board) {
+            unless this.player_markers.contains(spot) {
                 return false;
             }
         }
@@ -130,8 +129,7 @@ class TicTacToe {
     }
 
     get_winning_move(player) {
-        for (var i = 0; i < len(this.win_conditions); i += 1) {
-            const condition = this.win_conditions[i];
+        foreach (const condition in this.win_conditions) {
             const result = this.check_win_condition(player, condition);
             if (result.spots_done == 2 and len(result.spots_open) == 1) {
                 return Move(result.spots_open[0], 1);
@@ -183,8 +181,7 @@ class TicTacToe {
         }
 
         var best_move = Move(-1, -1);
-        for (var i = 0; i < len(empty_cells); i += 1) {
-            const current_spot = empty_cells[i];
+        foreach (const current_spot in empty_cells) {
             this.board[current_spot] = player;
             const current_move = this.minmax(this.swap_player(player));
             if -current_move.end_state >= best_move.end_state {
