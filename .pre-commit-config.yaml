@@ -66,6 +66,8 @@ repos:
         args: [
             "-rn", # Only display messages
             "-sn", # Don't display the score
+            "--rcfile",
+            "tictactoe_python/pyproject.toml",
           ]
 
   # golang specific
