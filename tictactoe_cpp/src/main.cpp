@@ -2,6 +2,8 @@
 
 #include <tictactoe.hpp>
 
+#include <print>
+
 auto main() -> int {
   auto board{createBoard<4>()};
   char player{'X'};
@@ -19,12 +21,12 @@ auto main() -> int {
     }
 
     if (isPlayerWin(player, board)) {
-      std::cout << "Player " << player << " wins the game!" << std::endl;
+      std::println("Player {} wins the game!", player);
       break;
     }
 
     if (isBoardFilled(board)) {
-      std::cout << "Match drawn!" << std::endl;
+      std::println("Match drawn!");
       break;
     }
 

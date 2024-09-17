@@ -7,6 +7,7 @@
 #include <array>
 #include <iostream>
 #include <limits>
+#include <print>
 #include <string>
 #include <string_view>
 #include <thread>  // NOLINT [build/c++11]
@@ -423,12 +424,12 @@ template <std::size_t N>
 template <std::size_t N>
 void showBoard(const GameBoard<N> &board) {
   std::string line_separator(N * 5, '-');
-  std::cout << line_separator << std::endl;
+  std::println("{}", line_separator);
   for (size_t i{0}; i < N; i++) {
     for (size_t j{0}; j < N; j++) {
-      std::cout << "| " << board[i][j] << " |";
+      std::print("| {} |", board[i][j]);
     }
-    std::cout << std::endl << line_separator << std::endl;
+    std::println("\n{}", line_separator);
   }
 }
 
@@ -436,7 +437,7 @@ void showBoard(const GameBoard<N> &board) {
 template <std::size_t N>
 void aiTurn(char player, GameBoard<N> *board, int ai_strength) {
   // Inform the player of the game state
-  std::cout << "AI turn as player " << player << "." << std::endl;
+  std::println("AI turn as player {}.", player);
   showBoard(*board);
   Move best_move{};
   // Check which function to use to perform AI move
@@ -468,22 +469,22 @@ void playerTurn(char player, GameBoard<N> *board) {
   bool valid_move{false};
   // Let the player input their move and validate
   while (!valid_move) {
-    std::cout << "Player " << player << " turn" << std::endl;
+    std::println("Player {} turn", player);
     showBoard(*board);
     valid_move = true;
     std::string input1{};
     std::string input2{};
-    std::cout << "Enter row and column numbers to fix spot: " << std::endl;
+    std::println("Enter row and column numbers to fix spot:");
     std::cin >> input1 >> input2;
     // That they entered two numbers
     try {
       row = std::stoull(input1);
       col = std::stoull(input2);
     } catch (std::invalid_argument const &ex) {
-      std::cout << "At least one of your entered inputs of (" << input1 << ", "
-                << input2
-                << ") could not be converted to an integer. Try again!"
-                << std::endl;
+      std::println(
+          "At least one of your entered inputs of ({}, {}) is invalid or the "
+          "spot is taken.",
+          input1, input2);
       valid_move = false;
       std::cin.clear();  // Clear the error state
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
@@ -492,19 +493,15 @@ void playerTurn(char player, GameBoard<N> *board) {
     }
     // That the numbers are within bounds
     if (row > 3 || row < 1 || col > 3 || col < 1) {
-      std::cout << "Row " << row << " or column " << col
-                << " are out of bounds. They have to be between 1 and 3 "
-                   "inclusive. Try again!"
-                << std::endl;
+      std::println("Row {} or column {} is out of bounds.", row, col);
       valid_move = false;
       continue;
     }
     // And that the position is not taken
     if ((*board)[row - 1][col - 1] != '-') {
-      std::cout << "The position (" << row << ", " << col
-                << ") has already been taken by a player! Please do your move "
-                   "on an empty position."
-                << std::endl;
+      std::println(
+          "The position ({}, {}) is already occupied. Try a different spot.",
+          row, col);
       valid_move = false;
       continue;
     }
