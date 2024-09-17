@@ -1,4 +1,4 @@
-﻿namespace Tictactoe.Lib
+﻿open System
 
 type AIStrength =
     | HUMAN = 0
@@ -123,36 +123,63 @@ type Game(xStrength: AIStrength, oStrength: AIStrength) =
         board.[move] <- player
         System.Threading.Thread.Sleep(1000)
 
+    let humanTurn player =
+        // Handle player input for the move
+        let mutable validMove = false
+
+        while not validMove do
+            printfn "Player %c, enter your move (0-8): " player
+            showBoard ()
+            let input = System.Console.ReadLine()
+
+            match System.Int32.TryParse(input) with
+            | (true, move) when move >= 0 && move <= 8 && board.[move] <> 'X' && board.[move] <> 'O' ->
+                board.[move] <- player
+                validMove <- true
+            | _ -> printfn "Invalid move. Try again."
+
     member this.PlayGame() =
         let mutable currentPlayer = 'X'
+        let mutable Break = false
 
-        while true do
+        while not Break do
             if currentPlayer = 'X' && xStrength <> AIStrength.HUMAN then
                 aiTurn currentPlayer xStrength
             elif currentPlayer = 'O' && oStrength <> AIStrength.HUMAN then
                 aiTurn currentPlayer oStrength
             else
-                // Handle player input for the move
-                let mutable validMove = false
-
-                while not validMove do
-                    printfn "Player %c, enter your move (0-8): " currentPlayer
-                    showBoard ()
-                    let input = System.Console.ReadLine()
-
-                    match System.Int32.TryParse(input) with
-                    | (true, move) when move >= 0 && move <= 8 && board.[move] <> 'X' && board.[move] <> 'O' ->
-                        board.[move] <- currentPlayer
-                        validMove <- true
-                    | _ -> printfn "Invalid move. Try again."
+                humanTurn currentPlayer
 
             if isWinner currentPlayer then
                 printfn "Player %c wins!" currentPlayer
-                break
+                Break <- true
             elif isBoardFull () then
                 printfn "It's a tie!"
-                break
+                Break <- true
 
             currentPlayer <- swapPlayer currentPlayer
 
         showBoard ()
+
+
+
+[<EntryPoint>]
+let main (args) =
+    printfn "args: %A" args
+    let mutable X = AIStrength.HUMAN
+    let mutable O = AIStrength.HUMAN
+
+    for i in 0 .. args.Length - 1 do
+        if args.[i].StartsWith("-") then
+            if args.[i] = "-X" && i + 1 < args.Length then
+                match Enum.TryParse(args.[i + 1]) with
+                | (true, value) -> X <- value
+                | _ -> ()
+            elif args.[i] = "-O" && i + 1 < args.Length then
+                match Enum.TryParse(args.[i + 1]) with
+                | (true, value) -> O <- value
+                | _ -> ()
+
+    let game = Game(X, O)
+    game.PlayGame()
+    0
