@@ -21,5 +21,7 @@ jobs:
         with:
           lazarus-version: "stable"
           with-cache: true
-      - run: lazbuild tictactoe.lpi
-      - run: ./tictactoe
+      - name: Build
+        run: lazbuild tictactoe.lpi
+      - name: Run
+        run: ./tictactoe

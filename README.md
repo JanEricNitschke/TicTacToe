@@ -449,9 +449,10 @@ dotnet run -- -X 4 -O 4
 
 Version using [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language)), specifically [FreePascal](https://www.freepascal.org/).
 
-To run:
+To build and run:
 ```
-
+lazbuild tictactoe.lpi
+./tictactoe
 ```
 
 ## TicTacToe-scratch
