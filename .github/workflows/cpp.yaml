@@ -20,7 +20,7 @@ jobs:
     - name: Lint with cpplint
       run: |
         pip install cpplint
-        cpplint --filter=-build/include_subdir,build/include_order */*.cpp */*.hpp
+        cpplint --filter=-build/include_subdir,-build/include_order */*.cpp */*.hpp
     - name: Prepare cmake
       run: |
         cmake -S . -B build
