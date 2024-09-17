@@ -1,0 +1,25 @@
+# This workflow will do stuff wit the Pascal version of tictactoe
+
+name: Pascal
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_pascal
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Lazarus/Pascal
+        uses: gcarreno/setup-lazarus@v3
+        with:
+          lazarus-version: "stable"
+          with-cache: true
+      - run: lazbuild tictactoe.lpi
+      - run: ./tictactoe
