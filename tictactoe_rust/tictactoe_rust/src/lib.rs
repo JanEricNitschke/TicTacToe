@@ -8,7 +8,6 @@ allow you to play `TicTacToe` alone or with a friend.
 use rand::prelude::SliceRandom;
 use rand::Rng;
 use std::collections;
-use std::io;
 use std::ops::Neg;
 use std::ops::Not;
 use std::thread;
@@ -79,12 +78,9 @@ impl Neg for EndState {
 pub struct TicTacToe {
     // Contains the given board state of the game
     board: Board,
-    /// Tracks whether it is one person playing vs AI or not
-    ai_opponent: bool,
-    /// Hold the char that the AI is playing as
-    ai_player: char,
     /// Holds the difficulty setting for the AI
-    ai_difficulty: usize,
+    ai_x_difficulty: usize,
+    ai_o_difficulty: usize,
 }
 
 /// Returns the char for the other player
@@ -97,27 +93,6 @@ const fn swap_player(player: char) -> char {
         return 'O';
     }
     'X'
-}
-
-/// Get yes/no response from a player.
-/// # Arguments
-///
-/// * `question` - The question to get the response for.
-fn get_player_yes_no(question: &str) -> bool {
-    loop {
-        let mut choice = String::new();
-        println!("{question}");
-        io::stdin()
-            .read_line(&mut choice)
-            .expect("Failed to read line");
-        choice = choice.trim().to_uppercase();
-        if choice == "Y" {
-            return true;
-        }
-        if choice == "N" {
-            return false;
-        }
-    }
 }
 
 impl TicTacToe {
@@ -133,9 +108,25 @@ impl TicTacToe {
     pub const fn new() -> Self {
         Self {
             board: [['-'; 3]; 3],
-            ai_opponent: false,
-            ai_player: 'O',
-            ai_difficulty: 4,
+            ai_x_difficulty: 0,
+            ai_o_difficulty: 0,
+        }
+    }
+
+    /// Returns a `TicTacToe` game with an empty board and specified as strengths.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use tictactoe_rust::TicTacToe;
+    /// let tictactoe = TicTacToe::with_ai_strengths(4, 4);
+    /// ```
+    #[must_use]
+    pub const fn with_ai_strengths(x_strength: usize, o_strength: usize) -> Self {
+        Self {
+            board: [['-'; 3]; 3],
+            ai_x_difficulty: x_strength,
+            ai_o_difficulty: o_strength,
         }
     }
 
@@ -151,8 +142,10 @@ impl TicTacToe {
     pub fn play(&mut self) {
         let mut player = 'X';
         loop {
-            if self.ai_opponent && self.ai_player == player {
-                self.ai_turn(player);
+            if player == 'X' && self.ai_x_difficulty > 0 {
+                self.ai_turn(player, self.ai_x_difficulty);
+            } else if player == 'O' && self.ai_o_difficulty > 0 {
+                self.ai_turn(player, self.ai_o_difficulty);
             } else {
                 self.player_turn(player);
             }
@@ -178,7 +171,8 @@ impl TicTacToe {
     /// # Arguments
     ///
     /// * `player` - A char of the currently active player
-    fn ai_turn(&mut self, player: char) {
+    /// * `ai_difficulty` - An unsigned integer of the AI difficulty setting
+    fn ai_turn(&mut self, player: char, ai_difficulty: usize) {
         println!("AI turn as {player}.");
         self.show_board();
 
@@ -186,7 +180,8 @@ impl TicTacToe {
             row,
             col,
             end_state: _,
-        } = match self.ai_difficulty {
+        } = match ai_difficulty {
+            0 => unreachable!("AI difficulty should never be 0!"),
             1 => self.random_move(),
             2 => self.win_move(player),
             3 => self.block_win_move(player),
@@ -594,30 +589,12 @@ impl TicTacToe {
     /// tictactoe.get_settings();
     /// ```
     pub fn get_settings(&mut self) {
-        self.get_ai_opponent_setting();
-        if self.ai_opponent {
-            self.get_ai_opponent_start();
-            self.get_ai_difficulty();
-        }
-    }
-
-    /// Gets the game settings for the AI opponent
-    /// So whether there should be one and if it should start first
-    fn get_ai_opponent_setting(&mut self) {
-        self.ai_opponent = get_player_yes_no("Play alone vs AI?[y/n]");
-    }
-
-    /// Gets the setting whether or not the AI opponent should start first
-    fn get_ai_opponent_start(&mut self) {
-        if get_player_yes_no("Should the AI make the first move?[y/n]") {
-            self.ai_player = 'X';
-        } else {
-            self.ai_player = 'O';
-        }
+        self.get_ai_difficulty('X');
+        self.get_ai_difficulty('O');
     }
 
     /// Gets settings for AI difficulty
-    fn get_ai_difficulty(&mut self) {
+    fn get_ai_difficulty(&mut self, player: char) {
         println!("AI strength settings:");
         println!("1: Easy");
         println!("2: Medium");
@@ -637,7 +614,11 @@ impl TicTacToe {
                 // If input was invalid continue the loop
                 Ok(strength) => {
                     if strength < 5 {
-                        self.ai_difficulty = strength;
+                        if player == 'X' {
+                            self.ai_x_difficulty = strength;
+                        } else {
+                            self.ai_o_difficulty = strength;
+                        }
                         break;
                     }
                 }
@@ -700,8 +681,16 @@ mod tests {
     fn new_creates_empty_board() {
         let tictactoe = TicTacToe::new();
         assert_eq!(tictactoe.board, [['-'; 3]; 3]);
-        assert!(!tictactoe.ai_opponent);
-        assert_eq!(tictactoe.ai_player, 'O');
+        assert_eq!(tictactoe.ai_x_difficulty, 0);
+        assert_eq!(tictactoe.ai_o_difficulty, 0);
+    }
+
+    #[test]
+    fn with_strengths_sets_strengths() {
+        let tictactoe = TicTacToe::with_ai_strengths(2, 3);
+        assert_eq!(tictactoe.board, [['-'; 3]; 3]);
+        assert_eq!(tictactoe.ai_x_difficulty, 2);
+        assert_eq!(tictactoe.ai_o_difficulty, 3);
     }
 
     #[test]
