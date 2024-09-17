@@ -441,9 +441,7 @@ Version using [F#](https://fsharp.org/).
 
 To compile and run:
 ```bash
-dotnet build Tictactoe.Lib
-dotnet test Tictactoe.Tests
-cd Tictactoe.Prog
+dotnet build
 dotnet run -- -X 4 -O 4
 ```
 
