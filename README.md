@@ -435,6 +435,18 @@ erlc tictactoe.erl
 escript tictactoe.escript 4 4
 ```
 
+## TicTacToe-F#
+
+Version using [F#](https://fsharp.org/).
+
+To compile and run:
+```bash
+dotnet build Tictactoe.Lib
+dotnet test Tictactoe.Tests
+cd Tictactoe.Prog
+dotnet run -- -X 4 -O 4
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

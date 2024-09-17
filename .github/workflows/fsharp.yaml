@@ -1,0 +1,28 @@
+# This workflow will run the tests on the F# version of tictactoe
+
+name: F#
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_fsharp
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+      - name: Build
+        run: dotnet build Tictactoe.Lib
+      - name: Test
+        run: dotnet test Tictactoe.Tests
+      - name: Run
+        run: |
+          cd Tictactoe.Prog
+          dotnet run -- -X 4 -O 4
