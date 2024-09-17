@@ -445,6 +445,15 @@ dotnet build
 dotnet run -- -X 4 -O 4
 ```
 
+## TicTacToe-Pascal
+
+Version using [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language)), specifically [FreePascal](https://www.freepascal.org/).
+
+To run:
+```
+
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
