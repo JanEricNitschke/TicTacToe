@@ -31,3 +31,31 @@ jobs:
       run: cargo build --verbose
     - name: Test
       run: cargo test --verbose
+
+  test_python_bindings:
+    name: Test Python Bindings
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    defaults:
+      run:
+        working-directory: ./tictactoe_rust/tictactoe_rust_python
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run python binding game
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install maturin
+          maturin develop
+          python3 tests/run_game.py
