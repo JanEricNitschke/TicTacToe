@@ -17,6 +17,13 @@ if (WIN32)
   -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast \
   -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo \
   -Wstrict-null-sentinel -Wstrict-overflow=5 -Werror -Wfloat-equal -Werror=narrowing")
+  # Include the experimental library
+  find_library(STDCXXEXP stdc++exp)
+  if (NOT STDCXXEXP)
+      message(FATAL_ERROR "stdc++exp library not found!")
+  else()
+      message("stdc++exp library found at ${STDCXXEXP}")
+  endif()
   message("On Windows, not using sanitizers")
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++23 -pedantic -Wall -Wextra -Wcast-align \
@@ -27,14 +34,6 @@ else()
   -fsanitize=address,undefined,leak")
   message("Not on Windows, using sanitizers")
 endif (WIN32)
-
-# Include the experimental library
-find_library(STDCXXEXP stdc++exp)
-if (NOT STDCXXEXP)
-    message(FATAL_ERROR "stdc++exp library not found!")
-else()
-    message("stdc++exp library found at ${STDCXXEXP}")
-endif()
 
 
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp ${PROJECT_SOURCE_DIR}/src/tictactoe.cpp)
