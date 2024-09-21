@@ -23,5 +23,5 @@ jobs:
           with-cache: true
       - name: Build
         run: lazbuild tictactoe.lpi
-      # - name: Run
-      #   run: ./tictactoe
+      - name: Run
+        run: ./tictactoe -x 4 -o 4
