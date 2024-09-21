@@ -13,6 +13,9 @@ uses
 type
   TBoard = array[0..8] of char;
 
+type
+  TIntegerArray = array of integer;
+
   function InitializeBoard: TBoard;
   var
     i: integer;
@@ -105,6 +108,101 @@ type
       Result := 'X';
   end;
 
+  function GetEmptySpots(Board: TBoard): TIntegerArray;
+  var
+    i: integer;
+    EmptySpots: array of integer = nil;
+  begin
+    SetLength(EmptySpots, 0); // Initialize the dynamic array
+    for i := 0 to 8 do
+    begin
+      if (Board[i] <> 'X') and (Board[i] <> 'O') then
+      begin
+        SetLength(EmptySpots, Length(EmptySpots) + 1);
+        EmptySpots[High(EmptySpots)] := i; // Add the index to the empty spots array
+      end;
+    end;
+    Result := EmptySpots;
+  end;
+
+
+
+  function RandomMove(Board: TBoard): integer;
+  var
+    EmptySpots: array of integer;
+  begin
+    EmptySpots := GetEmptySpots(Board); // Get all available empty spots
+    Result := EmptySpots[Random(Length(EmptySpots))]; // Pick a random empty spot
+  end;
+
+
+
+  function FindWinningMove(Board: TBoard; Player: char): integer;
+  var
+    i: integer;
+    IsWon: boolean;
+  begin
+    for i := 0 to 8 do
+    begin
+      if (Board[i] <> 'X') and (Board[i] <> 'O') then
+      begin
+        // Try placing the player symbol in the spot
+        Board[i] := Player;
+        isWon := IsWinner(Board, Player);
+        Board[i] := Chr(i + Ord('0')); // Undo the move
+        if isWon then
+          Exit(i); // Return the winning position
+      end;
+    end;
+    Result := -1; // No winning move found
+  end;
+
+  function FindBlockingMove(Board: TBoard; Player: char): integer;
+  var
+    Opponent: char;
+  begin
+    Opponent := SwapPlayer(Player);
+    Result := FindWinningMove(Board, Opponent); // Block the opponent's winning move
+  end;
+
+  function WinningMove(Board: TBoard; Player: char): integer;
+  begin
+    Result := FindWinningMove(Board, Player); // AI tries to win
+    if Result = -1 then
+      Result := RandomMove(Board); // No winning move, pick random
+  end;
+
+  function WinningBlockingMove(Board: TBoard; Player: char): integer;
+  begin
+    Result := FindWinningMove(Board, Player); // AI tries to win
+    if Result = -1 then
+      Result := FindBlockingMove(Board, Player); // No winning move, try to block
+    if Result = -1 then
+      Result := RandomMove(Board); // No blocking move, pick random
+  end;
+
+  procedure AITurn(var Board: TBoard; Player: char; Strength: integer);
+  var
+    Move: integer;
+  begin
+    WriteLn('AI is thinking for player ', Player, ' with strength ', Strength, '...');
+
+    case Strength of
+      1: Move := RandomMove(Board); // AI makes a random move
+      2: begin
+        Move := WinningMove(Board, Player);
+      end;
+      3: begin
+        Move := WinningBlockingMove(Board, Player);
+      end;
+      else
+        Move := RandomMove(Board); // Default random move
+    end;
+
+    Board[Move] := Player;
+  end;
+
+
 
 type
 
@@ -113,6 +211,7 @@ type
   TicTacToePascal = class(TCustomApplication)
   protected
     procedure DoRun; override;
+    function GetAIStrength(ShortOption: char; LongOption: string): integer;
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
@@ -121,36 +220,42 @@ type
 
   { TicTacToePascal }
 
+
+  function TicTacToePascal.GetAIStrength(ShortOption: char; LongOption: string): integer;
+  var
+    OptionValue: string;
+    Strength: integer;
+  begin
+    OptionValue := GetOptionValue(ShortOption, LongOption);
+    if (OptionValue = '') or not TryStrToInt(OptionValue, Strength) then
+      Strength := 0; // Default AI strength is 0 (human player)
+    Result := Strength;
+  end;
+
   procedure TicTacToePascal.DoRun;
   var
-    ErrorMsg: string;
     Board: TBoard;
     Player: char;
+    XStrength, OStrength: integer;
   begin
-    // quick check parameters
-    ErrorMsg := CheckOptions('h', 'help');
-    if ErrorMsg <> '' then
-    begin
-      ShowException(Exception.Create(ErrorMsg));
-      Terminate;
-      Exit;
-    end;
+    Randomize;
+    XStrength := GetAIStrength('x', 'x-strength');
+    OStrength := GetAIStrength('o', 'o-strength');
 
-    // parse parameters
-    if HasOption('h', 'help') then
-    begin
-      WriteHelp;
-      Terminate;
-      Exit;
-    end;
+    WriteLn('AI Strength for X: ', XStrength);
+    WriteLn('AI Strength for O: ', OStrength);
 
-    { add your program here }
     Board := InitializeBoard;
     Player := 'X';
 
     repeat
       DisplayBoard(Board);
-      PlayerTurn(Board, Player);
+      if (Player = 'X') and (XStrength > 0) then
+        AITurn(Board, Player, XStrength)  // AI turn for player X
+      else if (Player = 'O') and (OStrength > 0) then
+        AITurn(Board, Player, OStrength)  // AI turn for player O
+      else
+        PlayerTurn(Board, Player);  // Human player turn
 
       if IsWinner(Board, Player) then
       begin
@@ -185,9 +290,9 @@ type
 
   procedure TicTacToePascal.WriteHelp;
   begin
-    { add your help code here }
-    writeln('Usage: ', ExeName, ' -h');
+    writeln('Usage: ', ExeName, ' -x=<X AI Strength> -o=<O AI Strength>');
   end;
+
 
 var
   Application: TicTacToePascal;
