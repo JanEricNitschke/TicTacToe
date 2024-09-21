@@ -16,6 +16,12 @@ type
 type
   TIntegerArray = array of integer;
 
+type
+  TBestMove = record
+    Score: integer;
+    Spot: integer;
+  end;
+
   function InitializeBoard: TBoard;
   var
     i: integer;
@@ -26,7 +32,6 @@ type
     Result := Board;
   end;
 
-
   procedure DisplayBoard(const Board: TBoard);
   begin
     WriteLn(Board[0], ' | ', Board[1], ' | ', Board[2]);
@@ -35,7 +40,6 @@ type
     WriteLn('--+---+--');
     WriteLn(Board[6], ' | ', Board[7], ' | ', Board[8]);
   end;
-
 
   function IsValidMove(Board: TBoard; Move: integer): boolean;
   begin
@@ -58,7 +62,6 @@ type
 
     Board[Move] := Player;
   end;
-
 
   function IsWinner(Board: TBoard; Player: char): boolean;
   const
@@ -83,7 +86,6 @@ type
     end;
   end;
 
-
   function IsDraw(Board: TBoard): boolean;
   var
     i: integer;
@@ -99,7 +101,6 @@ type
     end;
   end;
 
-
   function SwapPlayer(CurrentPlayer: char): char;
   begin
     if CurrentPlayer = 'X' then
@@ -113,29 +114,25 @@ type
     i: integer;
     EmptySpots: array of integer = nil;
   begin
-    SetLength(EmptySpots, 0); // Initialize the dynamic array
+    SetLength(EmptySpots, 0);
     for i := 0 to 8 do
     begin
       if (Board[i] <> 'X') and (Board[i] <> 'O') then
       begin
         SetLength(EmptySpots, Length(EmptySpots) + 1);
-        EmptySpots[High(EmptySpots)] := i; // Add the index to the empty spots array
+        EmptySpots[High(EmptySpots)] := i;
       end;
     end;
     Result := EmptySpots;
   end;
 
-
-
   function RandomMove(Board: TBoard): integer;
   var
     EmptySpots: array of integer;
   begin
-    EmptySpots := GetEmptySpots(Board); // Get all available empty spots
-    Result := EmptySpots[Random(Length(EmptySpots))]; // Pick a random empty spot
+    EmptySpots := GetEmptySpots(Board);
+    Result := EmptySpots[Random(Length(EmptySpots))];
   end;
-
-
 
   function FindWinningMove(Board: TBoard; Player: char): integer;
   var
@@ -181,6 +178,62 @@ type
       Result := RandomMove(Board); // No blocking move, pick random
   end;
 
+  function Minimax(var Board: TBoard; Player: char): TBestMove;
+  var
+    EmptySpots: array of integer;
+    Spot: integer;
+    Score: integer;
+    i: integer;
+    Opponent: char;
+  begin
+    if IsWinner(Board, Player) then
+    begin
+      Result.Score := 1;  // Winning move
+      Exit;
+    end;
+
+    Opponent := SwapPlayer(Player);
+
+    if IsWinner(Board, Opponent) then
+    begin
+      Result.Score := -1; // Opponent wins, bad move
+      Exit;
+    end;
+
+    EmptySpots := GetEmptySpots(Board);
+    if Length(EmptySpots) = 0 then
+    begin
+      Result.Score := 0; // Draw
+      Exit;
+    end;
+
+    if Length(EmptySpots) = 9 then
+    begin
+      Result.Score := 0;
+      Result.Spot := RandomMove(Board);
+      Exit;
+    end;
+
+    Result.Score := -MaxInt;
+    for i := 0 to High(EmptySpots) do
+    begin
+      Spot := EmptySpots[i];
+      Board[Spot] := Player;
+      Score := -Minimax(Board, SwapPlayer(Player)).Score;
+      Board[Spot] := Chr(Spot + Ord('0')); // Reset spot
+      if Score > Result.Score then
+      begin
+        Result.Score := Score;
+        Result.Spot := Spot;
+      end;
+    end;
+  end;
+
+  function AIBestMove(var Board: TBoard; Player: char): integer;
+  begin
+    Result := Minimax(Board, Player).Spot;
+  end;
+
   procedure AITurn(var Board: TBoard; Player: char; Strength: integer);
   var
     Move: integer;
@@ -188,7 +241,7 @@ type
     WriteLn('AI is thinking for player ', Player, ' with strength ', Strength, '...');
 
     case Strength of
-      1: Move := RandomMove(Board); // AI makes a random move
+      1: Move := RandomMove(Board);
       2: begin
         Move := WinningMove(Board, Player);
       end;
@@ -196,13 +249,12 @@ type
         Move := WinningBlockingMove(Board, Player);
       end;
       else
-        Move := RandomMove(Board); // Default random move
+        Move := AIBestMove(Board, Player);
     end;
 
     Board[Move] := Player;
+    Sleep(1000);
   end;
-
-
 
 type
 

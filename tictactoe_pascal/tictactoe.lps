@@ -9,21 +9,13 @@
         <Filename Value="tictactoe.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="82"/>
-        <CursorPos X="83" Y="102"/>
-        <UsageCount Value="36"/>
+        <TopLine Value="167"/>
+        <CursorPos X="12" Y="214"/>
+        <UsageCount Value="37"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="40" Column="15" TopLine="12"/>
-      </Position>
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="24" Column="13"/>
-      </Position>
       <Position>
         <Filename Value="tictactoe.lpr"/>
         <Caret Line="73" Column="118" TopLine="46"/>
@@ -135,6 +127,14 @@
       <Position>
         <Filename Value="tictactoe.lpr"/>
         <Caret Line="241" Column="68" TopLine="218"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="228" Column="105" TopLine="205"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="190" Column="15" TopLine="161"/>
       </Position>
     </JumpHistory>
     <RunParams>
