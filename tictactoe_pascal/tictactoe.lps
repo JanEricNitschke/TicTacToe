@@ -9,37 +9,13 @@
         <Filename Value="tictactoe.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="112"/>
-        <CursorPos X="10" Y="148"/>
-        <UsageCount Value="24"/>
+        <TopLine Value="82"/>
+        <CursorPos X="83" Y="102"/>
+        <UsageCount Value="36"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="9">
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="23" Column="11"/>
-      </Position>
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="15" Column="11"/>
-      </Position>
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="23" Column="11"/>
-      </Position>
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="15" Column="11"/>
-      </Position>
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="21" Column="106" TopLine="22"/>
-      </Position>
-      <Position>
-        <Filename Value="tictactoe.lpr"/>
-        <Caret Line="24" Column="13"/>
-      </Position>
+    <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="tictactoe.lpr"/>
         <Caret Line="40" Column="15" TopLine="12"/>
@@ -55,6 +31,110 @@
       <Position>
         <Filename Value="tictactoe.lpr"/>
         <Caret Line="139" Column="92" TopLine="125"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="133" Column="70" TopLine="103"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="164" Column="57" TopLine="147"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="175" Column="51" TopLine="147"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="139" Column="51" TopLine="112"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="127" Column="28" TopLine="98"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="140" Column="66" TopLine="103"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="112" Column="62" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="118" Column="38" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="112" Column="49" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="118" Column="28" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="110" Column="48" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="116" Column="69" TopLine="100"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="118" Column="66" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="113" Column="73" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="161" Column="57" TopLine="116"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="120" Column="60" TopLine="86"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="117" Column="67" TopLine="83"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="141" Column="111" TopLine="120"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="112" Column="129" TopLine="96"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="108" Column="48" TopLine="79"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="124" TopLine="91"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="108" Column="42" TopLine="79"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="111" Column="85" TopLine="82"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="179" Column="17" TopLine="150"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="172" Column="27" TopLine="135"/>
+      </Position>
+      <Position>
+        <Filename Value="tictactoe.lpr"/>
+        <Caret Line="241" Column="68" TopLine="218"/>
       </Position>
     </JumpHistory>
     <RunParams>
