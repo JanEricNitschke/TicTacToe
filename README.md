@@ -455,6 +455,18 @@ lazbuild tictactoe.lpi
 ./tictactoe
 ```
 
+## TicTacToe-Turnstyle
+
+Version using [Turnstyle](https://jaspervdj.be/turnstyle/).
+
+Written as lambda expression, then compiled with turnstyle `cabal run turnstyle compile -O tictactoe.txt --output tictactoe.png` and finally hand optimized.
+
+Run with:
+```
+cabal run turnstyle run tictactoe.png
+```
+
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

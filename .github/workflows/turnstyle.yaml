@@ -1,0 +1,37 @@
+# This workflow will run turnstyle version of tictactoe
+
+name: turnstyle
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: main/tictactoe_turnstyle
+    steps:
+    - name: Checkout turnstyle
+      uses: actions/checkout@v4
+      with:
+        repository: JanEricNitschke/turnstyle
+        path: turnstyle
+    - name: Setup haskell
+      uses: haskell-actions/setup@v2
+      with:
+        ghc-version: '9.10.1'
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        path: main
+    - name: Install turnstyle
+      run: cabal install --user
+      working-directory: turnstyle
+    - name: Run
+      run: |
+        turnstyle run tictactoe.png < input1.txt
+        turnstyle run tictactoe.png < input2.txt
