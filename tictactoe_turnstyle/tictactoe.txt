@@ -1,0 +1,34 @@
+LET list = λa. λb. λf. f(a)(b) IN
+LET first = λa. λb. a IN
+LET second = λa. λb. b IN
+LET zero = ((num_sub 1) 1) IN
+LET is_zero = λn. ((cmp_eq n) zero) IN
+LET empty = 45 IN # Empty cell (-)
+LET player1 = 88 IN # Player 1 (X)
+LET player2 = 79 IN # Player 2 (O)
+LET nil = 99 IN
+LET board = ((list empty) ((list empty) ((list empty) ((list empty) ((list empty) ((list empty) ((list empty) ((list empty) ((list empty) nil))))))))) IN
+LET y = λf. (λx. f (x x)) (λx. f (x x)) IN # y combinator
+LET get_helper = λrec. λl. λn. (((is_zero n) (l first)) ((rec (l second)) ((num_sub n) 1))) IN
+LET set_helper = λrec. λl. λv. λn. (((is_zero n) ((list v) (l second))) ((list (l first)) (((rec (l second)) v) ((num_sub n) 1)))) IN
+LET get_nth = (y get_helper) IN
+LET set_nth = (y set_helper) IN
+LET condition_check = λb. λx. λy. λz. λp. ((((cmp_eq ((get_nth b) x)) p) ((((cmp_eq ((get_nth b) y)) p) ((((cmp_eq ((get_nth b) z)) p) 1) zero)) zero)) zero) IN
+LET show_board = λb. λf. ((out_char ((get_nth b) zero)) ((out_char ((get_nth b) 1)) ((out_char ((get_nth b) 2)) ((out_char 10) ((out_char ((get_nth b) 3)) ((out_char ((get_nth b) 4)) ((out_char ((get_nth b) 5)) ((out_char 10) ((out_char ((get_nth b) 6)) ((out_char ((get_nth b) 7)) ((out_char ((get_nth b) 8)) ((out_char 10) f)))))))))))) IN
+LET print_winner = λp. λf. ((out_char 87) ((out_char 105) ((out_char 110) ((out_char 32) ((out_char 102) ((out_char 111) ((out_char 114) ((out_char 32) ((out_char p) ((out_char 33) ((out_char 10) f))))))))))) IN
+LET win_check =  λb. λp. ((((cmp_eq (((((condition_check b) zero) 1) 2) p)) 1) ((print_winner p) 1)) ((((cmp_eq (((((condition_check b) 3) 4) 5) p)) 1) ((print_winner p) 1)) ((((cmp_eq (((((condition_check b) 6) 7) 8) p)) 1) ((print_winner p) 1)) ((((cmp_eq (((((condition_check b) zero) 3) 6) p)) 1) ((print_winner p) 1)) ((((cmp_eq (((((condition_check b) 1) 4) 7) p)) 1) ((print_winner p) 1)) ((((cmp_eq (((((condition_check b) 2) 5) 8) p)) 1) ((print_winner p) 1)) ((((cmp_eq (((((condition_check b) zero) 4) 8) p)) 1) ((print_winner p) 1)) ((((cmp_eq (((((condition_check b) 2) 4) 6) p)) 1) ((print_winner p) 1)) zero)))))))) IN
+LET print_draw = λb. λf. ((out_char 68) ((out_char 114) ((out_char 97) ((out_char 119) ((out_char 10) ((show_board b) f)))))) IN
+LET draw_check = λb. ((((cmp_eq ((get_nth b) zero)) empty) zero) ((((cmp_eq ((get_nth b) 1)) empty) zero) ((((cmp_eq ((get_nth b) 2)) empty) zero) ((((cmp_eq ((get_nth b) 3)) empty) zero) ((((cmp_eq ((get_nth b) 4)) empty) zero) ((((cmp_eq ((get_nth b) 5)) empty) zero) ((((cmp_eq ((get_nth b) 6)) empty) zero) ((((cmp_eq ((get_nth b) 7)) empty) zero) ((((cmp_eq ((get_nth b) 8)) empty) zero) ((print_draw b) 1)))))))))) IN
+LET game_over = λb. λp. ((((cmp_eq ((win_check b) p)) 1) ((show_board b) 1)) (draw_check b)) IN
+LET take_player_input = λk. λl. ((out_char 73) ((out_char 110) ((out_char 112) ((out_char 117) ((out_char 116) ((out_char 58) ((out_char 10) ((in_num k) l)))))))) IN
+LET swap_player =  λp. ((((cmp_eq p) player1) player2) player1) IN
+LET loop_variant_1 = 100 IN
+LET loop_variant_2 = 101 IN
+LET game_loop_helper = λrec. λv. λp. λb.
+    LET loop_1 = rec loop_variant_1 IN
+    LET loop_2 = rec loop_variant_2 IN
+    cmp_eq v loop_variant_1
+         ((show_board b) ((take_player_input (λv. ((loop_2 p) (((set_nth b) p) v)))) 1))
+         ((((cmp_eq ((game_over b) p)) 1) zero) ((loop_1 (swap_player p)) b)) IN
+LET game_loop = (y game_loop_helper) IN
+(((game_loop loop_variant_1) player1) board)
