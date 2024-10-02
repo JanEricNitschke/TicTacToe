@@ -34,4 +34,6 @@ jobs:
     - name: Run
       run: |
         turnstyle run tictactoe.png < input1.txt
+        turnstyle run tictactoe_opt.png < input1.txt
         turnstyle run tictactoe.png < input2.txt
+        turnstyle run tictactoe_opt.png < input2.txt
