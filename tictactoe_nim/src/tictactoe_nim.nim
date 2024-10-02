@@ -1,7 +1,7 @@
 
 from std/strutils import parseInt
 from std/random import randomize
-from std/parseopt import getopt
+from std/parseopt import getopt, cmdArgument, cmdLongOption, cmdShortOption, cmdEnd
 
 
 from tictactoe_nimpkg/lib import play_game
