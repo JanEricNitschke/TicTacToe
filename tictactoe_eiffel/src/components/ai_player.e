@@ -57,7 +57,6 @@ feature {ANY} -- Element change
             else
                 position := best_move(a_board)
             end
-
             -- Place the marker at the found position.
             a_board.add_marker(position, marker)
             create exts
@@ -100,7 +99,9 @@ feature {AI_PLAYER} -- Implementation
         do
             create random.make
             random.next
-            Result := lower + random.last_integer(upper - lower)
+            Result := (lower-1) + random.last_integer(upper - (lower-1))
+        ensure
+            in_range: lower <= Result and then Result <= upper
         end
 
     random_move(a_board: BOARD): INTEGER
@@ -109,7 +110,7 @@ feature {AI_PLAYER} -- Implementation
             open_spots: ARRAY [INTEGER]
         do
             open_spots := a_board.empty_cells
-            Result := open_spots.item(random_integer(1, open_spots.count+1))
+            Result := open_spots.item(random_integer(1, open_spots.count))
         end
 
     try_win_move(a_board: BOARD): INTEGER
@@ -192,7 +193,7 @@ feature {AI_PLAYER} -- Implementation
             elseif open_spots.is_empty then
                 create move.make(1, 0)
             elseif a_board.is_empty then
-                create move.make(random_integer(1, 10), 0)
+                create move.make(random_integer(1, 9), 0)
             else
                 create move.make(0, -1)
                 from

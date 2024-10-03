@@ -24,7 +24,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install liberty-eiffel-all
     - name: Compile
-      run: se c -style_warning -no_check TICTACTOE make -o tictactoe
+      run: se c -style_warning TICTACTOE make -o tictactoe
     - name: Run
       run: ./tictactoe --x-strength=4 --o-strength=4
     - name: Check minmax
