@@ -466,6 +466,14 @@ Run with:
 cabal run turnstyle run tictactoe.png
 ```
 
+## TicTacToe-Tcl
+
+Version using [Tcl](https://www.tcl.tk/).
+
+Run with:
+```
+tclsh tictactoe.tcl
+```
 
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
