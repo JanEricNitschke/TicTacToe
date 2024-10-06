@@ -461,6 +461,8 @@ Version using [Turnstyle](https://jaspervdj.be/turnstyle/).
 
 Written as lambda expression, then compiled with turnstyle `cabal run turnstyle compile -O tictactoe.txt --output tictactoe.png` and finally hand optimized.
 
+Does not handle invalid (out-of-bounds or overwriting) inputs.
+
 Run with:
 ```
 cabal run turnstyle run tictactoe.png
@@ -473,6 +475,15 @@ Version using [Tcl](https://www.tcl.tk/).
 Run with:
 ```
 tclsh tictactoe.tcl
+```
+
+## TicTacToe-Piet
+
+Version using [Piet](https://www.dangermouse.net/esoteric/piet.html).
+
+Run with:
+```
+npiet tictactoe.png
 ```
 
 ## TicTacToe-scratch
