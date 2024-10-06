@@ -1,6 +1,6 @@
-# This workflow will run stuff on the turnstyle version of tictactoe.
+# This workflow will run stuff on the piet version of tictactoe.
 
-name: turnstyle
+name: tpiet
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: main/tictactoe_turnstyle
+        working-directory: main/tictactoe_piet
     steps:
     - name: Checkout turnstyle
       uses: actions/checkout@v4
