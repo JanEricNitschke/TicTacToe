@@ -3,7 +3,7 @@ exclude: docs/|fibonacci/
 repos:
   # General
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: check-yaml
         language: python
@@ -28,7 +28,7 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.25.0
+    rev: v1.26.0
     hooks:
       - id: typos
         args: []
@@ -40,7 +40,7 @@ repos:
         language: python
         args: ["--write", "--check", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.6.8
+    rev: v0.6.9
     hooks:
       - id: ruff
         args:
@@ -104,16 +104,17 @@ repos:
   # - repo: meta
   #   hooks:
   #     - id: identity
-  #       types_or: [c]
-  #       files: ^tictactoe_c/
+  #       files: ^tictactoe_cpp/|^tictactoe_c/
+  #       types_or: [c, c++]
 
   # c/cpp specific
   - repo: https://github.com/cpplint/cpplint
-    rev: 1.6.1 # Use the ref you want to point at
+    rev: 2.0.0 # Use the ref you want to point at
     hooks:
       - id: cpplint
-        files: ^tictactoe_cpp/|^tictactoe_c/
-        types: [c, c++]
+        files: ^tictactoe_cpp/
+        types: [c++]
+        args: ["--filter=-build/include_subdir"]
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
     hooks:
@@ -173,7 +174,7 @@ repos:
 
   # javascript specific
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.11.1
+    rev: v9.12.0
     hooks:
       - id: eslint
         files: ^tictactoe_javascript/

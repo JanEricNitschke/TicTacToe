@@ -1,5 +1,6 @@
 // Copyright 2022-2024 Jan-Eric Nitschke. All rights reserved.
 
+#include <iostream>
 #include <tictactoe.hpp>
 
 auto main() -> int {
