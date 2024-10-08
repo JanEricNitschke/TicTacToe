@@ -100,30 +100,281 @@ PUSH 10
 PUSH 1
 ROLL     -> [P,0,1,2,3,4,5,6,7,8] (original stack)
 
+EqualToPlayer [V,P,0,1,2,3,4,5,6,7,8]:
+PUSH 2 -> [2,V,P,0,1,2,3,4,5,6,7,8]
+PUSH 1 -> [1,2V,P,0,1,2,3,4,5,6,7,8]
+ROLL   -> [P,V,0,1,2,3,4,5,6,7,8]
+DUP    -> [P,P,V,0,1,2,3,4,5,6,7,8]
+PUSH 3 -> [3,P,P,V,0,1,2,3,4,5,6,7,8]
+PUSH 1 -> [1,3,P,P,V,0,1,2,3,4,5,6,7,8]
+ROLL   -> [P,V,P,0,1,2,3,4,5,6,7,8]
+SUB    -> [V-P,P,0,1,2,3,4,5,6,7,8]
+NOT    -> [V==P,P,0,1,2,3,4,5,6,7,8]
+
 ConditionCheck [X,Y,Z,P,0,1,2,3,4,5,6,7,8]:
-...
+PUSH 13       -> [13,X,Y,Z,P,0,1,2,3,4,5,6,7,8]
+PUSH 2        -> [2,13,X,Y,Z,P,0,1,2,3,4,5,6,7,8]
+ROLL          -> [Z,P,0,1,2,3,4,5,6,7,8,X,Y]
+EqualToPlayer -> [Z==P,P,0,1,2,3,4,5,6,7,8,X,Y]
+PUSH 11       -> [11,Z==P,P,0,1,2,3,4,5,6,7,8,X,Y]
+PUSH 1        -> [1,11,Z==P,P,0,1,2,3,4,5,6,7,8,X,Y]
+ROLL          -> [P,0,1,2,3,4,5,6,7,8,Z==P,X,Y]
+
+PUSH 13       -> [13,P,0,1,2,3,4,5,6,7,8,Z==P,X,Y]
+PUSH 12       -> [12,13,P,0,1,2,3,4,5,6,7,8,Z==P,X,Y]
+ROLL          -> [Y,P,0,1,2,3,4,5,6,7,8,Z==P,X]
+EqualToPlayer -> [Y==P,P,0,1,2,3,4,5,6,7,8,Z==P,X]
+PUSH 11       -> [11,Y==P,P,0,1,2,3,4,5,6,7,8,Z==P,X]
+PUSH 1        -> [1,11,Y==P,P,0,1,2,3,4,5,6,7,8,Z==P,X]
+ROLL          -> [P,0,1,2,3,4,5,6,7,8,Y==P,Z==P,X]
+
+PUSH 13       -> [13,P,0,1,2,3,4,5,6,7,8,Y==P,Z==P,X]
+PUSH 12       -> [12,13,P,0,1,2,3,4,5,6,7,8,Y==P,Z==P,X]
+ROLL          -> [X,P,0,1,2,3,4,5,6,7,8,Y==P,Z==P]
+EqualToPlayer -> [X==P,P,0,1,2,3,4,5,6,7,8,Y==P,Z==P]
+
+PUSH 13       -> [13,X==P,P,0,1,2,3,4,5,6,7,8,Y==P,Z==P]
+PUSH 11       -> [11,13,X==P,P,0,1,2,3,4,5,6,7,8,Y==P,Z==P]
+ROLL          -> [Y==P,Z==P,X==P,P,0,1,2,3,4,5,6,7,8]
+ADD           -> [Y==P + Z==P,X==P,P,0,1,2,3,4,5,6,7,8]
+ADD           -> [Y==P + Z==P + X==P,P,0,1,2,3,4,5,6,7,8]
+PUSH 3        -> [3,Y==P + Z==P + X==P,P,0,1,2,3,4,5,6,7,8]
+SUB           -> [Y==P + Z==P + X==P - 3,P,0,1,2,3,4,5,6,7,8]
+NOT           -> [Y==P && Z==P && X==P,P,0,1,2,3,4,5,6,7,8]
     -> [R,P,0,1,2,3,4,5,6,7,8] (R = 0 or 1)
 
 CheckWinner [P,0,1,2,3,4,5,6,7,8]:
-...
+
+PUSH 2          -> [2,P,0,1,2,3,4,5,6,7,8]
+PUSH 1          -> [1,2,P,0,1,2,3,4,5,6,7,8]
+PUSH 0          -> [0,1,2,P,0,1,2,3,4,5,6,7,8]
+ConditionCheck  -> [R1,P,0,1,2,3,4,5,6,7,8]
+PUSH 11
+PUSH 1
+ROLL            -> [P,0,1,2,3,4,5,6,7,8,R1]
+
+PUSH 5
+PUSH 4
+PUSH 3
+ConditionCheck
+PUSH 11
+PUSH 1
+ROLL             -> [P,0,1,2,3,4,5,6,7,8,R2,R1]
+
+PUSH 8
+PUSH 7
+PUSH 6
+ConditionCheck
+PUSH 11
+PUSH 1
+ROLL             -> [P,0,1,2,3,4,5,6,7,8,R3,R2,R1]
+
+PUSH 6
+PUSH 3
+PUSH 0
+ConditionCheck
+PUSH 11
+PUSH 1
+ROLL              -> [P,0,1,2,3,4,5,6,7,8,R1,C3,C2,C1]
+
+
+PUSH 7
+PUSH 4
+PUSH 1
+ConditionCheck
+PUSH 11
+PUSH 1
+ROLL             -> [P,0,1,2,3,4,5,6,7,8,R2,R1,C3,C2,C1]
+
+PUSH 8
+PUSH 5
+PUSH 2
+ConditionCheck
+PUSH 11
+PUSH 1
+ROLL             -> [P,0,1,2,3,4,5,6,7,8,R3,R2,R1,C3,C2,C1]
+
+PUSH 8
+PUSH 4
+PUSH 0
+ConditionCheck
+PUSH 11
+PUSH 1
+ROLL             -> [P,0,1,2,3,4,5,6,7,8,D1,R3,R2,R1,C3,C2,C1]
+
+PUSH 6
+PUSH 4
+PUSH 2
+ConditionCheck   -> [D2,P,0,1,2,3,4,5,6,7,8,D1,R3,R2,R1,C3,C2,C1]
+PUSH 18
+PUSH 11
+ROLL             -> [D1,R3,R2,R1,C3,C2,C1,D2,P,0,1,2,3,4,5,6,7,8]
+ADD              -> [D1+R3,R2,R1,C3,C2,C1,D2,P,0,1,2,3,4,5,6,7,8]
+ADD              -> [D1+R3+R2,R1,C3,C2,C1,D2,P,0,1,2,3,4,5,6,7,8]
+ADD              -> [D1+R3+R2+R1,C3,C2,C1,D2,P,0,1,2,3,4,5,6,7,8]
+ADD              -> [D1+R3+R2+R1+C3,C2,C1,D2,P,0,1,2,3,4,5,6,7,8]
+ADD              -> [D1+R3+R2+R1+C3+C2,C1,D2,P,0,1,2,3,4,5,6,7,8]
+ADD              -> [D1+R3+R2+R1+C3+C2+C1,D2,P,0,1,2,3,4,5,6,7,8]
+ADD              -> [D1+R3+R2+R1+C3+C2+C1+D2,P,0,1,2,3,4,5,6,7,8]
+NOT              -> [!(D1||R3||R2||R1||C3||C2||C1||D2),P,0,1,2,3,4,5,6,7,8]
+NOT              -> [D1||R3||R2||R1||C3||C2||C1||D2,P,0,1,2,3,4,5,6,7,8]
    -> [R,P,0,1,2,3,4,5,6,7,8] (R = 0 or 1)
 
-CheckDraw [P,0,1,2,3,4,5,6,7,8]:
-...
+CheckFull [P,0,1,2,3,4,5,6,7,8]:
+PUSH 0
+GetNth  ->  [V0,P,0,1,2,3,4,5,6,7,8]
+PUSH 45
+SUB
+NOT     -> [V0==45,P,0,1,2,3,4,5,6,7,8]
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V0==45]
+
+PUSH 1
+GetNth
+PUSH 45
+SUB
+NOT
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V1==45,V0==45]
+
+PUSH 2
+GetNth
+PUSH 45
+SUB
+NOT
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V2==45,V1==45,V0==45]
+
+PUSH 3
+GetNth
+PUSH 45
+SUB
+NOT
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V3==45,V2==45,V1==45,V0==45]
+
+PUSH 4
+GetNth
+PUSH 45
+SUB
+NOT
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V4==45,V3==45,V2==45,V1==45,V0==45]
+
+PUSH 5
+GetNth
+PUSH 45
+SUB
+NOT
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V5==45,V4==45,V3==45,V2==45,V1==45,V0==45]
+
+PUSH 6
+GetNth
+PUSH 45
+SUB
+NOT
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V6==45,V5==45,V4==45,V3==45,V2==45,V1==45,V0==45]
+
+PUSH 7
+GetNth
+PUSH 45
+SUB
+NOT
+PUSH 11
+PUSH 1
+ROLL    -> [P,0,1,2,3,4,5,6,7,8,V7==45,V6==45,V5==45,V4==45,V3==45,V2==45,V1==45,V0==45]
+
+PUSH 8
+GetNth
+PUSH 45
+SUB
+NOT     -> [V8==45,P,0,1,2,3,4,5,6,7,8,V7==45,V6==45,V5==45,V4==45,V3==45,V2==45,V1==45,V0==45]
+
+PUSH 19
+PUSH 11
+ROLL    -> [V7==45,V6==45,V5==45,V4==45,V3==45,V2==45,V1==45,V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+
+ADD     -> [V7==45+V6==45,V5==45,V4==45,V3==45,V2==45,V1==45,V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+ADD     -> [V7==45+V6==45+V5==45,V4==45,V3==45,V2==45,V1==45,V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+ADD     -> [V7==45+V6==45+V5==45+V4==45,V3==45,V2==45,V1==45,V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+ADD     -> [V7==45+V6==45+V5==45+V4==45+V3==45,V2==45,V1==45,V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+ADD     -> [V7==45+V6==45+V5==45+V4==45+V3==45+V2==45,V1==45,V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+ADD     -> [V7==45+V6==45+V5==45+V4==45+V3==45+V2==45+V1==45,V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+ADD     -> [V7==45+V6==45+V5==45+V4==45+V3==45+V2==45+V1==45+V0==45,V8==45,P,0,1,2,3,4,5,6,7,8]
+ADD     -> [V7==45+V6==45+V5==45+V4==45+V3==45+V2==45+V1==45+V0==45+V8==45,P,0,1,2,3,4,5,6,7,8]
+NOT     -> [V7!=45&&V6!=45&&V5!=45&&V4!=45&&V3!=45&&V2!=45&&V1!=45&&V0!=45&&V8!=45,P,0,1,2,3,4,5,6,7,8]
    -> [R,P,0,1,2,3,4,5,6,7,8] (R = 0 or 1)
 
 PrintInput [P,0,1,2,3,4,5,6,7,8]:
-...
+PUSH 73
+OUT_CHAR   (I)
+PUSH 110
+OUT_CHAR   (In)
+PUSH 112
+OUT_CHAR   (Inp)
+PUSH 117
+OUT_CHAR   (Inpu)
+PUSH 116
+OUT_CHAR   (Input)
+PUSH 58
+OUT_CHAR   (Input:)
+PUSH 10
+OUT_CHAR   (Input:\n)
    -> [P,0,1,2,3,4,5,6,7,8] (original board)
 
 PrintDraw [P,0,1,2,3,4,5,6,7,8]:
-...
+PUSH 68
+OUT_CHAR   (D)
+PUSH 114
+OUT_CHAR   (Dr)
+PUSH 97
+OUT_CHAR   (Dra)
+PUSH 119
+OUT_CHAR   (Draw)
+PUSH 10
+OUT_CHAR   (Draw\n)
    -> [P,0,1,2,3,4,5,6,7,8] (original board)
 
 PrintWin  [P,0,1,2,3,4,5,6,7,8]:
-...
+PUSH 87
+OUT_CHAR   (W)
+PUSH 105
+OUT_CHAR   (Wi)
+PUSH 110
+OUT_CHAR   (Win)
+PUSH 32
+OUT_CHAR   (Win )
+PUSH 102
+OUT_CHAR   (Win f)
+PUSH 111
+OUT_CHAR   (Win fo)
+PUSH 114
+OUT_CHAR   (Win for)
+PUSH 32
+OUT_CHAR   (Win for )
+DUP
+OUT_CHAR   (Win for P)
+PUSH 33
+OUT_CHAR   (Win for P!)
+PUSH 10
+OUT_CHAR   (Win for P!\n)
    -> [P,0,1,2,3,4,5,6,7,8] (original board)
 
 SwapPlayer  [P1,0,1,2,3,4,5,6,7,8]:
-...
+PUSH 79  -> [79,P1,0,1,2,3,4,5,6,7,8]
+SUB      -> [P1-79,0,1,2,3,4,5,6,7,8]
+NOT      -> [P1==79,0,1,2,3,4,5,6,7,8]
+PUSH 9   -> [9,P1==79,0,1,2,3,4,5,6,7,8]
+MUL      -> [9 if P1==79 else 0,0,1,2,3,4,5,6,7,8]
+PUSH 79  -> [79,9 if P1==79 else 0,0,1,2,3,4,5,6,7,8]
+ADD      -> [88 if P1==79 else 79,0,1,2,3,4,5,6,7,8]
    -> [P2,0,1,2,3,4,5,6,7,8] (P1, P2 e (88,79) && P1 != P2)
