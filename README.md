@@ -481,9 +481,13 @@ tclsh tictactoe.tcl
 
 Version using [Piet](https://www.dangermouse.net/esoteric/piet.html).
 
+Developed using [MasterPiets](https://gabriellesc.github.io/piet/index.html) and [Pietron](https://github.com/dnek/pietron).
+
+Logic of the individual components is defined in [PietLogic.txt](tictactoe_piet/PietLogic.txt).
+
 Run with:
 ```
-npiet tictactoe.png
+rpiet tictactoe.png
 ```
 
 ## TicTacToe-scratch

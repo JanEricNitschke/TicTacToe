@@ -3,6 +3,9 @@
 ba = "ba"
 # Clojure settings.
 edn = "edn"
+# From piet version
+Inpu = "Inpu"
+fo = "fo"
 
 
 [default]
