@@ -19,8 +19,8 @@ jobs:
       uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        cargo install rpiet
+        cargo install --locked --git 'https://github.com/your-diary/piet_programming_language'
     - name: Run
       run: |
-        rpiet tictactoe.png < input1.txt
-        rpiet tictactoe.png < input2.txt
+        piet_programming_language tictactoe.png < input1.txt
+        piet_programming_language tictactoe.png < input2.txt
