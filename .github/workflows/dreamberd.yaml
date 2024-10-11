@@ -1,0 +1,27 @@
+# This workflow will run stuff on the dreamberd version of tictactoe.
+
+name: dreamberd
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_dreamberd
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        pip install "dreamberd[input]"
+        export LC_ALL="de_DE.UTF-8"
+        export PYTHONUNBUFFERED=1
+    - name: Run
+      run: |
+        python simulate_key_presses.py & dreamberd tictactoe.db

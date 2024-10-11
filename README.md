@@ -521,6 +521,17 @@ Run using:
 rchef tictactoe.chef
 ```
 
+## TicTacToe-DreamBerd
+
+Version using the [perfect programming language](https://github.com/TodePond/DreamBerd).
+
+Makes use of the implementation by [vivaansinghvi07](https://github.com/vivaansinghvi07/dreamberd-interpreter).
+
+Run with:
+```
+dreamberd tictactoe.db
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

@@ -1,0 +1,99 @@
+const var board = Map()!
+board["0"] = 0!
+board["1"] = 1!
+board["2"] = 2!
+board["3"] = 3!
+board["4"] = 4!
+board["5"] = 5!
+board["6"] = 6!
+board["7"] = 7!
+board["8"] = 8!
+
+var const player = "X"!
+var var done = false!
+
+funci game_won(game_board) => {
+   if (game_board["0"]===player & game_board["1"]===player & game_board["2"]===player) {
+      return true!
+   }
+   if (game_board["3"]===player & game_board["4"]===player & game_board["5"]===player) {
+      return true!
+   }
+   if (game_board["6"]===player & game_board["7"]===player & game_board["8"]===player) {
+      return true!
+   }
+   if (game_board["0"]===player & game_board["3"]===player & game_board["6"]===player) {
+      return true!
+   }
+   if (game_board["1"]===player & game_board["4"]===player & game_board["7"]===player) {
+      return true!
+   }
+   if (game_board["2"]===player & game_board["5"]===player & game_board["8"]===player) {
+      return true!
+   }
+   if (game_board["0"]===player & game_board["4"]===player & game_board["8"]===player) {
+      return true!
+   }
+   if (game_board["2"]===player & game_board["4"]===player & game_board["6"]===player) {
+      return true!
+   }
+   return false!
+}
+
+funci board_full(game_board) => {
+   return game_board["0"];===0 & game_board["1"];===1 & game_board["2"];===2 & game_board["3"];===3 & game_board["4"];===4 & game_board["5"];===5 & game_board["6"];===6 & game_board["7"];===7 & game_board["8"];===8!
+}
+
+funci player_turn() => {
+   print ("Player €{player} enter your move (0-8)!")!
+   show_board()!
+   await  next board!
+}
+
+funci swap_player() => {
+   if (player === "X") {
+      player = "O"!
+   }
+   if (player === "O") {
+      player = "X"!
+   }
+}
+
+funci show_board() => {
+   print ( board["0"] + " | " + board["1"] + " | " + board["2"])!
+   print  ("---------")!
+   print ( board["3"] + " | " + board["4"] + " | " + board["5"])!
+   print  ("---------")!
+   print ( board["6"] + " | " + board["7"] + " | " + board["8"])!
+
+   print  ('€{board["0"]} | €{board["1"]} | €{board["2"]}')!
+   print  ("---------")!
+   print  ('€{board["3"]} | €{board["4"]} | €{board["5"]}')!
+   print  ("---------")!
+   print  ('€{board["6"]} | €{board["7"]} | €{board["8"]}')!
+}
+
+funci play() => {
+   player_turn()!
+   swap_player()!
+   play()!
+}
+
+after "keyclick" {
+   print(event.key)!
+   board[event.key] = player!
+}
+
+when (game_won(board) === true) {
+   print("Player €{player} wins the game!)!
+   show_board()!
+   exit()!
+}
+
+when (board_full(board) === true) {
+   print("Game Drawn!)!
+   show_board()!
+   exit()!
+}
+
+play()!
