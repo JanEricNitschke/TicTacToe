@@ -490,6 +490,19 @@ Run with:
 piet_programming_language tictactoe.png
 ```
 
+
+## TicTacToe-Intercal
+
+Version in [INTERCAL](https://en.wikipedia.org/wiki/INTERCAL), specifically using [C-INTERCAL](https://gitlab.com/esr/intercal).
+
+Adopted from [BoundedBeans](https://esolangs.org/wiki/User:BoundedBeans/INTERCAL_Tic-Tac-Toe).
+
+Compile and run with:
+```
+ick -Ofb tictactoe.i
+./tictactoe
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

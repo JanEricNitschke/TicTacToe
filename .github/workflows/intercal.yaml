@@ -1,0 +1,28 @@
+# This workflow will run stuff on the intercal version of tictactoe.
+
+name: intercal
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_intercal
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        sudo apt-get install intercal
+    - name: Compile tictactoe
+      run: ick -Ofb tictactoe.i
+    - name: Run
+      run: |
+        ./tictactoe < input1.txt
+        ./tictactoe < input2.txt
