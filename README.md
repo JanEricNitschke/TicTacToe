@@ -503,6 +503,15 @@ ick -Ofb tictactoe.i
 ./tictactoe
 ```
 
+## TicTacToe-Shakespeare
+
+Version using [Shakespeare](https://en.wikipedia.org/wiki/Shakespeare_Programming_Language), specifically [shakespearelang](https://shakespearelang.com/1.0/).
+
+Run with:
+```
+shakespeare run tictactoe.spl
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 

@@ -1,0 +1,30 @@
+# This workflow will run stuff on the shakespeare version of tictactoe.
+
+name: shakespeare
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_shakespeare
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        pip install shakespearelang
+    - name: Run
+      run: |
+        shakespeare run tictactoe.spl < input1.txt
+        shakespeare run tictactoe.spl < input2.txt
