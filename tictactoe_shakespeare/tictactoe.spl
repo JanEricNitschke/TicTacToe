@@ -1,0 +1,573 @@
+A game of TicTacToe in Shakespeare.
+
+Hamlet, the current player.
+Macbeth, the board spot 0.
+Lady Macbeth, the board spot 1.
+Othello, the board spot 2.
+Ophelia, the board spot 3.
+Romeo, the board spot 4.
+Juliet, the board spot 5.
+Adonis, the board spot 6.
+Portia, the board spot 7.
+Prospero, the board spot 8.
+Falstaff, the player input.
+Puck, the output buffer.
+Shylock, the win and draw buffer.
+Shallow, place holder for comparisons.
+
+                    Act I: The Preparation.
+
+                    Scene I: The Setup of the current player.
+
+[Enter Hamlet and Juliet]
+
+Juliet: Thou art the sum of an amazing healthy honest noble peaceful fine Lord
+        and the sum of an amazing lovely sweet golden summer's day
+        and a blossoming charming pretty flower.
+
+[Exeunt]
+
+                    Scene II: The Setup of the board.
+
+[Enter Hamlet and Macbeth]
+Hamlet: Thou are the sum of an amazing healthy honest noble peaceful lord
+        and the sum of an amazing lovely sweet summer's day
+        and the sum of a blossoming charming flower and a chihuahua.
+
+[Exit Macbeth]
+[Enter Lady Macbeth]
+Hamlet: Thou are as beautiful as Macbeth.
+
+
+[Exit Lady Macbeth]
+[Enter Othello]
+Hamlet: Thou are as beautiful as Lady Macbeth.
+
+
+[Exit Othello]
+[Enter Ophelia]
+Hamlet: Thou are as beautiful as Othello.
+
+[Exit Ophelia]
+[Enter Romeo]
+Hamlet: Thou are as beautiful as Ophelia.
+
+
+[Exit Romeo]
+[Enter Juliet]
+Hamlet: Thou are as beautiful as Romeo.
+
+[Exit Juliet]
+[Enter Adonis]
+Hamlet: Thou are as beautiful as Juliet.
+
+[Exit Adonis]
+[Enter Portia]
+Hamlet: Thou are as beautiful as Adonis.
+
+[Exit Portia]
+[Enter Prospero]
+Hamlet: Thou are as beautiful as Portia.
+[Exit Prospero]
+[Exeunt]
+
+                    Scene III: Setup the Outputbuffer.
+
+[Enter Hamlet and Puck]
+Hamlet: Thou are the sum of an amazing lovely sweet summer's day and a beautiful flower.
+        Remember thyself.
+
+                    Act II: The Game Loop.
+
+                    Scene I: Show the board.
+[Exeunt]
+[Enter Hamlet and Puck]
+Hamlet: Thou are as beautiful as Macbeth. Speak your mind!
+        Thou are as beautiful as Lady Macbeth. Speak your mind!
+        Thou are as beautiful as Othello. Speak your mind!
+        Recall the beautiful day. Remember thyself. Speak your mind!
+        Thou are as beautiful as Ophelia. Speak your mind!
+        Thou are as beautiful as Romeo. Speak your mind!
+        Thou are as beautiful as Juliet. Speak your mind!
+        Recall the beautiful day. Remember thyself. Speak your mind!
+        Thou are as beautiful as Adonis. Speak your mind!
+        Thou are as beautiful as Portia. Speak your mind!
+        Thou are as beautiful as Prospero. Speak your mind!
+        Recall the beautiful day. Remember thyself. Speak your mind!
+[Exeunt]
+
+                    Scene II: Take player input.
+
+[Enter Hamlet and Puck]
+Hamlet: Thou art the sum of an amazing healthy honest noble peaceful fine Lord
+        and the sum of a beautiful blossoming charming flower and a chihuahua.
+        Speak your mind!
+
+        Thou art the sum of an amazing healthy proud honest noble peaceful fine Lord
+        and the sum of a cowardly evil hairy infected blister
+        and a rotten Hell. Speak your mind!
+
+        Thou art the difference between thyself and a rotten Hell. Speak your mind!
+
+        Thou art the sum of thyself and the sum of
+        a beautiful blossoming flower and a chihuahua. Speak your mind!
+
+        Thou art the sum of thyself and a Microsoft. Speak your mind!
+
+        Thou art the difference between an amazing healthy honest noble peaceful fine Lord
+        and the sum of a beautiful blossoming flower and a green chihuahua.
+        Speak your mind!
+
+        Recall the beautiful day. Remember thyself. Speak your mind!
+
+[Exit Puck]
+[Enter Falstaff]
+Hamlet: Listen to your heart!
+
+                    Scene III: Update the board.
+
+Hamlet: Are you as green as the difference between a chihuahua and a chihuahua?
+[Exit Falstaff]
+[Enter Macbeth]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Macbeth]
+
+
+[Enter Falstaff]
+Hamlet: Are you as green as the difference between a green chihuahua and a chihuahua?
+[Exit Falstaff]
+[Enter Lady Macbeth]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Lady Macbeth]
+
+[Enter Falstaff]
+Hamlet: Are you as green as a green chihuahua?
+[Exit Falstaff]
+[Enter Othello]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Othello]
+
+[Enter Falstaff]
+Hamlet: Are you as green as the sum of a green chihuahua and a chihuahua?
+[Exit Falstaff]
+[Enter Ophelia]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Ophelia]
+
+[Enter Falstaff]
+Hamlet: Are you as green as a big green chihuahua?
+[Exit Falstaff]
+[Enter Romeo]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Romeo]
+
+[Enter Falstaff]
+Hamlet: Are you as green as the sum of a big green chihuahua and a chihuahua?
+[Exit Falstaff]
+[Enter Juliet]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Juliet]
+
+[Enter Falstaff]
+Hamlet: Are you as green as the sum of a big green chihuahua and a green chihuahua?
+[Exit Falstaff]
+[Enter Adonis]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Adonis]
+
+[Enter Falstaff]
+Hamlet: Are you as green as the sum of a big green chihuahua and the sum of a green chihuahua and a chihuahua?
+[Exit Falstaff]
+[Enter Portia]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Portia]
+
+[Enter Falstaff]
+Hamlet: Are you as green as a big old green chihuahua?
+[Exit Falstaff]
+[Enter Prospero]
+Hamlet: If so, you are as beautiful as me.
+        If so, let us proceed to scene IV.
+[Exit Prospero]
+
+
+                    Scene IV: Check for a win.
+[Exeunt]
+[Enter Hamlet and Shylock]
+Hamlet: You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+
+[Enter Macbeth]
+Hamlet: Are you as beautiful as me?
+[Exit Macbeth]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Lady Macbeth]
+Hamlet: Are you as beautiful as me?
+[Exit Lady Macbeth]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Othello]
+Hamlet: Are you as beautiful as me?
+[Exit Othello]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+[Enter Ophelia]
+Hamlet: Are you as beautiful as me?
+[Exit Ophelia]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Romeo]
+Hamlet: Are you as beautiful as me?
+[Exit Romeo]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Juliet]
+Hamlet: Are you as beautiful as me?
+[Exit Juliet]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+[Enter Adonis]
+Hamlet: Are you as beautiful as me?
+[Exit Adonis]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Portia]
+Hamlet: Are you as beautiful as me?
+[Exit Portia]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Prospero]
+Hamlet: Are you as beautiful as me?
+[Exit Prospero]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+[Enter Macbeth]
+Hamlet: Are you as beautiful as me?
+[Exit Macbeth]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Ophelia]
+Hamlet: Are you as beautiful as me?
+[Exit Ophelia]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Adonis]
+Hamlet: Are you as beautiful as me?
+[Exit Adonis]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+[Enter Lady Macbeth]
+Hamlet: Are you as beautiful as me?
+[Exit Lady Macbeth]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Romeo]
+Hamlet: Are you as beautiful as me?
+[Exit Romeo]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Portia]
+Hamlet: Are you as beautiful as me?
+[Exit Portia]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+[Enter Othello]
+Hamlet: Are you as beautiful as me?
+[Exit Othello]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Juliet]
+Hamlet: Are you as beautiful as me?
+[Exit Juliet]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Prospero]
+Hamlet: Are you as beautiful as me?
+[Exit Prospero]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+[Enter Macbeth]
+Hamlet: Are you as beautiful as me?
+[Exit Macbeth]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Romeo]
+Hamlet: Are you as beautiful as me?
+[Exit Romeo]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Prospero]
+Hamlet: Are you as beautiful as me?
+[Exit Prospero]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+[Enter Othello]
+Hamlet: Are you as beautiful as me?
+[Exit Othello]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Romeo]
+Hamlet: Are you as beautiful as me?
+[Exit Romeo]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Adonis]
+Hamlet: Are you as beautiful as me?
+[Exit Adonis]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+
+        Are you as beautiful as the sum of a green chihuahua and a chihuahua?
+        If so, let us proceed to scene VII.
+
+        You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+
+                    Scene V: Check for a draw.
+[Enter Shylock]
+Hamlet: You are as beautiful as the difference between a chihuahua and a chihuahua.
+[Exit Shylock]
+[Enter Shallow]
+Hamlet: Thou are the sum of an amazing healthy honest noble peaceful lord
+        and the sum of an amazing lovely sweet summer's day
+        and the sum of a blossoming charming flower and a chihuahua.
+[Exit Shallow]
+
+[Enter Macbeth]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Macbeth]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Lady Macbeth]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Lady Macbeth]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Othello]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Othello]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Ophelia]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Ophelia]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Romeo]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Romeo]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Juliet]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Juliet]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Adonis]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Adonis]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Portia]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Portia]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+[Exit Shylock]
+
+[Enter Prospero]
+Hamlet: Are you as beautiful as Shallow?
+[Exit Prospero]
+[Enter Shylock]
+Hamlet: If so, you are the sum of thyself and a chihuahua.
+        Are you as beautiful as the difference between a chihuahua and a chihuahua?
+        If so, let us proceed to scene VIII.
+[Exit Shylock]
+
+                    Scene VI: Swap player.
+[Enter Shallow]
+Hamlet: Thou art the sum of an amazing healthy honest noble peaceful fine Lord
+        and the sum of an amazing lovely sweet golden summer's day
+        and a blossoming charming pretty flower.
+
+        Are you as beautiful as me?
+
+Shallow: If so, thou art the sum of an amazing healthy honest noble peaceful fine Lord
+        and the sum of an amazing lovely sweet summer's day
+        and the sum of a blossoming pretty flower
+        and the sum of a green chihuahua and a chihuahua.
+        If not, you are as beautiful as me.
+
+        Let us proceed to scene I.
+
+
+                    Scene VII: Print Winner.
+[Exeunt]
+[Enter Hamlet and Puck]
+Hamlet: Thou art as beautiful as me. Speak your mind!
+        Thou art as beautiful as a healthy honest noble peaceful fine Lord. Speak your mind!
+        Thou art as beautiful as the sum of thyself and the sum of
+        an amazing healthy honest noble peaceful fine Lord and the sum of
+        an amazing lovely sweet golden summer's day and the sum of
+        a blossoming charming flower and the sum of
+        a green chihuahua and a chihuahua. Speak your mind!
+
+        Thou art as beautiful as the difference between thyself and the sum of
+        a lovely sweet golden summer's day and the sum of
+        a blossoming charming flower and a green chihuahua. Speak your mind!
+
+        Thou art as beautiful as the sum of thyself and the sum of
+        a blossoming charming flower and a chihuahua. Speak your mind!
+
+        Thou art as beautiful as the sum of thyself and the sum of
+        a blossoming charming flower and a chihuahua. Speak your mind!
+
+        Thou art as beautiful as the sum of a healthy honest noble peaceful fine Lord and a chihuahua. Speak your mind!
+
+        Recall the beautiful day. Remember thyself. Speak your mind!
+
+        Let us proceed to scene IX.
+
+                    Scene VIII: Print Draw.
+[Exeunt]
+[Enter Hamlet and Puck]
+Hamlet: Thou art as beautiful as the sum of an amazing healthy honest noble peaceful fine Lord
+        and a blossoming charming flower. Speak your mind!
+
+        Thou art as beautiful as the sum of thyself and the sum of
+        a healthy honest noble peaceful fine Lord and the difference between
+        a beautiful lovely sweet golden summer's day and a green chihuahua.
+        Speak your mind!
+
+        Thou art as beautiful as the difference between thyself and the sum of
+        a beautiful lovely sweet golden summer's day and a chihuahua. Speak your mind!
+
+        Thou art as beautiful as the sum of thyself and the sum of a beautiful lovely sweet golden summer's day
+        and the sum of a blossoming charming flower and a green chihuahua. Speak your mind!
+
+        Thou art as beautiful as the sum of a healthy honest noble peaceful fine Lord and a chihuahua. Speak your mind!
+
+        Recall the beautiful day. Remember thyself. Speak your mind!
+
+
+                    Scene IX: Print final board.
+[Exeunt]
+[Enter Hamlet and Puck]
+Hamlet: Thou are as beautiful as Macbeth. Speak your mind!
+        Thou are as beautiful as Lady Macbeth. Speak your mind!
+        Thou are as beautiful as Othello. Speak your mind!
+        Recall the beautiful day. Remember thyself. Speak your mind!
+        Thou are as beautiful as Ophelia. Speak your mind!
+        Thou are as beautiful as Romeo. Speak your mind!
+        Thou are as beautiful as Juliet. Speak your mind!
+        Recall the beautiful day. Remember thyself. Speak your mind!
+        Thou are as beautiful as Adonis. Speak your mind!
+        Thou are as beautiful as Portia. Speak your mind!
+        Thou are as beautiful as Prospero. Speak your mind!
+        Recall the beautiful day. Remember thyself. Speak your mind!
+[Exeunt]
