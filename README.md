@@ -512,6 +512,15 @@ Run with:
 shakespeare run tictactoe.spl
 ```
 
+## TicTacToe-Chef
+
+Version in [Chef](https://www.dangermouse.net/esoteric/chef.html), specifically using [rchef](https://github.com/booleancoercion/rchef).
+
+Run using:
+```
+rchef tictactoe.chef
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
