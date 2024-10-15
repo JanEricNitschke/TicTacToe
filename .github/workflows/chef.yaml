@@ -1,0 +1,26 @@
+# This workflow will run stuff on the chef version of tictactoe.
+
+name: chef
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_chef
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        cargo install --locked --git 'https://github.com/JanEricNitschke/rchef'
+    - name: Run
+      run: |
+        rchef tictactoe.chef < input1.txt
+        rchef tictactoe.chef < input2.txt

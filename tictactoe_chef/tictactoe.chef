@@ -1,0 +1,584 @@
+Tictactoe and a reference to some food.
+
+This recipe allows you to play tictactoe with two players.
+However, it does not perform a check if a spot has already been taken. So watch out!
+
+Bowl 0 is for retrieving arguments from aux. recipes.
+Bowl 1 holds the current board state.
+Bowl 2 holds the current player.
+
+45 is '-', 79 is 'O' and 88 is 'X'.
+
+Ingredients.
+45 ml milk
+88 ml water
+0 ml oil
+1 egg
+
+Method.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put milk into the 2nd mixing bowl.
+Put water into the 3rd mixing bowl.
+Open the egg.
+Serve with show sauce.
+Serve with input sauce.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 4th mixing bowl.
+Clean 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Fold oil into the 4th mixing bowl.
+Put oil into the 2nd mixing bowl.
+Clean 1st mixing bowl.
+Clean 4th mixing bowl.
+Serve with gamewon sauce.
+Fold oil into the 1st mixing bowl.
+Clean 1st mixing bowl.
+Swiffel the oil.
+Serve with showwin sauce.
+Serve with show sauce.
+Refrigerate.
+Agitate until swiffeled.
+Serve with draw sauce.
+Fold oil into the 1st mixing bowl.
+Clean 1st mixing bowl.
+Swoffel the oil.
+Serve with showdraw sauce.
+Serve with show sauce.
+Refrigerate.
+Agitate until swoffeled.
+Serve with swap sauce.
+Clean 3rd mixing bowl.
+Fold oil into the 1st mixing bowl.
+Put oil into the 3rd mixing bowl.
+Clean 1st mixing bowl.
+Bake until opened.
+
+Show Sauce.
+
+Prints the current board state. Passes nothing back to the main chef.
+
+Ingredients.
+10 ml juice
+0 ml wine
+
+Method.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Fold wine into 2nd mixing bowl.
+Put wine into the 4th mixing bowl.
+Put juice into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Put juice into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Put juice into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 4th mixing bowl.
+Put wine into the 1st mixing bowl.
+Liquefy contents of the 1st mixing bowl.
+Pour contents of the 1st mixing bowl into the 1st baking dish.
+Clean the 1st mixing bowl.
+Refrigerate for 1 hour.
+
+Input Sauce.
+
+Takes an integer 0-8 from the user and replaces the value in that spot on
+the board (bowl 2) with the current active player (bowl 3).
+Returns the modified board in the first bowl.
+
+Ingredients.
+0 ml wine
+0 ml whiskey
+0 ml gin
+9 g butter
+
+Method.
+Take whiskey from refrigerator.
+Put whiskey into the 4th mixing bowl.
+Fold gin into the 4th mixing bowl.
+Dissolve the gin.
+Stir whiskey into the 2nd mixing bowl.
+Agitate the gin until dissolved.
+Fold wine into the 2nd mixing bowl.
+Fold wine into the 3rd mixing bowl.
+Put wine into the 2nd mixing bowl.
+Stir whiskey into the 2nd mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 2nd mixing bowl.
+Put wine into the 5th mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+Fold wine into the 5th mixing bowl.
+Put wine into the 1st mixing bowl.
+
+Gamewon Sauce.
+
+Checks if the game has been won by the currently active player.
+If so, places 1 in the first mixing bowl. Otherwise a 0 is placed instead.
+
+Ingredients.
+0 eggs
+1 cucumbers
+2 mangos
+3 apples
+4 tomatoes
+5 bees
+6 berries
+7 pumpkins
+8 pineapples
+0 chicken
+
+Method.
+Clean 1st mixing bowl.
+Put eggs into 1st mixing bowl.
+Put cucumbers into 1st mixing bowl.
+Put mangos into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put apples into 1st mixing bowl.
+Put tomatoes into 1st mixing bowl.
+Put bees into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put berries into 1st mixing bowl.
+Put pumpkins into 1st mixing bowl.
+Put pineapples into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put eggs into 1st mixing bowl.
+Put apples into 1st mixing bowl.
+Put berries into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put cucumbers into 1st mixing bowl.
+Put tomatoes into 1st mixing bowl.
+Put pumpkins into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put mangos into 1st mixing bowl.
+Put bees into 1st mixing bowl.
+Put pineapples into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put eggs into 1st mixing bowl.
+Put tomatoes into 1st mixing bowl.
+Put pineapples into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put mangos into 1st mixing bowl.
+Put tomatoes into 1st mixing bowl.
+Put berries into 1st mixing bowl.
+Serve with condition sauce.
+Fold chicken into 1st mixing bowl.
+Swiffel the chicken.
+Clean 1st mixing bowl.
+Put chicken into 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Clean 1st mixing bowl.
+Put eggs into 1st mixing bowl.
+
+
+Condition Sauce.
+
+Checks if the condition has been met.
+If so, places 1 in the first mixing bowl. Otherwise a 0 is placed instead.
+Expects the (three) conditions to be passed in the 1st mixing bowl.
+The board should be in the 2nd mixing bowl and the current player in the third.
+Bourbon will hold the condition.
+Beer the player.
+Stuff the board entry.
+Eggs the result.
+
+Ingredients.
+0 ml bourbon
+0 ml beer
+0 ml stuff
+0 ml gin
+0 eggs
+1 flower
+0 apples
+
+Method.
+Fold beer into 3rd mixing bowl.
+Clean 5th mixing bowl.
+Put eggs into 5th mixing bowl.
+Fold bourbon into 1st mixing bowl.
+Clean 4th mixing bowl.
+Put bourbon into the 4th mixing bowl.
+Fold gin into the 4th mixing bowl.
+Dissolve the gin.
+Stir bourbon into the 2nd mixing bowl.
+Agitate the gin until dissolved.
+Fold stuff into the 2nd mixing bowl.
+Put stuff into the 2nd mixing bowl.
+Stir bourbon into the 2nd mixing bowl.
+Put beer into the 4th mixing bowl.
+Remove stuff from the 4th mixing bowl.
+Fold eggs into the 4th mixing bowl.
+Clean 4th mixing bowl.
+Swiffel the eggs.
+Add flower to the 5th mixing bowl.
+Put apples into the 4th mixing bowl.
+Fold eggs into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold bourbon into 1st mixing bowl.
+Clean 4th mixing bowl.
+Put bourbon into the 4th mixing bowl.
+Fold gin into the 4th mixing bowl.
+Dissolve the gin.
+Stir bourbon into the 2nd mixing bowl.
+Agitate the gin until dissolved.
+Fold stuff into the 2nd mixing bowl.
+Put stuff into the 2nd mixing bowl.
+Stir bourbon into the 2nd mixing bowl.
+Put beer into the 4th mixing bowl.
+Remove stuff from the 4th mixing bowl.
+Fold eggs into the 4th mixing bowl.
+Clean 4th mixing bowl.
+Swiffel the eggs.
+Add flower to the 5th mixing bowl.
+Put apples into the 4th mixing bowl.
+Fold eggs into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold bourbon into 1st mixing bowl.
+Clean 4th mixing bowl.
+Put bourbon into the 4th mixing bowl.
+Fold gin into the 4th mixing bowl.
+Dissolve the gin.
+Stir bourbon into the 2nd mixing bowl.
+Agitate the gin until dissolved.
+Fold stuff into the 2nd mixing bowl.
+Put stuff into the 2nd mixing bowl.
+Stir bourbon into the 2nd mixing bowl.
+Put beer into the 4th mixing bowl.
+Remove stuff from the 4th mixing bowl.
+Fold eggs into the 4th mixing bowl.
+Clean 4th mixing bowl.
+Swiffel the eggs.
+Add flower to the 5th mixing bowl.
+Put apples into the 4th mixing bowl.
+Fold eggs into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold eggs into the 5th mixing bowl.
+Swiffel the eggs.
+Put apples into the 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put flower into the 1st mixing bowl.
+
+Draw Sauce.
+
+Checks if the game has been drawn.
+If so, places 1 in the first mixing bowl. Otherwise a 0 is placed instead.
+Bourbon holds the empty indicator.
+Whiskey holds the board spot.
+Bowl 4 is the calculation spot.
+Bowl 5 holds the result.
+
+Ingredients.
+45 ml bourbon
+0 ml whiskey
+1 ml beer
+0 ml gin
+9 eggs
+
+Method.
+Clean the 4th mixing bowl.
+Put gin into the 5th mixing bowl.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Fold whiskey into the 2nd mixing bowl.
+Put whiskey into the 4th mixing bowl.
+Remove bourbon from the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Swiffel the whiskey.
+Add beer to the 5th mixing bowl.
+Put gin into the 4th mixing bowl.
+Fold whiskey into the 4th mixing bowl.
+Agitate until swiffeled.
+Remove eggs from the 5th mixing bowl.
+Fold whiskey into the 5th mixing bowl.
+Swiffel the whiskey.
+Put gin into the 1st mixing bowl.
+Refrigerate.
+Agitate until swiffeled.
+Put beer into the 1st mixing bowl.
+Refrigerate.
+
+Showwin Sauce.
+
+Prints "{Player} wins!"
+
+Ingredients.
+32 eggs
+119 cucumbers
+105 mangos
+110 apples
+115 tomatoes
+33 bees
+10 berries
+0 ml oil
+
+Method.
+Put berries into the 1st mixing bowl.
+Put bees into the 1st mixing bowl.
+Put tomatoes into the 1st mixing bowl.
+Put apples into the 1st mixing bowl.
+Put mangos into the 1st mixing bowl.
+Put cucumbers into the 1st mixing bowl.
+Put eggs into the 1st mixing bowl.
+Fold oil into the 3rd mixing bowl.
+Put oil into the 1st mixing bowl.
+Liquefy contents of the 1st mixing bowl.
+Pour contents of the 1st mixing bowl into the 1st baking dish.
+Clean the 1st mixing bowl.
+Refrigerate for 1 hour.
+
+Showdraw Sauce.
+
+Prints "Draw!"
+
+Ingredients.
+68 eggs
+114 cucumbers
+97 mangos
+119 apples
+33 bees
+10 berries
+
+Method.
+Put berries into the 1st mixing bowl.
+Put bees into the 1st mixing bowl.
+Put apples into the 1st mixing bowl.
+Put mangos into the 1st mixing bowl.
+Put cucumbers into the 1st mixing bowl.
+Put eggs into the 1st mixing bowl.
+Liquefy contents of the 1st mixing bowl.
+Pour contents of the 1st mixing bowl into the 1st baking dish.
+Clean the 1st mixing bowl.
+Refrigerate for 1 hour.
+
+Swap Sauce.
+
+Swap the player (3rd mixing bowl) between 88 and 79.
+
+Ingredients.
+9 ml vodka
+79 ml beer
+88 ml water
+0 ml oil
+0 ml honey
+
+Method.
+Fold oil into the 3rd mixing bowl.
+Put oil into the 4th mixing bowl.
+Put water into the 3rd mixing bowl.
+Remove beer from the 4th mixing bowl.
+Fold oil into the 4th mixing bowl.
+Swiffel the oil.
+Remove vodka from the 3rd mixing bowl.
+Put honey into the 6th mixing bowl.
+Fold oil into the 6th mixing bowl.
+Agitate until swiffeled.
+Clean 1st mixing bowl.
+Fold oil into the 3rd mixing bowl.
+Put oil into the 1st mixing bowl.
