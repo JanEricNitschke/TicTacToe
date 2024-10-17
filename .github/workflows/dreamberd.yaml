@@ -19,9 +19,11 @@ jobs:
       uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        pip install "dreamberd[input]"
+        pip install "git+https://github.com/JanEricNitschke/dreamberd-interpreter.git[input]"
+        pip install pynput
         export LC_ALL="de_DE.UTF-8"
         export PYTHONUNBUFFERED=1
     - name: Run
       run: |
-        python simulate_key_presses.py & dreamberd tictactoe.db
+        python simulate_key_presses.py --win & dreamberd tictactoe.db
+        python simulate_key_presses.py --draw & dreamberd tictactoe.db

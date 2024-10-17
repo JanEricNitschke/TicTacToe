@@ -2,6 +2,8 @@ const var board = [0, 1, 2, 3, 4, 5, 6, 7, 8]!
 
 var const player = "X"!
 
+var var tracker = 1!
+
 funci game_won(game_board) => {
    if (game_board[-1]===player & game_board[0]===player & game_board[1]===player) {
       return true!
@@ -31,22 +33,25 @@ funci game_won(game_board) => {
 }
 
 funci board_full(game_board) => {
-   return game_board[-1];===0 & game_board[0];===1 & game_board[1];===2 & game_board[2];===3 & game_board[3];===4 & game_board[4];===5 & game_board[5];===6 & game_board[6];===7 & game_board[7];===8!
+   return game_board[-1];==0 & game_board[0];==1 & game_board[1];==2 & game_board[2];==3 & game_board[3];==4 & game_board[4];==5 & game_board[5];==6 & game_board[6];==7 & game_board[7];==8!
 }
 
 funci player_turn() => {
    print ("Player €{player} enter your move (0-8)!")!
    show_board()!
-   await  next board!
+   await next tracker!
 }
 
 funci swap_player() => {
    if (player === "X") {
       player = "O"!
+      return true!
    }
    if (player === "O") {
       player = "X"!
+      return true!
    }
+   return false!
 }
 
 funci show_board() => {
@@ -64,18 +69,19 @@ funci play() => {
 }
 
 after "keyclick" {
-   const const index = Number(event.key) - 1
+   const const index = Number(event.key) - 1!
    board[index] = player!
+   tracker = tracker + 1!
 }
 
 when (game_won(board) === true) {
-   print("Player €{player} wins the game!)!
+   print("Player €{player} wins the game!")!
    show_board()!
    exit()!
 }
 
 when (board_full(board) === true) {
-   print("Game Drawn!)!
+   print("Game Drawn!")!
    show_board()!
    exit()!
 }
