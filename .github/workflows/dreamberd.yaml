@@ -10,20 +10,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: ./tictactoe_dreamberd
     steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        pip install "git+https://github.com/JanEricNitschke/dreamberd-interpreter.git[input]"
+        pip install "dreamberd[input] @ git+https://github.com/JanEricNitschke/dreamberd-interpreter.git"
         pip install pynput
-        export LC_ALL="de_DE.UTF-8"
-        export PYTHONUNBUFFERED=1
     - name: Run
       run: |
+        set LC_CTYPE="de_DE.UTF-8"
+        set LANG="de_DE.UTF-8"
+        set LC_ALL="de_DE.UTF-8"
+        Set-Culture de-DE
+        set PYTHONUNBUFFERED=1
         python simulate_key_presses.py --win & dreamberd tictactoe.db
         python simulate_key_presses.py --draw & dreamberd tictactoe.db

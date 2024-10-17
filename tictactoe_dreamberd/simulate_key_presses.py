@@ -15,12 +15,12 @@ def simulate_key_presses(keys: Iterable[int]) -> None:
     Args:
         keys (Iterable[int]): Sequence of keys to press
     """
-    time.sleep(3)
+    time.sleep(5)
 
     for key in keys:
         keyboard_controller.press(str(key))
         keyboard_controller.release(str(key))
-        time.sleep(0.5)
+        time.sleep(0.75)
 
 
 # Main function to handle command line arguments
