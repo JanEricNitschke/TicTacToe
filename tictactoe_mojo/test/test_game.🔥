@@ -1,0 +1,5 @@
+from testing import assert_equal
+from tictactoe.game import play
+
+def test_play():
+    assert_equal(play(), 1)

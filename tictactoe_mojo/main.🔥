@@ -1,0 +1,4 @@
+from tictactoe.game import play
+
+fn main():
+    play()
