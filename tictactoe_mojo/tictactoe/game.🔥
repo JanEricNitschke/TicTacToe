@@ -1,0 +1,3 @@
+fn play() -> Int:
+    print("Hello Mojo!")
+    return 1

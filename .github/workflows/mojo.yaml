@@ -1,0 +1,25 @@
+# This workflow will run the tests on the mojo version of tictactoe
+
+name: Mojo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_mojo
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Setup Mojo
+        uses: fabasoad/setup-mojo-action@v1
+      - name: Build
+        run: mojo build main.🔥
+      - name: Test
+        run: mojo test -I . test
