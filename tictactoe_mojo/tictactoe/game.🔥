@@ -1,3 +1,225 @@
-fn play() -> Int:
-    print("Hello Mojo!")
-    return 1
+alias OPEN: UInt8 = 0 # (00)
+alias X: UInt8 = 1    # (01)
+alias O: UInt8 = 2    # (10)
+alias BOARD = SIMD[DType.uint8, _]
+
+@always_inline("nodebug")
+fn _board_construction_checks[size: Int]():
+    """Checks if the board size is valid.
+
+    The board size is valid if it is a power of two and is positive.
+
+    Parameters:
+        size: The number of elements in the board.
+    """
+    constrained[size > 0, "board size must be > 0"]()
+    constrained[size & (size - 1) == 0, "board size must be power of 2"]()
+
+fn _swap_player(player: UInt8) -> UInt8:
+    """Returns the other player.
+
+    Args:
+        player: The player to swap.
+
+    Returns:
+        The other player.
+    """
+    return 3 - player
+
+fn _ai_turn_o[size: Int](board: BOARD[size*size], strength: UInt8) -> Int:
+    """Returns the move that the O player made.
+
+    Args:
+        board: The current board.
+        strength: The strength of the O player.
+
+    Returns:
+        The move the O player made as an index into the board.
+    """
+    return 0
+
+fn _ai_turn_x[size: Int](board: BOARD[size*size], strength: UInt8) -> Int:
+    """Returns the move that the X player made.
+
+    Args:
+        board: The current board.
+        strength: The strength of the X player.
+
+    Returns:
+        The move the X player made as an index into the board.
+    """
+    return 0
+
+fn _player_turn[size: Int](board: BOARD[size*size], player: UInt8) -> Int:
+    """Returns the move that the player made.
+
+    Args:
+        board: The current board.
+        player: The player that should make the move.
+
+    Returns:
+        The move the player made as an index into the board.
+    """
+    var player_input: String
+    var move: Int
+    while True:
+        print("Player ", _int_to_player(player), " enter your move (0-", (board.size)-1, ").", sep="")
+        _show_board(board)
+        player_input = input()
+        try:
+            move = int(player_input)
+            if move >= 0 and move < board.size and board[move] == OPEN:
+                break
+            print("Enter a valid number and try again.")
+        except ValueError:
+            print("Enter a number and try again.")
+            continue
+
+    return move
+
+fn _int_to_player(player: UInt8) -> String:
+    """Returns the player as a string.
+
+    Args:
+        player: The player to convert.
+
+    Returns:
+        The player as a string.
+    """
+    if player == X:
+        return "X"
+    elif player == O:
+        return "O"
+    else:
+        return "-"
+
+fn _show_board[size: Int](board: BOARD[size*size]):
+    """Prints the board to the console.
+
+    Args:
+        board: The board to print.
+    """
+    var SEP: String = "-"
+    var SEPARATOR: String = SEP * (5 * size)
+    print(SEPARATOR)
+    for i in range(size):
+        for j in range(size):
+            print("| ", _int_to_player(board[i * size + j]), " |", end="", sep="")
+        print()
+        print(SEPARATOR)
+
+
+fn _is_full[size: Int](board: BOARD[size*size]) -> Bool:
+    """Returns True if the board is full.
+
+    Args:
+        board: The board to check.
+
+    Returns:
+        True if the board is full, False otherwise.
+    """
+    return all(board != OPEN)
+
+fn _is_winner_param[size: Int, //, player: UInt8](board: BOARD[size*size]) -> Bool:
+    @parameter
+    for row in range(size):
+        row_win = True
+        @parameter
+        for col in range(size):
+            if board[row * size + col] != player:
+                row_win = False
+                break
+        if row_win:
+            print("Row win")
+            return True
+
+    # Check columns
+    @parameter
+    for col in range(size):
+        col_win = True
+        @parameter
+        for row in range(size):
+            if board[row * size + col] != player:
+                col_win = False
+                break
+        if col_win:
+            print("Col win")
+            return True
+
+    # Check main diagonal
+    main_diag_win = True
+    @parameter
+    for i in range(size):
+        if board[i * size + i] != player:
+            main_diag_win = False
+            break
+    if main_diag_win:
+        print("Main diag win")
+        return True
+
+    # Check anti-diagonal
+    anti_diag_win = True
+    @parameter
+    for i in range(size):
+        if board[i * size + (size - 1 - i)] != player:
+            anti_diag_win = False
+            break
+    if anti_diag_win:
+        print("Anti diag win")
+        return True
+    print("No win")
+    return False
+
+
+fn _is_winner[size: Int](board: BOARD[size*size], player: UInt8) -> Bool:
+    """Returns True if the player is the winner.
+
+    Args:
+        board: The board to check.
+        player: The player to check.
+
+    Returns:
+        True if the player is the winner, False otherwise.
+    """
+    if player == X:
+        return _is_winner_param[X](board)
+    return _is_winner_param[O](board)
+
+fn _play[size: Int](board: BOARD[size*size], player: UInt8, x_strength: UInt8, o_strength: UInt8) -> Int:
+    """Returns the move that the player made.
+
+    Args:
+        board: The current board.
+        player: The player that should make the move.
+        x_strength: The strength of the X player. (0 means human)
+        o_strength: The strength of the O player. (0 means human)
+
+    Returns:
+        The move the player made as an index into the board.
+    """
+    var move: Int
+    if player == 1 and x_strength > 0:
+        move = _ai_turn_x(board, x_strength)
+    elif player == 3 and o_strength > 0:
+        move = _ai_turn_o(board, o_strength)
+    else:
+        move = _player_turn(board, player)
+    return move
+
+fn play[size: Int](x_strength: UInt8, o_strength: UInt8):
+    _board_construction_checks[size]()
+    var board = BOARD[size*size](0)
+    var player: UInt8 = 1
+
+    while True:
+        var move = _play(board, player, x_strength, o_strength)
+        board[move] = player
+        if _is_winner(board, player):
+            print("Player ", _int_to_player(player), " wins!", sep="")
+            break
+        if _is_full(board):
+            print("It's a draw!")
+            break
+        player = _swap_player(player)
+
+    _show_board(board)
