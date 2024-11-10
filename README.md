@@ -532,6 +532,17 @@ Run with:
 dreamberd tictactoe.db
 ```
 
+## TicTacToe-Mojo
+
+Version using [Mojo](https://docs.modular.com/mojo/manual/).
+
+Build, test and run with:
+```
+mojo build main.🔥
+mojo test -I . test
+./main
+```
+
 ## TicTacToe-scratch
 Very simple two player tictactoe game with Scratch.
 
