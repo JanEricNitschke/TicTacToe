@@ -1,4 +1,4 @@
 from tictactoe.game import play
 
 fn main():
-    play[4](0, 0)
+    play[4](1, 1)

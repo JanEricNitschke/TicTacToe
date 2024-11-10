@@ -1,7 +1,16 @@
+from random import seed, random_ui64
+from time import sleep
+
 alias OPEN: UInt8 = 0 # (00)
 alias X: UInt8 = 1    # (01)
 alias O: UInt8 = 2    # (10)
 alias BOARD = SIMD[DType.uint8, _]
+
+@value
+struct Move:
+    var spot: Int
+    var score: Int
+
 
 @always_inline("nodebug")
 fn _board_construction_checks[size: Int]():
@@ -26,19 +35,64 @@ fn _swap_player(player: UInt8) -> UInt8:
     """
     return 3 - player
 
-fn _ai_turn_o[size: Int](board: BOARD[size*size], strength: UInt8) -> Int:
-    """Returns the move that the O player made.
+fn _minmax[player: UInt8, size: Int](inout board: BOARD[size*size]) -> Move:
+    """Returns the best move for the player.
 
     Args:
         board: The current board.
-        strength: The strength of the O player.
+
+    Parameters:
+        player: The player to get the best move for.
 
     Returns:
-        The move the O player made as an index into the board.
+        The best move for the player.
     """
-    return 0
+    if _is_winner_param[player](board):
+        return Move(-1, 1)
+    @parameter
+    if player == X:
+        if _is_winner_param[O](board):
+            return Move(-1, -1)
+    else:
+        if _is_winner_param[X](board):
+            return Move(-1, -1)
+    var empty_cells = _get_empty_cells(board)
+    if empty_cells.size == 0:
+        return Move(-1, 0)
+    var best_move = Move(-1, -2)
+    var score: Int
+    for spot in empty_cells:
+        board[spot[]] = player
+        if player == X:
+            score = -(_minmax[O](board).score)
+        else:
+            score = -(_minmax[X](board).score)
+        board[spot[]] = OPEN
+        if score > best_move.score:
+            best_move.score = score
+            best_move.spot = spot[]
+        if score == 1:
+            break
+    return best_move
 
-fn _ai_turn_x[size: Int](board: BOARD[size*size], strength: UInt8) -> Int:
+fn _get_empty_cells[size: Int](board: BOARD[size*size]) -> List[Int]:
+    """Returns the empty cells in the board.
+
+    Args:
+        board: The board to check.
+
+    Returns:
+        The empty cells in the board.
+    """
+    var empty_cells = List[Int]()
+    @parameter
+    for i in range(board.size):
+        if board[i] == OPEN:
+            empty_cells.append(i)
+    return empty_cells
+
+
+fn _ai_turn[size: Int, //, player: UInt8](inout board: BOARD[size*size], strength: UInt8) -> Int:
     """Returns the move that the X player made.
 
     Args:
@@ -48,7 +102,17 @@ fn _ai_turn_x[size: Int](board: BOARD[size*size], strength: UInt8) -> Int:
     Returns:
         The move the X player made as an index into the board.
     """
-    return 0
+    print("AI turn as ", _int_to_player(player), " with strength ", strength, ".", sep="")
+    _show_board(board)
+    var empty_cells = _get_empty_cells(board)
+    var spot: Int
+    if empty_cells.size >= 12:
+        spot = empty_cells[int(random_ui64(0, empty_cells.size-1))]
+    else:
+        spot = _minmax[player](board).spot
+    sleep(1)
+    return spot
+
 
 fn _player_turn[size: Int](board: BOARD[size*size], player: UInt8) -> Int:
     """Returns the move that the player made.
@@ -174,7 +238,7 @@ fn _is_winner[size: Int](board: BOARD[size*size], player: UInt8) -> Bool:
         return _is_winner_param[X](board)
     return _is_winner_param[O](board)
 
-fn _play[size: Int](board: BOARD[size*size], player: UInt8, x_strength: UInt8, o_strength: UInt8) -> Int:
+fn _play[size: Int](inout board: BOARD[size*size], player: UInt8, x_strength: UInt8, o_strength: UInt8):
     """Returns the move that the player made.
 
     Args:
@@ -187,22 +251,22 @@ fn _play[size: Int](board: BOARD[size*size], player: UInt8, x_strength: UInt8, o
         The move the player made as an index into the board.
     """
     var move: Int
-    if player == 1 and x_strength > 0:
-        move = _ai_turn_x(board, x_strength)
-    elif player == 3 and o_strength > 0:
-        move = _ai_turn_o(board, o_strength)
+    if player == X and x_strength > 0:
+        move = _ai_turn[X](board, x_strength)
+    elif player == O and o_strength > 0:
+        move = _ai_turn[O](board, o_strength)
     else:
         move = _player_turn(board, player)
-    return move
+    board[move] = player
 
 fn play[size: Int](x_strength: UInt8, o_strength: UInt8):
+    seed()
     _board_construction_checks[size]()
     var board = BOARD[size*size](0)
     var player: UInt8 = 1
 
     while True:
-        var move = _play(board, player, x_strength, o_strength)
-        board[move] = player
+        _play(board, player, x_strength, o_strength)
         if _is_winner(board, player):
             print("Player ", _int_to_player(player), " wins!", sep="")
             break
