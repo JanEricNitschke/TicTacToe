@@ -439,12 +439,12 @@ impl TicTacToe {
                 */
                 if self.board[row][col] == player {
                     win_conditions
-                        .entry("row".to_owned() + &row.to_string())
+                        .entry(format!("row{}", row))
                         .and_modify(|set| {
                             _ = set.remove(&(row, col));
                         });
                     win_conditions
-                        .entry("col".to_owned() + &col.to_string())
+                        .entry(format!("col{}", col))
                         .and_modify(|set| {
                             _ = set.remove(&(row, col));
                         });
@@ -465,12 +465,12 @@ impl TicTacToe {
                 // then all lines that contain it become useless
                 if self.board[row][col] == swap_player(player) {
                     win_conditions
-                        .entry("row".to_owned() + &row.to_string())
+                        .entry(format!("row{}", row))
                         .and_modify(|set| {
                             set.clear();
                         });
                     win_conditions
-                        .entry("col".to_owned() + &col.to_string())
+                        .entry(format!("col{}", col))
                         .and_modify(|set| {
                             set.clear();
                         });
