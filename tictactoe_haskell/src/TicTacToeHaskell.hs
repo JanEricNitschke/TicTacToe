@@ -171,7 +171,7 @@ minmax player board
     bestMovesFromOpponent = map (minmax $ swapPlayer player) changedBoard
     -- Pair up this list of best move for the opponent with our move that lead to that board
     bestMoveOfOpponentWithYourMove = zip bestMovesFromOpponent emptyCells
-    -- Find the pair of (best move for the opponent, after this move my me)
+    -- Find the pair of (best move for the opponent, after this move by me)
     -- That has the worst best move to the opponent
     -- So basically check if there was any board where the opponent loses with every move
     -- Or at least check if there is any move where only a draw was possible

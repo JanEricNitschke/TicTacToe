@@ -122,13 +122,13 @@ func TestWinMoveWorksWithoutWin(t *testing.T) {
 	tictactoe.board = Board{{'X', '-', '-'}, {'-', 'O', '-'}, {'-', '-', 'X'}}
 	resultingMove := tictactoe.winMove('X')
 	if resultingMove.row < 0 || resultingMove.row > 2 {
-		t.Errorf("Row value of resulting move has to been in 0-2 but was %d instead", resultingMove.row)
+		t.Errorf("Row value of resulting move has to be in 0-2 but was %d instead", resultingMove.row)
 	}
 	if resultingMove.col < 0 || resultingMove.col > 2 {
-		t.Errorf("Col value of resulting move has to been in 0-2 but was %d instead", resultingMove.col)
+		t.Errorf("Col value of resulting move has to be in 0-2 but was %d instead", resultingMove.col)
 	}
 	if resultingMove.endState != 0 {
-		t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
+		t.Errorf("EndState of resulting move has to be 0 but was %d instead", resultingMove.endState)
 	}
 	if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
 		t.Errorf(randomMoveConstraint, tictactoe.board[resultingMove.row][resultingMove.col])
@@ -203,13 +203,13 @@ func TestBlockWinMoveWorksWithoutWin(t *testing.T) {
 	tictactoe.board = Board{{'X', '-', '-'}, {'-', 'O', '-'}, {'-', '-', 'X'}}
 	resultingMove := tictactoe.blockWinMove('X')
 	if resultingMove.row < 0 || resultingMove.row > 2 {
-		t.Errorf("Row value of resulting move has to been in 0-2 but was %d instead", resultingMove.row)
+		t.Errorf("Row value of resulting move has to be in 0-2 but was %d instead", resultingMove.row)
 	}
 	if resultingMove.col < 0 || resultingMove.col > 2 {
-		t.Errorf("Col value of resulting move has to been in 0-2 but was %d instead", resultingMove.col)
+		t.Errorf("Col value of resulting move has to be in 0-2 but was %d instead", resultingMove.col)
 	}
 	if resultingMove.endState != 0 {
-		t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
+		t.Errorf("EndState of resulting move has to be 0 but was %d instead", resultingMove.endState)
 	}
 	if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
 		t.Errorf(randomMoveConstraint, tictactoe.board[resultingMove.row][resultingMove.col])
@@ -237,13 +237,13 @@ func FuzzRandomMove(f *testing.F) {
 		emptyMove := Move{endState: -99, row: -99, col: -99}
 		if resultingMove != emptyMove {
 			if resultingMove.row < 0 || resultingMove.row > 2 {
-				t.Errorf("Row value of resulting move has to been in 0-2 but was %d instead", resultingMove.row)
+				t.Errorf("Row value of resulting move has to be in 0-2 but was %d instead", resultingMove.row)
 			}
 			if resultingMove.col < 0 || resultingMove.col > 2 {
-				t.Errorf("Col value of resulting move has to been in 0-2 but was %d instead", resultingMove.col)
+				t.Errorf("Col value of resulting move has to be in 0-2 but was %d instead", resultingMove.col)
 			}
 			if resultingMove.endState != 0 {
-				t.Errorf("EndState of resulting move has to been 0 but was %d instead", resultingMove.endState)
+				t.Errorf("EndState of resulting move has to be 0 but was %d instead", resultingMove.endState)
 			}
 			if tictactoe.board[resultingMove.row][resultingMove.col] != '-' {
 				t.Errorf(randomMoveConstraint, tictactoe.board[resultingMove.row][resultingMove.col])
