@@ -7,7 +7,7 @@ public interface Player {
     /**
      * Function to make a move on a board with a marker.
      * @param board Game board to make the move on.
-     * @param marker Marker to make the moave as.
+     * @param marker Marker to make the move as.
      */
     void makeMove(Board board, Marker marker);
 }
