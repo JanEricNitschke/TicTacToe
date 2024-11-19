@@ -20,6 +20,7 @@ int parse_optional_int(PyObject* obj, int* result) {
     }
     return 1;  // Success
   }
+  PyErr_Format(PyExc_ValueError, "AI Strength must be an integer.");
   return 0;  // Failure
 }
 
