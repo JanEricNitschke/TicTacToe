@@ -24,3 +24,7 @@ jobs:
     - name: Build
       run: |
         make build
+    - name: Run
+      run: |
+        ./tictactoe < input1.txt
+        ./tictactoe < input2.txt
