@@ -169,7 +169,7 @@ pos_taken:
 	jmp player_turn
 
 ; Function to check if the current player has won
-; The current plyer is always stored in r15b
+; The current player is always stored in r15b
 ; Returns:
 ; rax: 1 of the game is won, 0 otherwise.
 game_won:
