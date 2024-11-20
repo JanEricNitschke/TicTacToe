@@ -22,3 +22,6 @@ jobs:
     - name: Compile.
       run: |
         cobc -x tictactoe_cobol.cob
+    - name: Run
+      run: |
+        ./tictactoe_cobol < input.txt

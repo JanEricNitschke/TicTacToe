@@ -23,6 +23,7 @@ jobs:
     - name: Test
       run: |
         make test
-    # - name: Run
-    #   run: |
-    #     ./bin/tictactoe -X 0 -O 0
+    - name: Run
+      run: |
+        ./bin/tictactoe < input1.txt
+        ./bin/tictactoe < input2.txt
