@@ -307,7 +307,8 @@ ai_move(Board1, Player, Strength, Board2) :-
             3:win_block_move_board1_player_board2(Board1, Player, Board2),
             4:best_move_board1_player_board2_endstate(Board1, Player, Board2, _)
         ]
-    ).
+    ),
+    sleep(1).
 
 % Ask the user for the ai strength.
 read_ai_strength(Strength) :-
