@@ -86,7 +86,7 @@ updates:
         update-types:
           - minor
           - patch
-  - package-ecosystem: "elm-package"
+  - package-ecosystem: "elm"
     directory: "/tictactoe_elm"
     schedule:
       interval: "weekly"
