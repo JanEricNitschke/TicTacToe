@@ -86,6 +86,15 @@ updates:
         update-types:
           - minor
           - patch
+  - package-ecosystem: "elm-package"
+    directory: "/tictactoe_elm"
+    schedule:
+      interval: "weekly"
+    groups:
+      swift-minor:
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: "github-actions"
     # Workflow files stored in the default location of `.github/workflows`. (You don't need to specify `/.github/workflows` for `directory`. You can use `directory: "/"`.)
