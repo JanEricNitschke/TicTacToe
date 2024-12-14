@@ -66,11 +66,11 @@ enum Player {
 
 extension InvertColor on Color {
   Color invert() {
-    final r = 255 - red;
-    final g = 255 - green;
-    final b = 255 - blue;
+    final red = 255 - (r * 255).round();
+    final green = 255 - (g * 255).round();
+    final blue = 255 - (b * 255).round();
     // return Color(0xFFFF0000);
-    return Color.fromARGB((opacity * 255).round(), r, g, b);
+    return Color.fromARGB((a * 255).round(), red, green, blue);
   }
 }
 
