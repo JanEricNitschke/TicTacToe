@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Setup Mojo
-        uses: fabasoad/setup-mojo-action@v1
+        uses: fabasoad/setup-mojo-action@v2
       - name: Build
         run: mojo build main.🔥
       - name: Run
