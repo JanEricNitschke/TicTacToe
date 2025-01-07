@@ -18,7 +18,6 @@ linters:
     - errorlint
     - exhaustive
     - exhaustruct   # Should be useful in the future. No time now
-    - copyloopvar
     - forcetypeassert
     - funlen  # Should be usefull in the future. No time atm
     - ginkgolinter
@@ -91,6 +90,7 @@ linters:
     - dupl
     - wsl
     - nlreturn
+    - copyloopvar  # Not running anyway because project supports 1.19
 
 linters-settings:
   gosec:

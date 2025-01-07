@@ -43,7 +43,7 @@ public class TicTacToe {
    *
    * @param question Question to ask the user.
    * @param scanner  Scanner to read the user input.
-   * @return Whether the user anwered in the affirmative.
+   * @return Whether the user answered in the affirmative.
    */
   public boolean getUserYesNo(final String question, final Scanner scanner) {
     char answer;
