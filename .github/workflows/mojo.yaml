@@ -20,8 +20,8 @@ jobs:
       - name: Setup Mojo
         uses: fabasoad/setup-mojo-action@v2
       - name: Build
-        run: mojo build main.🔥
+        run: magic run mojo build main.🔥
       - name: Run
         run: ./main
       - name: Test
-        run: mojo test -I . test
+        run: magic run mojo test -I . test
