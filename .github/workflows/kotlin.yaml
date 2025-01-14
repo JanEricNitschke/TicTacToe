@@ -23,10 +23,10 @@ jobs:
         distribution: 'oracle' # See 'Supported distributions' for available options
         java-version: '21'
         cache: 'gradle'
-    - name: Setup Gradle 8.9
+    - name: Setup Gradle 8.10
       uses: gradle/actions/setup-gradle@v4
       with:
-        gradle-version: 8.9
+        gradle-version: 8.10
     - name: Make gradle executable
       run: chmod +x ./gradlew
 
