@@ -26,7 +26,7 @@ struct Move {
     /// Positive integers expected to be in the range 0..=2.
     row: usize,
     col: usize,
-    /// end_state attribute for the outcome of this move given perfect follow up play by both sides.
+    /// `end_state` attribute for the outcome of this move given perfect follow up play by both sides.
     end_state: EndState,
 }
 
@@ -407,7 +407,7 @@ impl TicTacToe {
     }
 
     // Perform a random valid move
-    fn random_move(&mut self) -> Move {
+    fn random_move(&self) -> Move {
         // Get all empty cells
         let empty_cells = self.empty_cells();
         // Pick a random one
@@ -423,7 +423,7 @@ impl TicTacToe {
     }
 
     fn check_win_conditions(
-        &mut self,
+        &self,
         player: char,
         win_conditions: &mut std::collections::HashMap<
             String,
@@ -438,16 +438,12 @@ impl TicTacToe {
                 in that line by one
                 */
                 if self.board[row][col] == player {
-                    win_conditions
-                        .entry(format!("row{}", row))
-                        .and_modify(|set| {
-                            _ = set.remove(&(row, col));
-                        });
-                    win_conditions
-                        .entry(format!("col{}", col))
-                        .and_modify(|set| {
-                            _ = set.remove(&(row, col));
-                        });
+                    win_conditions.entry(format!("row{row}")).and_modify(|set| {
+                        _ = set.remove(&(row, col));
+                    });
+                    win_conditions.entry(format!("col{col}")).and_modify(|set| {
+                        _ = set.remove(&(row, col));
+                    });
                     if row == col {
                         win_conditions.entry("diag".to_string()).and_modify(|set| {
                             _ = set.remove(&(row, col));
@@ -464,16 +460,12 @@ impl TicTacToe {
                 // If the opposing player occupies this cell
                 // then all lines that contain it become useless
                 if self.board[row][col] == swap_player(player) {
-                    win_conditions
-                        .entry(format!("row{}", row))
-                        .and_modify(|set| {
-                            set.clear();
-                        });
-                    win_conditions
-                        .entry(format!("col{}", col))
-                        .and_modify(|set| {
-                            set.clear();
-                        });
+                    win_conditions.entry(format!("row{row}")).and_modify(|set| {
+                        set.clear();
+                    });
+                    win_conditions.entry(format!("col{col}")).and_modify(|set| {
+                        set.clear();
+                    });
                     if row == col {
                         win_conditions.entry("diag".to_string()).and_modify(|set| {
                             set.clear();
@@ -496,7 +488,7 @@ impl TicTacToe {
     given board. So any line that contains the player twice
     and an empty cell as the last slot
     */
-    fn get_winning_move(&mut self, player: char) -> Option<Move> {
+    fn get_winning_move(&self, player: char) -> Option<Move> {
         // Build  all of the possible lines
         let mut win_conditions: std::collections::HashMap<
             String,
@@ -557,21 +549,21 @@ impl TicTacToe {
 
     // Try to perform a winning move
     // If there is none return a random one instead
-    fn win_move(&mut self, player: char) -> Move {
+    fn win_move(&self, player: char) -> Move {
         self.get_winning_move(player)
             .map_or_else(|| self.random_move(), |win_move| win_move)
     }
 
     // Tries to find a move that would block the opponent
     // winning on their next move
-    fn get_blocking_move(&mut self, player: char) -> Option<Move> {
+    fn get_blocking_move(&self, player: char) -> Option<Move> {
         // Just find a move that would make the opponent win
         self.get_winning_move(swap_player(player))
     }
 
     // Try to find a winning or blocking move
     // If neither exists do a random one instead
-    fn block_win_move(&mut self, player: char) -> Move {
+    fn block_win_move(&self, player: char) -> Move {
         if let Some(win_move) = self.get_winning_move(player) {
             return win_move;
         }
