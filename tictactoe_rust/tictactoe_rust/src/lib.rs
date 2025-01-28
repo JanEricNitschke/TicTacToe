@@ -5,7 +5,7 @@
 allow you to play `TicTacToe` alone or with a friend.
 */
 
-use rand::prelude::SliceRandom;
+use rand::prelude::IndexedRandom;
 use rand::Rng;
 use std::collections;
 use std::ops::Neg;
@@ -380,8 +380,8 @@ impl TicTacToe {
         }
         if empty_cells.len() == 9 {
             best_move = Move {
-                row: rand::thread_rng().gen_range(0..=2),
-                col: rand::thread_rng().gen_range(0..=2),
+                row: rand::rng().random_range(0..=2),
+                col: rand::rng().random_range(0..=2),
                 end_state: EndState::Draw,
             };
             return best_move;
@@ -413,7 +413,7 @@ impl TicTacToe {
         // Pick a random one
         // This should never be called when there are no empty cells
         let cell = empty_cells
-            .choose(&mut rand::thread_rng())
+            .choose(&mut rand::rng())
             .expect("random_move should never be called with a full board!");
         Move {
             row: cell[0],
