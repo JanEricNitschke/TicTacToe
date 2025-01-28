@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 authors     = ["Jan-Eric <janericnitschke@gmail.com"]
 description = "A simple tictactoe game in rust for python."
-readme      = "README.md"
 repository  = "https://github.com/JanEricNitschke/TicTacToe/tree/main/tictactoe_rust"
 license     = "MIT"
 keywords    = ["cli", "game"]
