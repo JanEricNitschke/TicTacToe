@@ -24,13 +24,14 @@ jobs:
       uses: actions-rust-lang/setup-rust-toolchain@v1
       with:
           toolchain: stable
+          rustflags: ""
     - name: Lint
       run: |
         rustup component add clippy
         # Run normal configuration and fail on default warnings
         cargo clippy -- -D warnings
         # Run pedantic but do not fail
-        cargo clippy -- -W clippy::all -W clippy::pedantic -W clippy::nursery -W clippy::cargo || 0
+        cargo clippy -- -W clippy::all -W clippy::pedantic -W clippy::nursery -W clippy::cargo
     - name: Build
       run: cargo build --verbose
     - name: Test
