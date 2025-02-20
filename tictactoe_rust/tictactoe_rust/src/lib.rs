@@ -5,8 +5,8 @@
 allow you to play `TicTacToe` alone or with a friend.
 */
 
-use rand::prelude::IndexedRandom;
 use rand::Rng;
+use rand::prelude::IndexedRandom;
 use std::collections;
 use std::ops::Neg;
 use std::ops::Not;
@@ -329,11 +329,19 @@ impl TicTacToe {
     /// * `col` - An unsigned integer of the column number to make the move on (0 indexed)
     fn fix_spot(&mut self, player: char, row: usize, col: usize) -> bool {
         if row >= 3 || col >= 3 {
-            println!("Row {} or column {} are out of bounds. They have to be between 1 and 3 inclusive. Try again!", row+1, col+1);
+            println!(
+                "Row {} or column {} are out of bounds. They have to be between 1 and 3 inclusive. Try again!",
+                row + 1,
+                col + 1
+            );
             return false;
         }
         if self.board[row][col] != '-' {
-            println!("The position ({}, {}) has already been taken by a player! Please do your move on an empty position.", row+1, col+1);
+            println!(
+                "The position ({}, {}) has already been taken by a player! Please do your move on an empty position.",
+                row + 1,
+                col + 1
+            );
             return false;
         }
         self.board[row][col] = player;
