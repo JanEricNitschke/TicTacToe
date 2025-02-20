@@ -1,7 +1,7 @@
 [package]
 name = "tictactoe_rust_python"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors     = ["Jan-Eric <janericnitschke@gmail.com"]
 description = "A simple tictactoe game in rust for python."
 repository  = "https://github.com/JanEricNitschke/TicTacToe/tree/main/tictactoe_rust"
