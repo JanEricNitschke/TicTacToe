@@ -30,7 +30,7 @@ jobs:
         # Run normal configuration and fail on default warnings
         cargo clippy -- -D warnings
         # Run pedantic but do not fail
-        cargo clippy -- -W clippy::all -W clippy::pedantic -W clippy::nursery -W clippy::cargo
+        cargo clippy -- -W clippy::all -W clippy::pedantic -W clippy::nursery -W clippy::cargo || 0
     - name: Build
       run: cargo build --verbose
     - name: Test
