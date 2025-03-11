@@ -31,18 +31,14 @@ jobs:
           pip install -r requirements.txt
           pip install -r tests/requirements.txt
       - name: Lint with ruff
-        uses: chartboost/ruff-action@v1
-        with:
-          version: 0.8.6
+        uses: astral-sh/ruff-action@v3
       - name: Check formatting with ruff
-        uses: chartboost/ruff-action@v1
+        uses: astral-sh/ruff-action@v3
         with:
-          version: 0.8.6
-          args: format
+          args: "format --check"
       - name: Typecheck with pyright
         uses: jakebailey/pyright-action@v2
         with:
-          version: 1.1.391
           working-directory: ./tictactoe_python
       - name: Thorough check with pylint
         run: pylint tictactoe/

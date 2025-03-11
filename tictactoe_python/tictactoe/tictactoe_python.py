@@ -220,13 +220,13 @@ class TicTacToe:
         """
         if row not in range(3) or col not in range(3):
             print(
-                f"Row {row+1} or column {col+1} are out of bounds."
+                f"Row {row + 1} or column {col + 1} are out of bounds."
                 " They have to be between 1 and 3 inclusive. Try again!"
             )
             return False
         if self.board[row, col] != self.empty_indicator:
             print(
-                f"The position ({row+1}, {col+1}) has already been taken by a player!"
+                f"The position ({row + 1}, {col + 1}) has already been taken by a player!"
                 " Please do your move on an empty position."
             )
             return False

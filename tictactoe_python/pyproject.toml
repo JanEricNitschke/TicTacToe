@@ -59,7 +59,6 @@ ignore = [
     "ISC001",
     "ISC002",
     # Others
-    "ANN101",
     "S311",
     "T20",
     "E501",
