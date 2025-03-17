@@ -20,7 +20,7 @@ jobs:
 
       # Install and setup Alire package manager
       - name: Setup alire
-        uses: alire-project/setup-alire@v4
+        uses: alire-project/setup-alire@v5
 
       # Build the project using the validation build profile to enforce static analysis and coding style.
       - name: Build
