@@ -8,7 +8,6 @@ linters:
     - contextcheck
     - cyclop
     - decorder
-    - depguard
     - dogsled
     - dupword
     - durationcheck
@@ -67,7 +66,6 @@ linters:
     - staticcheck
     - stylecheck
     - tagliatelle
-    - tenv
     - testableexamples
     - testpackage
     - thelper
@@ -76,12 +74,14 @@ linters:
     - unconvert
     - unparam
     - unused
+    - usetesting
     - usestdlibvars
     - varnamelen  # Usefull for the future
     - whitespace
     - wrapcheck
     - zerologlint
   disable:
+    - depguard  # Only relevant for organizations
     - gci  # Broken for me
     - gofmt
     - gofumpt
