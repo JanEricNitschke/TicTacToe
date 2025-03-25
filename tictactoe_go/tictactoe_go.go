@@ -288,9 +288,10 @@ func (tictactoe *TicTacToe) getWinningMove(player rune) (Move, error) {
 		// how many of the three indices are filled by the player
 		// and which indices remain open
 		for _, indices := range winCondition {
-			if tictactoe.board[indices[0]][indices[1]] == player {
+			switch tictactoe.board[indices[0]][indices[1]] {
+			case player:
 				done++
-			} else if tictactoe.board[indices[0]][indices[1]] == '-' {
+			case '-':
 				open = append(open, indices)
 			}
 		}
