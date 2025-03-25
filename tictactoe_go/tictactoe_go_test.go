@@ -355,7 +355,7 @@ func TestFixSpotFixesOnce(t *testing.T) {
 	if !tictactoe.fixSpot('X', 0, 0) {
 		t.Errorf("Fix spot should work first time")
 	}
-	if !(tictactoe.board[0][0] == 'X') {
+	if tictactoe.board[0][0] != 'X' {
 		t.Errorf("Spot should have been changed:  Is: %v, want %v", tictactoe.board[0][0], 'X')
 	}
 	if tictactoe.fixSpot('X', 0, 0) {
