@@ -1,3 +1,4 @@
+version: "2"
 linters:
   enable:
     - asasalint
@@ -11,36 +12,31 @@ linters:
     - dogsled
     - dupword
     - durationcheck
-    - errcheck
+    - err113
     - errchkjson
     - errname
     - errorlint
     - exhaustive
-    - exhaustruct   # Should be useful in the future. No time now
+    - exhaustruct
     - forcetypeassert
-    - funlen  # Should be usefull in the future. No time atm
+    - funlen
     - ginkgolinter
     - gocheckcompilerdirectives
     - gochecknoglobals
     - gochecknoinits
-    - gocognit  # Similar to cyclop. Could be usefull
+    - gocognit
     - goconst
     - gocritic
     - gocyclo
     - godot
     - godox
-    - err113
     - goheader
-    - mnd
     - gomoddirectives
     - gomodguard
     - goprintffuncname
     - gosec
-    - gosimple
-    - govet
     - grouper
     - importas
-    - ineffassign
     - interfacebloat
     - ireturn
     - lll
@@ -48,6 +44,7 @@ linters:
     - maintidx
     - makezero
     - misspell
+    - mnd
     - musttag
     - nakedret
     - nestif
@@ -64,47 +61,51 @@ linters:
     - reassign
     - revive
     - staticcheck
-    - stylecheck
     - tagliatelle
     - testableexamples
     - testpackage
     - thelper
     - tparallel
-    - typecheck
     - unconvert
     - unparam
-    - unused
-    - usetesting
     - usestdlibvars
-    - varnamelen  # Usefull for the future
+    - usetesting
+    - varnamelen
     - whitespace
     - wrapcheck
     - zerologlint
   disable:
-    - depguard  # Only relevant for organizations
-    - gci  # Broken for me
-    - gofmt
-    - gofumpt
-    - goimports
-    - forbidigo
+    - copyloopvar # Not running anyway because project supports 1.19
+    - depguard # Only relevant for organizations
     - dupl
-    - wsl
+    - forbidigo
     - nlreturn
-    - copyloopvar  # Not running anyway because project supports 1.19
-
-linters-settings:
-  gosec:
-    # Available rules: https://github.com/securego/gosec#available-rules
-    excludes:
-      - G404
-  cyclop:
-    # The maximal code complexity to report.
-    # Default: 10
-    max-complexity: 12
-    # The maximal average package complexity.
-    # If it's higher than 0.0 (float) the check is enabled
-    # Default: 0.0
-    package-average: 0.0
-  varnamelen:
-    ignore-names:
-      - is
+    - wsl
+  settings:
+    cyclop:
+      max-complexity: 12
+      package-average: 0
+    gosec:
+      excludes:
+        - G404
+    varnamelen:
+      ignore-names:
+        - is
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
