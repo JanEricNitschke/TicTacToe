@@ -1,7 +1,4 @@
 // @ts-check
-/* global document, HTMLButtonElement */
-// The above shouldnt be needed as i have already set `...globals.browser`
-// in the eslint.config.js file, but that does not seem to work...
 
 /**
  * Contains the current state of the board
