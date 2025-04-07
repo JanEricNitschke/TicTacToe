@@ -299,119 +299,137 @@ fn PrintDraw() {
   Core.PrintChar(10);
 }
 
-
-fn PrintBoard(board: array(i32, 9)) {
-  var i: i32 = 0;
-  while (i < 9) {
-    let cell: i32 = board[i];
-    if (cell == 0) {
-      // '-'
-      Core.PrintChar(45);
-    } else if (cell == 1) {
-      // 'X'
-      Core.PrintChar(88);
-    } else {
-      // 'O'
-      Core.PrintChar(79);
-    }
-    if (i % 3 == 2) {
-      // newline
-      Core.PrintChar(10);
-    } else {
-      // space
-      Core.PrintChar(32);
-    }
-    i = i + 1;
-  }
-}
-
-fn CheckWinner(board: array(i32, 9)) -> i32 {
-  let wins: array(array(i32, 3), 8) = (
-    // rows
-    (0, 1, 2), (3, 4, 5), (6, 7, 8),
-    // cols
-    (0, 3, 6), (1, 4, 7), (2, 5, 8),
-    // diags
-    (0, 4, 8), (2, 4, 6)
-  );
-  var i: i32 = 0;
-  while (i < 8) {
-    if (board[wins[i][0]] != 0 and board[wins[i][0]] == board[wins[i][1]] and board[wins[i][1]] == board[wins[i][2]]) {
-      return board[wins[i][0]];
-    }
-    i = i + 1;
-  }
-  return 0;
-}
-
-fn IsFull(board: array(i32, 9)) -> bool {
-  var i: i32 = 0;
-  while (i < 9) {
-    if (board[i] == 0) {
-      return false;
-    }
-    i = i + 1;
-  }
-  return true;
-}
-
-fn InputMove(board: array(i32, 9)) -> i32 {
-  var move: i32 = 0;
-  while (true) {
-    PrintBoard(board);
-    PrintEnterMove();
-
-
-    if (not ReadInt(&move)) {
-      PrintInvalidInput();
-      continue;
-    }
-    if (move < 0 or move > 8) {
-      PrintInvalidMove();
-      continue;
-    }
-    if (board[move] != 0) {
-      PrintCellOccupied();
-      continue;
-    }
-    break;
-  }
-  return move;
-}
+// Game Logic
 
 fn SwapPlayer(player: i32) -> i32 {
-  if (player == 1) {
-    return 2;
-  } else {
-    return 1;
-  }
+    if (player == 1) {
+        return 2;
+    } else {
+        return 1;
+    }
 }
 
-fn Run() {
-  // 0: empty, 1: X, 2: O
-  var board: array(i32, 9) = (0, 0, 0, 0, 0, 0, 0, 0, 0);
-  var current_player: i32 = 1;
+class TicTacToe {
+  fn Make() -> TicTacToe {
+    returned var me: TicTacToe;
+    me.board = (0, 0, 0, 0, 0, 0, 0, 0, 0);
+    me.current_player = 1;
 
-  while (true) {
-    var move: i32 = InputMove(board);
-    board[move] = current_player;
+    me.wins = (
+      // rows
+      (0, 1, 2), (3, 4, 5), (6, 7, 8),
+      // cols
+      (0, 3, 6), (1, 4, 7), (2, 5, 8),
+      // diags
+      (0, 4, 8), (2, 4, 6)
+    );
 
-    var winner: i32 = CheckWinner(board);
-    if (winner != 0) {
-      PrintBoard(board);
-      if (winner == 1) {
-        PrintPlayerXWins();
+    return var;
+  }
+
+  fn PrintBoard[self: Self]() {
+    var i: i32 = 0;
+    while (i < 9) {
+      let cell: i32 = self.board[i];
+      if (cell == 0) {
+        // '-'
+        Core.PrintChar(45);
+      } else if (cell == 1) {
+        // 'X'
+        Core.PrintChar(88);
       } else {
-        PrintPlayerOWins();
+        // 'O'
+        Core.PrintChar(79);
+      }
+      if (i % 3 == 2) {
+        // newline
+        Core.PrintChar(10);
+      } else {
+        // space
+        Core.PrintChar(32);
+      }
+      i = i + 1;
+    }
+  }
+
+  fn CheckWinner[self: Self]() -> i32 {
+    var i: i32 = 0;
+    while (i < 8) {
+      if (self.board[self.wins[i][0]] != 0 and self.board[self.wins[i][0]] == self.board[self.wins[i][1]] and self.board[self.wins[i][1]] == self.board[self.wins[i][2]]) {
+        return self.board[self.wins[i][0]];
+      }
+      i = i + 1;
+    }
+    return 0;
+  }
+
+  fn IsFull[self: Self]() -> bool {
+    var i: i32 = 0;
+    while (i < 9) {
+      if (self.board[i] == 0) {
+        return false;
+      }
+      i = i + 1;
+    }
+    return true;
+  }
+
+  fn InputMove[self: Self]() -> i32 {
+    var move: i32 = 0;
+    while (true) {
+      self.PrintBoard();
+      PrintEnterMove();
+
+
+      if (not ReadInt(&move)) {
+        PrintInvalidInput();
+        continue;
+      }
+      if (move < 0 or move > 8) {
+        PrintInvalidMove();
+        continue;
+      }
+      if (self.board[move] != 0) {
+        PrintCellOccupied();
+        continue;
       }
       break;
     }
-    if (IsFull(board)) {
-      PrintBoard(board);
-      PrintDraw();
-      break;
-    }
-
-    current_player = SwapPlayer(current_player);
+    return move;
   }
+
+  fn PlayGame[addr self: Self*]() {
+    while (true) {
+      var move: i32 = self->InputMove();
+      self->board[move] = self->current_player;
+
+      var winner: i32 = self->CheckWinner();
+      if (winner != 0) {
+        self->PrintBoard();
+        if (winner == 1) {
+          PrintPlayerXWins();
+        } else {
+          PrintPlayerOWins();
+        }
+        break;
+      }
+      if (self->IsFull()) {
+        self->PrintBoard();
+        PrintDraw();
+        break;
+      }
+
+      self->current_player = SwapPlayer(self->current_player);
+    }
+  }
+
+
+  var board: array(i32, 9);
+  var current_player: i32;
+  var wins: array(array(i32, 3), 8);
+}
+
+fn Run() {
+  var game: TicTacToe = TicTacToe.Make();
+  game.PlayGame();
 }
