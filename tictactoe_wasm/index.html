@@ -41,7 +41,7 @@
     </div>
 
     <script type="module">
-        const wasm = await WebAssembly.instantiateStreaming(fetch('tictactoe_wasm.wasm'), { console });
+        const wasm = await WebAssembly.instantiateStreaming(fetch('tictactoe_wasm.wasm'));
         const { play, check_end, memory } = wasm.instance.exports;
         const mem = new Uint8Array(memory.buffer);
 

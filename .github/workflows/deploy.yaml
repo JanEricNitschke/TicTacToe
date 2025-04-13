@@ -1,0 +1,89 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Base setup
+        run: mkdir -p public
+
+      - name: Setup JS version
+        run: |
+          cp -r tictactoe_javascript/ public/javascript
+
+      - name: Install elm, elm-format and cache the ELM_HOME directory
+        uses: mpizenberg/elm-tooling-action@v1.6
+        with:
+          cache-key: elm-home-${{ hashFiles('elm-tooling.json', 'elm.json') }}
+          cache-restore-key: elm-home
+          elm-tooling-dir: tictactoe_elm
+      - name: Setup Elm version
+        run: elm make src/Main.elm --output=../public/elm/index.html
+        working-directory: tictactoe_elm
+
+      - name: Setup java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "oracle"
+          java-version: "22"
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@13.2
+        with:
+          cli: latest
+      - name: Setup ClojureScript version
+        run: |
+          clojure -M -m cljs.main -co build.edn -c tictactoe.core
+          mkdir -p ../public/clojurescript
+          cp out/main.js ../public/clojurescript/main.js
+          cp index.html ../public/clojurescript/index.html
+        working-directory: tictactoe_clojurescript
+
+      - name: Set up wabt
+        run: |
+          sudo apt update
+          sudo apt install wabt
+      - name: Setup WASM version
+        run: |
+          mkdir -p ../public/wasm
+          wat2wasm tictactoe_wasm.wat -o tictactoe_wasm.wasm
+          cp tictactoe_wasm.wasm ../public/wasm/tictactoe_wasm.wasm
+          cp index.html ../public/wasm/index.html
+        working-directory: tictactoe_wasm
+
+      - name: Copy Manual Index
+        run: |
+          cp docs/index.html public/index.html
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
