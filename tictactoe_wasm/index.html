@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>TicTacToe WASM</title>
+    <style>
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            width: max-content;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background: #eee;
+            font-size: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="board">
+        <button class="cell" data-index="0"></button>
+        <button class="cell" data-index="1"></button>
+        <button class="cell" data-index="2"></button>
+        <button class="cell" data-index="3"></button>
+        <button class="cell" data-index="4"></button>
+        <button class="cell" data-index="5"></button>
+        <button class="cell" data-index="6"></button>
+        <button class="cell" data-index="7"></button>
+        <button class="cell" data-index="8"></button>
+    </div>
+
+    <script type="module">
+        const wasm = await WebAssembly.instantiateStreaming(fetch('tictactoe_wasm.wasm'), { console });
+        const { play, check_end, memory } = wasm.instance.exports;
+        const mem = new Uint8Array(memory.buffer);
+
+        const board = document.getElementById('board');
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const index = Number(cell.dataset.index);
+                const result = play(index);
+                if (result) {
+                    const value = mem[index];
+                    cell.textContent = value === 1 ? 'X' : 'O';
+
+                    const winner = check_end();
+                    if (winner !== 0) {
+                        if (winner === 1) alert("X wins!");
+                        else if (winner === 2) alert("O wins!");
+                        else if (winner === 3) alert("Draw!");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+
+</html>

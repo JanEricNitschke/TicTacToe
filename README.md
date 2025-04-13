@@ -609,6 +609,17 @@ carbon link --output=tictactoe_carbon tictactoe_carbon.o
 ./tictactoe_carbon
 ```
 
+## TicTacToe-WASM
+
+Version using [WASM]().
+
+Build and run and go to `localhost:8000`::
+
+```
+wat2wasm tictactoe_wasm.wat -o tictactoe_wasm.wasm
+python3 -m http.server
+```
+
 ## TicTacToe-scratch
 
 Very simple two player tictactoe game with Scratch.

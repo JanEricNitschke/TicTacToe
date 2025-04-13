@@ -1,0 +1,25 @@
+# This workflow will compile the WASM version of tictactoe
+
+name: WASM
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tictactoe_wasm
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up wabt
+        run: |
+          sudo apt update
+          sudo apt install wabt
+      - name: Compile wat
+        run: wat2wasm tictactoe_wasm.wat -o tictactoe_wasm.wasm
