@@ -19,7 +19,7 @@ coverage html
 
 Simple tictactoe game with [JavaScript](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/).
 
-Hosted [here](https://main.dwbh88xp4gd1m.amplifyapp.com/) on AWS.
+Hosted [here](https://janericnitschke.github.io/TicTacToe/javascript) on GH-Pages.
 
 ## TicTacToe-Cpp
 
@@ -400,6 +400,8 @@ Run and go to `localhost:9000`:
 clj -M --main cljs.main --compile tictactoe.core --repl
 ```
 
+Hosted [here](https://janericnitschke.github.io/TicTacToe/clojurescript) on GH-Pages.
+
 ## TicTacToe-CoffeeScript
 
 Version using [CoffeeScript](https://coffeescript.org/).
@@ -461,7 +463,7 @@ mix run -- --x-strength 4 --o-strength 4
 
 Minimal two player version using [Elm](https://elm-lang.org/).
 
-Hosted [here](https://main.d2csemwu9ce7sg.amplifyapp.com/) on AWS.
+Hosted [here](https://janericnitschke.github.io/TicTacToe/elm) on GH-Pages.
 
 Compile with:
 
@@ -611,7 +613,7 @@ carbon link --output=tictactoe_carbon tictactoe_carbon.o
 
 ## TicTacToe-WASM
 
-Version using [WASM]().
+Version using [WASM](https://webassembly.org/).
 
 Build and run and go to `localhost:8000`::
 
@@ -619,6 +621,8 @@ Build and run and go to `localhost:8000`::
 wat2wasm tictactoe_wasm.wat -o tictactoe_wasm.wasm
 python3 -m http.server
 ```
+
+Hosted [here](https://janericnitschke.github.io/TicTacToe/wasm) on GH-Pages.
 
 ## TicTacToe-scratch
 
