@@ -37,7 +37,7 @@ jobs:
           cp -r tictactoe_javascript/ public/javascript
 
       - name: Install elm, elm-format and cache the ELM_HOME directory
-        uses: mpizenberg/elm-tooling-action@v1.6
+        uses: mpizenberg/elm-tooling-action@v1.7
         with:
           cache-key: elm-home-${{ hashFiles('elm-tooling.json', 'elm.json') }}
           cache-restore-key: elm-home
