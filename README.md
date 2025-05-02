@@ -546,7 +546,7 @@ piet_programming_language tictactoe.png
 
 Version in [INTERCAL](https://en.wikipedia.org/wiki/INTERCAL), specifically using [C-INTERCAL](https://gitlab.com/esr/intercal).
 
-Adopted from [BoundedBeans](https://esolangs.org/wiki/User:BoundedBeans/INTERCAL_Tic-Tac-Toe).
+Adopted from [BoundedBeans](https://esolangs.org/wiki/User:BoundedBeans/INTERCAL_Tic-Tac-Toe). Reference manual: https://3e8.org/pub/intercal.pdf
 
 Compile and run with:
 
