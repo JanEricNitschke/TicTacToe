@@ -19,8 +19,8 @@ jobs:
       - name: Setup Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: latest
-          otp-version: latest
+          elixir-version: ">0"
+          otp-version: ">0"
       - name: Run formatter
         run: mix format --check-formatted
       - name: Install dependencies
