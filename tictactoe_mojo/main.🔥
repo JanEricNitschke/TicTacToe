@@ -1,4 +1,5 @@
 from tictactoe.game import play
 
-fn main():
+
+fn main() raises:
     play[4](1, 1)
