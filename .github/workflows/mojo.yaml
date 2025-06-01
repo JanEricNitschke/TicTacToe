@@ -17,11 +17,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Setup Mojo
-        uses: fabasoad/setup-mojo-action@v2
+      - uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          manifest-path: ./tictactoe_mojo/pixi.toml
       - name: Build
-        run: magic run mojo build main.🔥
+        run: pixi run mojo build main.🔥
       - name: Run
         run: ./main
       - name: Test
-        run: magic run mojo test -I . test
+        run: pixi run mojo test -I . test
