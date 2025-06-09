@@ -52,7 +52,7 @@ jobs:
           distribution: "oracle"
           java-version: "22"
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@13.2
+        uses: DeLaGuardo/setup-clojure@13.4
         with:
           cli: latest
       - name: Setup ClojureScript version
