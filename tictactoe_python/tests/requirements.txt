@@ -1,5 +1,5 @@
 pre-commit==4.2.0
 pylint==3.3.7
-pyright==1.1.402
+pyright==1.1.403
 pytest==8.4.1
 pytest-cov==6.2.1
