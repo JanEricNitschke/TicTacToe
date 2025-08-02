@@ -1,3 +1,31 @@
+[build-system]
+requires      = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name            = "tictactoe_python"
+version         = "0.1.0"
+authors         = [{ name = "Jan-Eric Nitschke", email = "janericnitschke@gmail.com" }]
+maintainers     = [{ name = "Jan-Eric Nitschke", email = "janericnitschke@gmail.com" }]
+license         = { text = "MIT" }
+requires-python = ">=3.10"
+
+dependencies = ["typing-extensions>=4.6.0; python_version < '3.13'"]
+
+[dependency-groups]
+dev = [
+    "pre-commit==4.2.0",
+    "pylint==3.3.7",
+    "pyright==1.1.403",
+    "pytest==8.4.1",
+    "pytest-cov==6.2.1",
+]
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["tictactoe"]
+
+
 [tool.pymend]
 extend-exclude    = "docs/|tests/"
 output-style      = "google"
@@ -6,8 +34,6 @@ ignored-functions = ["main"]
 check             = true
 
 [tool.ruff]
-
-
 # Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
@@ -198,3 +224,11 @@ min-similarity-lines = 20
 [tool.pylint.spelling]
 # Limits count of emitted suggestions for spelling mistakes.
 max-spelling-suggestions = 4
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["."]
+omit = ["tests/*"]

@@ -8,8 +8,19 @@ from collections.abc import Callable, Iterable, Iterator, Sized
 from dataclasses import dataclass
 from enum import Enum
 from time import sleep
+from typing import TYPE_CHECKING
 
-from typing_extensions import Self, override
+if sys.version_info >= (3, 13):
+    try:
+        from typing import Self, override
+    except ImportError:
+        # Help users on older alphas
+        if not TYPE_CHECKING:
+            from typing_extensions import Self, override
+        else:
+            raise
+else:
+    from typing_extensions import Self, override
 
 
 class Board(Iterable[list[str]], Sized):

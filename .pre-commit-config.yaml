@@ -28,7 +28,7 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.32.0
+    rev: v1.34.0
     hooks:
       - id: typos
         args: []
@@ -40,9 +40,9 @@ repos:
         language: python
         args: ["--write", "--check", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.11.12
+    rev: v0.12.7
     hooks:
-      - id: ruff
+      - id: ruff-check
         args:
           - "--fix"
           - "--exit-non-zero-on-fix"
@@ -72,7 +72,7 @@ repos:
 
   # golang specific
   - repo: https://github.com/golangci/golangci-lint
-    rev: v2.1.6
+    rev: v2.3.0
     hooks:
       - id: golangci-lint
         entry: bash -c 'cd tictactoe_go && golangci-lint run --new-from-rev HEAD --fix'
@@ -174,7 +174,7 @@ repos:
 
   # javascript specific
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.28.0
+    rev: v9.32.0
     hooks:
       - id: eslint
         files: ^tictactoe_javascript/
@@ -201,7 +201,7 @@ repos:
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
-    rev: v1.75.8
+    rev: v1.79.1
     hooks:
       - id: rubocop
 
@@ -236,7 +236,7 @@ repos:
 
   # Perl specific
   - repo: https://github.com/perltidy/perltidy
-    rev: "20250311.06"
+    rev: "20250711"
     hooks:
       - id: perltidy
         files: ^tictactoe_perl/
@@ -256,13 +256,21 @@ repos:
         files: ^tictactoe_bash/
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.11.0-1
+    rev: v3.12.0-2
     hooks:
       # Choose one of:
       - id: shfmt # prebuilt upstream executable
         files: ^tictactoe_bash/
       # - id: shfmt-src     # build from source (requires/installs Go to build)
       # - id: shfmt-docker  # Docker image (requires Docker to run)
+
+  # zig specific
+  # - repo: https://github.com/batmac/pre-commit-zig
+  #   rev: 3ee6c779d70ef77c8cf9677f0feac71804306173
+  #   hooks:
+  #     - id: zig-fmt
+  #     - id: zig-build
+  #     - id: zig-build-test
 
   # lua specific lints
   # NONE
