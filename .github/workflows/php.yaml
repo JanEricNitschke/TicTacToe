@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_php
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@v2
       with:

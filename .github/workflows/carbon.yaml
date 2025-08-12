@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_carbon
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set VERSION env
         run: echo "VERSION=$(date -d yesterday +0.0.0-0.nightly.%Y.%m.%d)" >> "$GITHUB_ENV"
       - name: Setup Carbon
