@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_zig
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Setup zig
       uses: goto-bus-stop/setup-zig@v2
     - name: Check formatting

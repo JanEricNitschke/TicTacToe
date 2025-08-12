@@ -20,12 +20,12 @@ jobs:
       with:
           toolchain: stable
     - name: Checkout generic
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: JanEricNitschke/generic-lang
         path: generic-lang
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: main
     - name: Install generic

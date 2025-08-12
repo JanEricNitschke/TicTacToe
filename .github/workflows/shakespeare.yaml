@@ -20,7 +20,7 @@ jobs:
       with:
         python-version: "3.12"
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Install dependencies
       run: |
         pip install shakespearelang

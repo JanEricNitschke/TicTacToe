@@ -15,7 +15,7 @@ jobs:
       run:
         working-directory: ./tictactoe_tcl
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup Tcl
         run: sudo apt-get install tcl
       - name: Run the game

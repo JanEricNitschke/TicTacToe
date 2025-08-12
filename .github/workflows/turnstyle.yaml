@@ -16,7 +16,7 @@ jobs:
         working-directory: main/tictactoe_turnstyle
     steps:
     - name: Checkout turnstyle
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: JanEricNitschke/turnstyle
         path: turnstyle
@@ -25,7 +25,7 @@ jobs:
       with:
         ghc-version: '9.10.1'
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: main
     - name: Install turnstyle
