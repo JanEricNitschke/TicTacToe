@@ -254,7 +254,7 @@ var failed = 0;
 var passed = 0;
 
 fun report(test_function) {
-    print("Test " + str(test_function), "");
+    print(f"Test ${test_function}", "");
     if test_function() {
         print(" successful.");
         passed += 1;
@@ -281,5 +281,5 @@ if failed == 0 {
     test_result = "failed";
 }
 
-print("Test result: " + test_result + ". " + str(passed) + " passed; " + str(failed) + " failed.");
+print(f"Test result: ${test_result}. ${passed} passed; ${failed} failed.");
 assert(failed == 0);
