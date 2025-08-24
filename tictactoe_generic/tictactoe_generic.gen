@@ -54,7 +54,7 @@ class TicTacToe {
             if this.board[spot] == player {
                 result.spots_done += 1;
             }
-            unless this.player_markers.contains(this.board[spot]) {
+            unless this.board[spot] in this.player_markers {
                 result.spots_open.append(spot);
             }
         }
@@ -73,7 +73,7 @@ class TicTacToe {
 
     board_filled() {
         foreach (const spot in this.board) {
-            unless this.player_markers.contains(spot) {
+            unless spot in this.player_markers {
                 return false;
             }
         }
@@ -85,7 +85,7 @@ class TicTacToe {
             print("ERROR: Spot has to be in range [0-8]!");
             return false;
         }
-        if this.player_markers.contains(this.board[spot]) {
+        if this.board[spot] in this.player_markers {
             print("ERROR: Spot " + str(spot) + " is already occupied!");
             return false;
         }
@@ -113,7 +113,7 @@ class TicTacToe {
     get_empty_cells() {
         var empty_cells = [];
         for (var spot = 0; spot < len(this.board); spot += 1) {
-            unless this.player_markers.contains(this.board[spot]) {
+            unless this.board[spot] in this.player_markers {
                 empty_cells.append(spot);
             }
         }
@@ -213,10 +213,10 @@ class TicTacToe {
     get_yes_no(question) {
         var response;
         const valid_answers = ["Y", "y", "N", "n"];
-        until valid_answers.contains(response) {
+        until response in valid_answers {
             response = input(question);
         }
-        return ["Y", "y"].contains(response);
+        return response in ["Y", "y"];
     }
 
     get_ai_opponent() {
@@ -238,7 +238,7 @@ class TicTacToe {
         print("2: Medium");
         print("3: Hard");
         print("4: Impossible");
-        until [1, 2, 3, 4].contains(strength) {
+        until strength in [1, 2, 3, 4] {
             const response = input("How strong should the AI be? [1 - 4]");
             unless is_int(response) {
                 print("Bad choice");
