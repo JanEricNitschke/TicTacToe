@@ -41,7 +41,7 @@ class TicTacToe {
         const side_length = 3;
         for (var row = 0; row < side_length; row += 1) {
             for (var col = 0; col < side_length; col += 1) {
-                print("| " + str(this.board[(row * side_length) + col] + " |"), "");
+                print(f"| ${this.board[(row * side_length) + col]} |", "");
             }
             print("");
             print(line_separator);
@@ -86,7 +86,7 @@ class TicTacToe {
             return false;
         }
         if this.board[spot] in this.player_markers {
-            print("ERROR: Spot " + str(spot) + " is already occupied!");
+            print(f"ERROR: Spot ${spot} is already occupied!");
             return false;
         }
         this.board[spot] = player;
@@ -94,7 +94,7 @@ class TicTacToe {
     }
 
     player_turn(player) {
-        print("Player " + player + " turn.");
+        print(f"Player ${player} turn.");
         this.show_board();
 
         var valid_input = false;
@@ -193,7 +193,7 @@ class TicTacToe {
     }
 
     ai_turn(player) {
-        print("AI turn as " + player + ".");
+        print(f"AI turn as ${player}.");
         this.show_board();
         var ai_move;
         switch this.ai_strength {
@@ -267,7 +267,7 @@ class TicTacToe {
             }
 
             if this.is_player_win(player) {
-                print("Player " + player + " wins the game!");
+                print(f"Player ${player} wins the game!");
                 break;
             }
 
