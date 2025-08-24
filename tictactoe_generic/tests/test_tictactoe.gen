@@ -1,285 +1,146 @@
 from "../tictactoe_generic.gen" import TicTacToe;
 
+from "testing" import assert_true, assert_false, assert_equal;
 
 fun test_fix_spot() {
     var tictactoe = TicTacToe();
-    unless !tictactoe.fix_spot(-1, "X") {
-        return false;
-    }
-    unless !tictactoe.fix_spot(10, "X") {
-        return false;
-    }
-    unless tictactoe.fix_spot(2, "X") {
-        return false;
-    }
-    unless tictactoe.board[2] == "X" {
-        return false;
-    }
-    unless !tictactoe.fix_spot(2, "X") {
-        return false;
-    }
-    return true;
+    assert_false(tictactoe.fix_spot(-1, "X"), "should not fix spot below bounds");
+    assert_false(tictactoe.fix_spot(10, "X"), "should not fix spot above bounds");
+    assert_true(tictactoe.fix_spot(2, "X"), "should fix spot 2 with X");
+    assert_equal(tictactoe.board[2], "X", "spot 2 should contain X after fixing");
+    assert_false(tictactoe.fix_spot(2, "X"), "should not allow re-fixing spot 2");
 }
 
 fun test_is_player_win() {
     var tictactoe = TicTacToe();
     # Row win X
     tictactoe.board = ["X", "X", "X", "-", "-", "-", "-", "-", "-"];
-    unless tictactoe.is_player_win("X") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("O") {
-        return false;
-    }
+    assert_true(tictactoe.is_player_win("X"), "X should win with a full row");
+    assert_false(tictactoe.is_player_win("O"), "O should not win in this board");
     # Row no win
     tictactoe.board = ["X", "X", "O", "-", "-", "-", "-", "-", "-"];
-    unless !tictactoe.is_player_win("X") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("O") {
-        return false;
-    }
+    assert_false(tictactoe.is_player_win("X"), "X should not win with mixed row");
+    assert_false(tictactoe.is_player_win("O"), "O should not win with mixed row");
     # Col win X
     tictactoe.board = ["X", "O", "O", "X", "-", "-", "X", "-", "-"];
-    unless tictactoe.is_player_win("X") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("O") {
-        return false;
-    }
+    assert_true(tictactoe.is_player_win("X"), "X should win with full column");
+    assert_false(tictactoe.is_player_win("O"), "O should not win here");
     # Col no win
     tictactoe.board = ["X", "O", "O", "X", "-", "-", "O", "-", "-"];
-    unless !tictactoe.is_player_win("X") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("O") {
-        return false;
-    }
+    assert_false(tictactoe.is_player_win("X"), "X should not win in this board");
+    assert_false(tictactoe.is_player_win("O"), "O should not win in this board");
     # Diagonal win O
     tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "-", "O"];
-    unless tictactoe.is_player_win("O") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("X") {
-        return false;
-    }
+    assert_true(tictactoe.is_player_win("O"), "O should win on diagonal");
+    assert_false(tictactoe.is_player_win("X"), "X should not win here");
     # Diagonal no win
     tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
-    unless !tictactoe.is_player_win("O") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("X") {
-        return false;
-    }
+    assert_false(tictactoe.is_player_win("O"), "O should not win in this board");
+    assert_false(tictactoe.is_player_win("X"), "X should not win in this board");
     # Antidiagonal win O
     tictactoe.board = ["O", "X", "O", "X", "O", "-", "O", "O", "-"];
-    unless tictactoe.is_player_win("O") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("X") {
-        return false;
-    }
+    assert_true(tictactoe.is_player_win("O"), "O should win on anti-diagonal");
+    assert_false(tictactoe.is_player_win("X"), "X should not win here");
     # Antidiagonal no win
     tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
-    unless !tictactoe.is_player_win("O") {
-        return false;
-    }
-    unless !tictactoe.is_player_win("X") {
-        return false;
-    }
-    return true;
+    assert_false(tictactoe.is_player_win("O"), "O should not win in this board");
+    assert_false(tictactoe.is_player_win("X"), "X should not win in this board");
 }
 
 fun test_board_filled() {
     var tictactoe = TicTacToe();
     tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "X"];
-    unless tictactoe.board_filled() {
-        return false;
-    }
+    assert_true(tictactoe.board_filled(), "board should be filled");
     tictactoe.board = ["-", "X", "X", "X", "X", "X", "X", "X", "X"];
-    unless !tictactoe.board_filled() {
-        return false;
-    }
-    tictactoe.board = ["-", "X", "X", "X", "X", "X", "X", "X", "X"];
-    unless !tictactoe.board_filled() {
-        return false;
-    }
+    assert_false(tictactoe.board_filled(), "first spot open");
     tictactoe.board = ["X", "X", "X", "X", "-", "X", "X", "X", "X"];
-    unless !tictactoe.board_filled() {
-        return false;
-    }
+    assert_false(tictactoe.board_filled(), "middle spot open");
     tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "-"];
-    unless !tictactoe.board_filled() {
-        return false;
-    }
-    return true;
+    assert_false(tictactoe.board_filled(), "last spot open");
 }
 
 fun test_swap_player() {
     var tictactoe = TicTacToe();
-    unless tictactoe.swap_player("X") == "O" {
-        return false;
-    }
-    unless tictactoe.swap_player("O") == "X" {
-        return false;
-    }
-    return true;
+    assert_equal(tictactoe.swap_player("X"), "O", "swapping X should yield O");
+    assert_equal(tictactoe.swap_player("O"), "X", "swapping O should yield X");
 }
-
 
 fun test_get_empty_cells() {
     var tictactoe = TicTacToe();
     tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "X"];
-    unless tictactoe.get_empty_cells() == [] {
-        return false;
-    }
+    assert_equal(tictactoe.get_empty_cells(), [], "no empty cells expected");
     tictactoe.board = ["X", "O", "-", "O", "-", "X", "-", "X", "X"];
-    unless tictactoe.get_empty_cells() == [2, 4, 6] {
-        return false;
-    }
-    return true;
+    assert_equal(tictactoe.get_empty_cells(), [2, 4, 6], "should return indices of empty cells");
 }
-
 
 fun test_minmax() {
     var tictactoe = TicTacToe();
     tictactoe.board = ["X", "X", "X", "X", "X", "X", "X", "X", "X"];
-    unless tictactoe.minmax("X").end_state == 1 {
-        return false;
-    }
-    unless tictactoe.minmax("O").end_state == -1 {
-        return false;
-    }
+    assert_equal(tictactoe.minmax("X").end_state, 1, "X should win with full board for X");
+    assert_equal(tictactoe.minmax("O").end_state, -1, "O should lose with full board for X");
 
     tictactoe.board = ["X", "X", "-", "O", "X", "O", "X", "O", "O"];
     var move;
     move = tictactoe.minmax("X");
-    unless move.end_state == 1 and move.spot == 2 {
-        return false;
-    }
+    assert_equal(move.end_state, 1, "X should have winning move");
+    assert_equal(move.spot, 2, "X should pick spot 2");
     move = tictactoe.minmax("O");
-    unless move.end_state == 1 and move.spot == 2 {
-        return false;
-    }
+    assert_equal(move.end_state, 1, "O should block and keep end_state 1");
+    assert_equal(move.spot, 2, "O should pick spot 2");
     tictactoe.board = ["O", "O", "X", "X", "-", "O", "-", "O", "X"];
     move = tictactoe.minmax("X");
-    unless move.end_state == 0 and move.spot == 4 {
-        return false;
-    }
+    assert_equal(move.end_state, 0, "X should reach draw state");
+    assert_equal(move.spot, 4, "X should pick spot 4");
     tictactoe.board = ["O", "O", "X", "X", "-", "-", "-", "O", "X"];
     move = tictactoe.minmax("O");
-    unless move.end_state == 1 and move.spot == 4 {
-        return false;
-    }
+    assert_equal(move.end_state, 1, "O should find winning move");
+    assert_equal(move.spot, 4, "O should pick spot 4");
     tictactoe.board = ["O", "-", "-", "-", "-", "-", "-", "-", "-"];
     move = tictactoe.minmax("X");
-    unless move.end_state == 0 and move.spot == 4 {
-        return false;
-    }
-    return true;
+    assert_equal(move.end_state, 0, "X should reach draw state");
+    assert_equal(move.spot, 4, "X should pick center spot 4");
 }
 
 fun test_random_move() {
     var tictactoe = TicTacToe();
     var random_move = tictactoe.random_move();
-    unless random_move.spot >= 0 and random_move.spot <= 8 {
-        return false;
-    }
+    assert_true(random_move.spot >= 0 and random_move.spot <= 8, "random move should be within bounds 0-8");
     tictactoe.board = ["X", "X", "-", "O", "X", "O", "X", "O", "O"];
     random_move = tictactoe.random_move();
-    unless random_move.spot == 2 {
-        return false;
-    }
-    return true;
+    assert_equal(random_move.spot, 2, "only empty spot should be 2");
 }
-
 
 fun test_get_winning_move() {
     var tictactoe = TicTacToe();
     # Finds win on row
     tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
-    unless tictactoe.get_winning_move("X").spot == 8 {
-        return false;
-    }
+    assert_equal(tictactoe.get_winning_move("X").spot, 8, "X should win at spot 8");
     # Finds win on col
     tictactoe.board = ["O", "X", "-", "-", "O", "-", "O", "X", "X"];
-    unless tictactoe.get_winning_move("O").spot == 3 {
-        return false;
-    }
+    assert_equal(tictactoe.get_winning_move("O").spot, 3, "O should win at spot 3");
     # Finds win on diagonal
     tictactoe.board = ["O", "-", "-", "-", "O", "-", "-", "-", "-"];
-    unless tictactoe.get_winning_move("O").spot == 8 {
-        return false;
-    }
+    assert_equal(tictactoe.get_winning_move("O").spot, 8, "O should win at spot 8 (diagonal)");
     # Finds win on antidiagonal
     tictactoe.board = ["-", "-", "-", "-", "X", "-", "X", "-", "-"];
-    unless tictactoe.get_winning_move("X").spot == 2 {
-        return false;
-    }
+    assert_equal(tictactoe.get_winning_move("X").spot, 2, "X should win at spot 2 (antidiagonal)");
     # Finds no win
     tictactoe.board = ["O", "X", "X", "-", "O", "-", "O", "X", "-"];
-    unless tictactoe.get_winning_move("X") == nil {
-        return false;
-    }
-    return true;
+    assert_equal(tictactoe.get_winning_move("X"), nil, "X should have no winning move");
 }
 
 fun test_block_win_move() {
     var tictactoe = TicTacToe();
     # Finds block on row
     tictactoe.board = ["O", "X", "O", "X", "O", "-", "X", "X", "-"];
-    unless tictactoe.block_win_move("O").spot == 8 {
-        return false;
-    }
+    assert_equal(tictactoe.block_win_move("O").spot, 8, "O should block X at spot 8");
     # Finds block on col
     tictactoe.board = ["O", "-", "-", "-", "-", "-", "O", "X", "X"];
-    unless tictactoe.block_win_move("X").spot == 3 {
-        return false;
-    }
+    assert_equal(tictactoe.block_win_move("X").spot, 3, "X should block O at spot 3");
     # Finds block on diagonal
     tictactoe.board = ["O", "-", "-", "-", "O", "-", "-", "-", "-"];
-    unless tictactoe.block_win_move("X").spot == 8 {
-        return false;
-    }
+    assert_equal(tictactoe.block_win_move("X").spot, 8, "X should block O at spot 8 (diagonal)");
     # Finds block on antidiagonal
     tictactoe.board = ["-", "-", "-", "-", "X", "-", "X", "-", "-"];
-    unless tictactoe.block_win_move("O").spot == 2 {
-        return false;
-    }
-    return true;
+    assert_equal(tictactoe.block_win_move("O").spot, 2, "O should block X at spot 2 (antidiagonal)");
 }
-
-
-var failed = 0;
-var passed = 0;
-
-fun report(test_function) {
-    print(f"Test ${test_function}", "");
-    if test_function() {
-        print(" successful.");
-        passed += 1;
-    } else {
-        print(" failed.");
-        failed += 1;
-    }
-}
-
-report(test_fix_spot);
-report(test_is_player_win);
-report(test_board_filled);
-report(test_swap_player);
-report(test_get_empty_cells);
-report(test_minmax);
-report(test_random_move);
-report(test_get_winning_move);
-report(test_block_win_move);
-
-var test_result;
-if failed == 0 {
-    test_result = "ok";
-} else {
-    test_result = "failed";
-}
-
-print(f"Test result: ${test_result}. ${passed} passed; ${failed} failed.");
-assert(failed == 0);
