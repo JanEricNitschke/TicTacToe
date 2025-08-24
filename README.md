@@ -120,7 +120,7 @@ To run and test:
 
 ```bash
 generic tictactoe_generic.gen
-generic tests/test_tictactoe.gen
+generic --test tests/
 ```
 
 ## TicTacToe-kotlin
