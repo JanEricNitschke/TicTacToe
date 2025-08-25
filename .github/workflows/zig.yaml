@@ -25,3 +25,9 @@ jobs:
       run: zig build install
     - name: Test
       run: zig build test
+    - name: Run
+      run: |
+        ./zig-out/bin/tictactoe_zig < input1.txt
+        ./zig-out/bin/tictactoe_zig < input2.txt
+        ./zig-out/bin/tictactoe_zig < input3.txt
+        ./zig-out/bin/tictactoe_zig < input4.txt
