@@ -18,8 +18,14 @@ pub fn main() !void {
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
     const fixed_allocator = fba.allocator();
 
-    const stdin = io.getStdIn();
-    const stdout = io.getStdOut().writer();
+    var stdin_buffer: [1024]u8 = undefined;
+    var stdin_reader = std.fs.File.stdin().reader(&stdin_buffer);
+    const stdin = &stdin_reader.interface;
+
+    var stdout_buffer: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    const stdout = &stdout_writer.interface;
+
     var player = tictactoe.Player.X;
 
     var ai_marker = tictactoe.Player.X;
@@ -72,4 +78,5 @@ pub fn main() !void {
         player = player.swap();
     }
     try tictactoe.showBoard(&board, stdout);
+    try stdout.flush();
 }
