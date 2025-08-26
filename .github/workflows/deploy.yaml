@@ -47,7 +47,7 @@ jobs:
         working-directory: tictactoe_elm
 
       - name: Setup java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "oracle"
           java-version: "22"
@@ -81,7 +81,7 @@ jobs:
           cp docs/index.html public/index.html
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./public
 
