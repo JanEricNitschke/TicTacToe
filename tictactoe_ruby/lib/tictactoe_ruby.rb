@@ -130,11 +130,13 @@ module TictactoeRuby
 
     def minmax_base_cases(board, player)
       if board.player_win?(player) then return Move.new(-1, -1, 1)
-      elsif board.player_win?(Player.swap_player(player)) then return Move.new(-1, -1, -1) end
+      elsif board.player_win?(Player.swap_player(player)) then return Move.new(-1, -1, -1)
+      end
 
       empty_cells = board.empty_cells
       if empty_cells.empty? then return Move.new(-1, -1, 0)
-      elsif empty_cells.length == 9 then return random_move(board) end
+      elsif empty_cells.length == 9 then return random_move(board)
+      end
 
       nil
     end
