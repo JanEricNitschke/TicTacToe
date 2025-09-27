@@ -24,11 +24,7 @@ LET take_player_input = λk. λl. ((out_char 73) ((out_char 110) ((out_char 112)
 LET swap_player =  λp. ((((cmp_eq p) player1) player2) player1) IN
 LET loop_variant_1 = 100 IN
 LET loop_variant_2 = 101 IN
-LET game_loop_helper = λrec. λv. λp. λb.
-    LET loop_1 = rec loop_variant_1 IN
-    LET loop_2 = rec loop_variant_2 IN
-    cmp_eq v loop_variant_1
-         ((show_board b) ((take_player_input (λv. ((loop_2 p) (((set_nth b) p) v)))) 1))
-         ((((cmp_eq ((game_over b) p)) 1) zero) ((loop_1 (swap_player p)) b)) IN
+LET game_loop_helper = λrec. λp. λb.
+        ((((cmp_eq ((game_over b) (swap_player p))) 1) zero) ((show_board b) ((take_player_input (λv. ((rec (swap_player p)) (((set_nth b) p) v)))) 1))) IN
 LET game_loop = (y game_loop_helper) IN
-(((game_loop loop_variant_1) player1) board)
+((game_loop player1) board)
