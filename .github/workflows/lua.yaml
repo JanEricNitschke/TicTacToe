@@ -25,7 +25,7 @@ jobs:
         sparse-checkout: |
           luaunit.lua
         sparse-checkout-cone-mode: false
-    - uses: leafo/gh-actions-lua@v11
+    - uses: leafo/gh-actions-lua@v12
       with:
         luaVersion: "5.4"
     - name: Test
