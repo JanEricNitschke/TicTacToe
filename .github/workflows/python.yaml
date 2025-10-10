@@ -37,9 +37,7 @@ jobs:
         with:
           args: "format --check"
       - name: Typecheck with pyright
-        uses: jakebailey/pyright-action@v2
-        with:
-          working-directory: ./tictactoe_python
+        run: uv run pyright
       - name: Thorough check with pylint
         run: uv run pylint tictactoe/
       - name: Test with pytest
