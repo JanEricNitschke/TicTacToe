@@ -18,7 +18,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v5
     - name: Setup node
-      uses: actions/setup-node@v5
+      uses: actions/setup-node@v6
       with:
         node-version: latest
     - name: Install CoffeeScript and CoffeeLint
