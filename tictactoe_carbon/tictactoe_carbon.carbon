@@ -69,234 +69,129 @@ fn ReadInt(p: i32*) -> bool {
 // String literal printing
 
 fn PrintEnterMove() {
-  // 'E'
-  Core.PrintChar(69);
-  // 'n'
-  Core.PrintChar(110);
-  // 't'
-  Core.PrintChar(116);
-  // 'e'
-  Core.PrintChar(101);
-  // 'r'
-  Core.PrintChar(114);
-  // ' '
-  Core.PrintChar(32);
-  // 'm'
-  Core.PrintChar(109);
-  // 'o'
-  Core.PrintChar(111);
-  // 'v'
-  Core.PrintChar(118);
-  // 'e'
-  Core.PrintChar(101);
-  // ' '
-  Core.PrintChar(32);
-  // '('
-  Core.PrintChar(40);
-  // '0'
-  Core.PrintChar(48);
-  // '-'
-  Core.PrintChar(45);
-  // '8'
-  Core.PrintChar(56);
-  // ')'
-  Core.PrintChar(41);
-  // ':'
-  Core.PrintChar(58);
-  // ' '
-  Core.PrintChar(32);
+  Core.PrintChar('E');
+  Core.PrintChar('n');
+  Core.PrintChar('t');
+  Core.PrintChar('e');
+  Core.PrintChar('r');
+  Core.PrintChar(' ');
+  Core.PrintChar('m');
+  Core.PrintChar('o');
+  Core.PrintChar('v');
+  Core.PrintChar('e');
+  Core.PrintChar(' ');
+  Core.PrintChar('(');
+  Core.PrintChar('0');
+  Core.PrintChar('-');
+  Core.PrintChar('8');
+  Core.PrintChar(')');
+  Core.PrintChar(':');
+  Core.PrintChar(' ');
 }
 
 fn PrintInvalidInput() {
-  // 'I'
-  Core.PrintChar(73);
-  // 'n'
-  Core.PrintChar(110);
-  // 'v'
-  Core.PrintChar(118);
-  // 'a'
-  Core.PrintChar(97);
-  // 'l'
-  Core.PrintChar(108);
-  // 'i'
-  Core.PrintChar(105);
-  // 'd'
-  Core.PrintChar(100);
-  // ' '
-  Core.PrintChar(32);
-  // 'i'
-  Core.PrintChar(105);
-  // 'n'
-  Core.PrintChar(110);
-  // 'p'
-  Core.PrintChar(112);
-  // 'u'
-  Core.PrintChar(117);
-  // 't'
-  Core.PrintChar(116);
-  // '.'
-  Core.PrintChar(46);
-  // newline
-  Core.PrintChar(10);
+  Core.PrintChar('I');
+  Core.PrintChar('n');
+  Core.PrintChar('v');
+  Core.PrintChar('a');
+  Core.PrintChar('l');
+  Core.PrintChar('i');
+  Core.PrintChar('d');
+  Core.PrintChar(' ');
+  Core.PrintChar('i');
+  Core.PrintChar('n');
+  Core.PrintChar('p');
+  Core.PrintChar('u');
+  Core.PrintChar('t');
+  Core.PrintChar('.');
+  Core.PrintChar('\n');
 }
 
 fn PrintInvalidMove() {
-  // 'I'
-  Core.PrintChar(73);
-  // 'n'
-  Core.PrintChar(110);
-  // 'v'
-  Core.PrintChar(118);
-  // 'a'
-  Core.PrintChar(97);
-  // 'l'
-  Core.PrintChar(108);
-  // 'i'
-  Core.PrintChar(105);
-  // 'd'
-  Core.PrintChar(100);
-  // ' '
-  Core.PrintChar(32);
-  // 'm'
-  Core.PrintChar(109);
-  // 'o'
-  Core.PrintChar(111);
-  // 'v'
-  Core.PrintChar(118);
-  // 'e'
-  Core.PrintChar(101);
-  // '.'
-  Core.PrintChar(46);
-  // newline
-  Core.PrintChar(10);
+  Core.PrintChar('I');
+  Core.PrintChar('n');
+  Core.PrintChar('v');
+  Core.PrintChar('a');
+  Core.PrintChar('l');
+  Core.PrintChar('i');
+  Core.PrintChar('d');
+  Core.PrintChar(' ');
+  Core.PrintChar('m');
+  Core.PrintChar('o');
+  Core.PrintChar('v');
+  Core.PrintChar('e');
+  Core.PrintChar('.');
+  Core.PrintChar('\n');
 }
 
 fn PrintCellOccupied() {
-  // 'C'
-  Core.PrintChar(67);
-  // 'e'
-  Core.PrintChar(101);
-  // 'l'
-  Core.PrintChar(108);
-  // 'l'
-  Core.PrintChar(108);
-  // ' '
-  Core.PrintChar(32);
-  // 'o'
-  Core.PrintChar(111);
-  // 'c'
-  Core.PrintChar(99);
-  // 'c'
-  Core.PrintChar(99);
-  // 'u'
-  Core.PrintChar(117);
-  // 'p'
-  Core.PrintChar(112);
-  // 'i'
-  Core.PrintChar(105);
-  // 'e'
-  Core.PrintChar(101);
-  // 'd'
-  Core.PrintChar(100);
-  // '.'
-  Core.PrintChar(46);
-  // newline
-  Core.PrintChar(10);
+  Core.PrintChar('C');
+  Core.PrintChar('e');
+  Core.PrintChar('l');
+  Core.PrintChar('l');
+  Core.PrintChar(' ');
+  Core.PrintChar('o');
+  Core.PrintChar('c');
+  Core.PrintChar('c');
+  Core.PrintChar('u');
+  Core.PrintChar('p');
+  Core.PrintChar('i');
+  Core.PrintChar('e');
+  Core.PrintChar('d');
+  Core.PrintChar('.');
+  Core.PrintChar('\n');
 }
 
 fn PrintPlayerXWins() {
-  // 'P'
-  Core.PrintChar(80);
-  // 'l'
-  Core.PrintChar(108);
-  // 'a'
-  Core.PrintChar(97);
-  // 'y'
-  Core.PrintChar(121);
-  // 'e'
-  Core.PrintChar(101);
-  // 'r'
-  Core.PrintChar(114);
-  // ' '
-  Core.PrintChar(32);
-  // 'X'
-  Core.PrintChar(88);
-  // ' '
-  Core.PrintChar(32);
-  // 'w'
-  Core.PrintChar(119);
-  // 'i'
-  Core.PrintChar(105);
-  // 'n'
-  Core.PrintChar(110);
-  // 's'
-  Core.PrintChar(115);
-  // '!'
-  Core.PrintChar(33);
-  // newline
-  Core.PrintChar(10);
+  Core.PrintChar('P');
+  Core.PrintChar('l');
+  Core.PrintChar('a');
+  Core.PrintChar('y');
+  Core.PrintChar('e');
+  Core.PrintChar('r');
+  Core.PrintChar(' ');
+  Core.PrintChar('X');
+  Core.PrintChar(' ');
+  Core.PrintChar('w');
+  Core.PrintChar('i');
+  Core.PrintChar('n');
+  Core.PrintChar('s');
+  Core.PrintChar('!');
+  Core.PrintChar('\n');
 }
 
 fn PrintPlayerOWins() {
-  // 'P'
-  Core.PrintChar(80);
-  // 'l'
-  Core.PrintChar(108);
-  // 'a'
-  Core.PrintChar(97);
-  // 'y'
-  Core.PrintChar(121);
-  // 'e'
-  Core.PrintChar(101);
-  // 'r'
-  Core.PrintChar(114);
-  // ' '
-  Core.PrintChar(32);
-  // 'O'
-  Core.PrintChar(79);
-  // ' '
-  Core.PrintChar(32);
-  // 'w'
-  Core.PrintChar(119);
-  // 'i'
-  Core.PrintChar(105);
-  // 'n'
-  Core.PrintChar(110);
-  // 's'
-  Core.PrintChar(115);
-  // '!'
-  Core.PrintChar(33);
-  // newline
-  Core.PrintChar(10);
+  Core.PrintChar('P');
+  Core.PrintChar('l');
+  Core.PrintChar('a');
+  Core.PrintChar('y');
+  Core.PrintChar('e');
+  Core.PrintChar('r');
+  Core.PrintChar(' ');
+  Core.PrintChar('O');
+  Core.PrintChar(' ');
+  Core.PrintChar('w');
+  Core.PrintChar('i');
+  Core.PrintChar('n');
+  Core.PrintChar('s');
+  Core.PrintChar('!');
+  Core.PrintChar('\n');
 }
 
 fn PrintDraw() {
-  // 'I'
-  Core.PrintChar(73);
-  // 't'
-  Core.PrintChar(116);
-  // '\''
-  Core.PrintChar(39);
-  // 's'
-  Core.PrintChar(115);
-  // ' '
-  Core.PrintChar(32);
-  // 'a'
-  Core.PrintChar(97);
-  // ' '
-  Core.PrintChar(32);
-  // 'd'
-  Core.PrintChar(100);
-  // 'r'
-  Core.PrintChar(114);
-  // 'a'
-  Core.PrintChar(97);
-  // 'w'
-  Core.PrintChar(119);
-  // '!'
-  Core.PrintChar(33);
-  // newline
-  Core.PrintChar(10);
+  Core.PrintChar('I');
+  Core.PrintChar('t');
+  Core.PrintChar('\'');
+  Core.PrintChar('s');
+  Core.PrintChar(' ');
+  Core.PrintChar('a');
+  Core.PrintChar(' ');
+  Core.PrintChar('d');
+  Core.PrintChar('r');
+  Core.PrintChar('a');
+  Core.PrintChar('w');
+  Core.PrintChar('!');
+  Core.PrintChar('\n');
 }
 
 // Game Logic
@@ -332,21 +227,16 @@ class TicTacToe {
     while (i < 9) {
       let cell: i32 = self.board[i];
       if (cell == 0) {
-        // '-'
-        Core.PrintChar(45);
+        Core.PrintChar('-');
       } else if (cell == 1) {
-        // 'X'
-        Core.PrintChar(88);
+        Core.PrintChar('X');
       } else {
-        // 'O'
-        Core.PrintChar(79);
+        Core.PrintChar('O');
       }
       if (i % 3 == 2) {
-        // newline
-        Core.PrintChar(10);
+        Core.PrintChar('\n');
       } else {
-        // space
-        Core.PrintChar(32);
+        Core.PrintChar(' ');
       }
       i = i + 1;
     }
@@ -355,7 +245,9 @@ class TicTacToe {
   fn CheckWinner[self: Self]() -> i32 {
     var i: i32 = 0;
     while (i < 8) {
-      if (self.board[self.wins[i][0]] != 0 and self.board[self.wins[i][0]] == self.board[self.wins[i][1]] and self.board[self.wins[i][1]] == self.board[self.wins[i][2]]) {
+      if (self.board[self.wins[i][0]] != 0
+          and self.board[self.wins[i][0]] == self.board[self.wins[i][1]]
+          and self.board[self.wins[i][1]] == self.board[self.wins[i][2]]) {
         return self.board[self.wins[i][0]];
       }
       i = i + 1;
@@ -379,7 +271,6 @@ class TicTacToe {
     while (true) {
       self.PrintBoard();
       PrintEnterMove();
-
 
       if (not ReadInt(&move)) {
         PrintInvalidInput();
@@ -422,7 +313,6 @@ class TicTacToe {
       self->current_player = SwapPlayer(self->current_player);
     }
   }
-
 
   var board: array(i32, 9);
   var current_player: i32;
