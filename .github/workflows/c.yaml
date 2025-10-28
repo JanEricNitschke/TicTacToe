@@ -53,7 +53,7 @@ jobs:
           pip install mypy
           stubgen -p tictactoe_c -o stubs
       - name: Upload stubs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
             name: Stub-file-${{ matrix.python-version }}
             path: ./tictactoe_c/stubs/

@@ -39,7 +39,7 @@ jobs:
         flutter test --coverage
         perl C:\ProgramData\chocolatey\lib\lcov\tools\bin\genhtml -o coverage\html coverage\lcov.info
     - name: Archive code coverage results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: code-coverage-report
         path: ./tictactoe_dart/coverage/html/
