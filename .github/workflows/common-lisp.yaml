@@ -20,7 +20,7 @@ jobs:
         lisp: [sbcl-bin]
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       # setup-lisp requires an env variable to be set, not matrix.lisp
     - name: Set LISP env var
       run: echo "LISP=${{ matrix.lisp }}" >> $GITHUB_ENV

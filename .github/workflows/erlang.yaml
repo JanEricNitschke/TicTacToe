@@ -15,7 +15,7 @@ jobs:
       run:
         working-directory: ./tictactoe_erlang
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Erlang
         uses: erlef/setup-beam@v1
         with:

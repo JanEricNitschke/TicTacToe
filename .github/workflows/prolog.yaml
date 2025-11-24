@@ -19,7 +19,7 @@ jobs:
         working-directory: ./tictactoe_prolog
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install SWI-Prolog backend
       uses: logtalk-actions/setup-swi-prolog@master
       with:

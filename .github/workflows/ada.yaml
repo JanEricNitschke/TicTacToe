@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_ada
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       # Install and setup Alire package manager
       - name: Setup alire

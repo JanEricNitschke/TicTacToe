@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_zig
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Setup zig
       uses: mlugg/setup-zig@v2
       with:
