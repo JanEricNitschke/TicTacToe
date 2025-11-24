@@ -15,7 +15,7 @@ jobs:
       run:
         working-directory: ./tictactoe_smalltalk
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: hpi-swa/setup-smalltalkCI@v1
         id: smalltalkci
         with:

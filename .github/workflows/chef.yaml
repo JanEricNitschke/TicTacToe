@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_chef
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install dependencies
       run: |
         cargo install --locked --git 'https://github.com/JanEricNitschke/rchef'

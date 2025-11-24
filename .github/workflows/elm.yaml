@@ -15,7 +15,7 @@ jobs:
       run:
         working-directory: ./tictactoe_elm
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install elm, elm-format and cache the ELM_HOME directory
         uses: mpizenberg/elm-tooling-action@v1.7
         with:

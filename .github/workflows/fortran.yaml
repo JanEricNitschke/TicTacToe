@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_fortran
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Build
       run: |
         make
