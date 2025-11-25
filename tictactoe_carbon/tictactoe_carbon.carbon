@@ -289,14 +289,14 @@ class TicTacToe {
     return move;
   }
 
-  fn PlayGame[addr self: Self*]() {
+  fn PlayGame[ref self: Self]() {
     while (true) {
-      var move: i32 = self->InputMove();
-      self->board[move] = self->current_player;
+      var move: i32 = self.InputMove();
+      self.board[move] = self.current_player;
 
-      var winner: i32 = self->CheckWinner();
+      var winner: i32 = self.CheckWinner();
       if (winner != 0) {
-        self->PrintBoard();
+        self.PrintBoard();
         if (winner == 1) {
           PrintPlayerXWins();
         } else {
@@ -304,13 +304,13 @@ class TicTacToe {
         }
         break;
       }
-      if (self->IsFull()) {
-        self->PrintBoard();
+      if (self.IsFull()) {
+        self.PrintBoard();
         PrintDraw();
         break;
       }
 
-      self->current_player = SwapPlayer(self->current_player);
+      self.current_player = SwapPlayer(self.current_player);
     }
   }
 
