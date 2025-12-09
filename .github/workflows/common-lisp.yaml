@@ -17,7 +17,7 @@ jobs:
     strategy:
       # Each combination of lisp and os are tested
       matrix:
-        lisp: [sbcl-bin]
+        lisp: [sbcl-bin/2.5.10]
     steps:
     - name: Checkout repo
       uses: actions/checkout@v6
