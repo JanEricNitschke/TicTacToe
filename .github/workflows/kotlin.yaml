@@ -39,7 +39,7 @@ jobs:
       run: ./gradlew lint
 
     - name: Generate lint report
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with: # Define extra parameters
         name: lint_report.html # Name of the artifact to be uploaded
         path: tictactoe_kotlin/app/build/reports/ # Specifies the path where the artifact to be uploaded is located
@@ -50,7 +50,7 @@ jobs:
 
     #  Generates tests reports as an artifact
     - name: Generate test report
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: unit_tests_report.html
         path: tictactoe_kotlin/app/build/reports/tests/testDebugUnitTest/
@@ -90,7 +90,7 @@ jobs:
           script: ./gradlew connectedCheck
       #  Generates tests reports as an artifact
       - name: Generate test report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: android_tests_report.html
           path: tictactoe_kotlin/app/build/reports/androidTests/connected
