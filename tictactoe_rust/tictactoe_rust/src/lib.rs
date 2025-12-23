@@ -559,7 +559,7 @@ impl TicTacToe {
     // If there is none return a random one instead
     fn win_move(&self, player: char) -> Move {
         self.get_winning_move(player)
-            .map_or_else(|| self.random_move(), |win_move| win_move)
+            .unwrap_or_else(|| self.random_move())
     }
 
     // Tries to find a move that would block the opponent
@@ -576,7 +576,7 @@ impl TicTacToe {
             return win_move;
         }
         self.get_blocking_move(player)
-            .map_or_else(|| self.random_move(), |block_move| block_move)
+            .unwrap_or_else(|| self.random_move())
     }
 
     /// Gets the game settings from the user via the command line
