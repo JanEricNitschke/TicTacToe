@@ -23,10 +23,8 @@ jobs:
         distribution: 'oracle' # See 'Supported distributions' for available options
         java-version: '21'
         cache: 'gradle'
-    - name: Setup Gradle 8.13
+    - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
-      with:
-        gradle-version: 8.13
     - name: Make gradle executable
       run: chmod +x ./gradlew
 
@@ -69,10 +67,8 @@ jobs:
           java-version: 21
           distribution: 'oracle'
           cache: 'gradle'
-      - name: Setup Gradle 8.13
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-        with:
-          gradle-version: 8.13
       - name: Make gradle executable
         run: chmod +x ./gradlew
       - name: Enable KVM group perms
