@@ -5,8 +5,8 @@
 allow you to play `TicTacToe` alone or with a friend.
 */
 
-use rand::Rng;
-use rand::prelude::IndexedRandom;
+use rand::RngExt;
+use rand::seq::IndexedRandom;
 use std::collections;
 use std::ops::Neg;
 use std::ops::Not;
