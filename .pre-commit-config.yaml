@@ -28,7 +28,7 @@ repos:
       - id: check-builtin-literals
         language: python
   - repo: https://github.com/crate-ci/typos
-    rev: v1.39.2
+    rev: v1.43.4
     hooks:
       - id: typos
         args: []
@@ -40,7 +40,7 @@ repos:
         language: python
         args: ["--write", "--check", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.14.6
+    rev: v0.15.0
     hooks:
       - id: ruff-check
         args:
@@ -72,7 +72,7 @@ repos:
 
   # golang specific
   - repo: https://github.com/golangci/golangci-lint
-    rev: v2.6.2
+    rev: v2.8.0
     hooks:
       - id: golangci-lint
         entry: bash -c 'cd tictactoe_go && golangci-lint run --new-from-rev HEAD --fix'
@@ -174,7 +174,7 @@ repos:
 
   # javascript specific
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v10.0.0-alpha.0
+    rev: v10.0.0
     hooks:
       - id: eslint
         files: ^tictactoe_javascript/
@@ -201,7 +201,7 @@ repos:
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
-    rev: v1.81.7
+    rev: v1.84.1
     hooks:
       - id: rubocop
 
@@ -236,7 +236,7 @@ repos:
 
   # Perl specific
   - repo: https://github.com/perltidy/perltidy
-    rev: "20250912.01"
+    rev: "20260204"
     hooks:
       - id: perltidy
         files: ^tictactoe_perl/
