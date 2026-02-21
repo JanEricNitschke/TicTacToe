@@ -1,7 +1,5 @@
 // TicTacToe Game in Carbon
 
-package tictactoe;
-
 import Core library "io";
 
 // IO functionality
@@ -319,7 +317,8 @@ class TicTacToe {
   var wins: array(array(i32, 3), 8);
 }
 
-fn Run() {
+fn Run() -> i32 {
   var game: TicTacToe = TicTacToe.Make();
   game.PlayGame();
+  return 0;
 }
