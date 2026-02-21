@@ -21,7 +21,8 @@ jobs:
         run: echo "VERSION=$(date -d yesterday +0.0.0-0.nightly.%Y.%m.%d)" >> "$GITHUB_ENV"
       - name: Setup Carbon
         run: |
-          sudo apt install libgcc-11-dev
+          sudo apt-get update
+          sudo apt-get install -y libgcc-11-dev
           wget https://github.com/carbon-language/carbon-lang/releases/download/v${{ env.VERSION }}/carbon_toolchain-${{ env.VERSION }}.tar.gz
           tar -xvf carbon_toolchain-${{ env.VERSION }}.tar.gz
       - name: Compile
