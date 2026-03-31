@@ -176,7 +176,7 @@ class EndState(OrderedEnum):
         """Get the opposite outcome of a game.
 
         Returns:
-            'EndState': Opposite outcome of the game.
+            EndState: Opposite outcome of the game.
         """
         return EndState(-self.value)
 
