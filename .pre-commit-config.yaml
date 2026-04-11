@@ -34,7 +34,7 @@ repos:
         args: []
   # Python specific
   - repo: https://github.com/JanEricNitschke/pymend
-    rev: "v2.1.1"
+    rev: "v3.0.0"
     hooks:
       - id: pymend
         language: python
