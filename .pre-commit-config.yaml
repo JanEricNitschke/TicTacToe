@@ -201,7 +201,7 @@ repos:
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
-    rev: v1.86.0
+    rev: v1.86.1
     hooks:
       - id: rubocop
 
