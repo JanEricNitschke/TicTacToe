@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_eiffel
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
     - name: Install Eiffel
       run: |
         echo "deb [trusted=yes] http://apt.liberty-eiffel.org/ release main" | sudo tee -a /etc/apt/sources.list

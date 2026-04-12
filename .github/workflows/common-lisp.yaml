@@ -20,11 +20,11 @@ jobs:
         lisp: [sbcl-bin/2.5.10]
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       # setup-lisp requires an env variable to be set, not matrix.lisp
     - name: Set LISP env var
       run: echo "LISP=${{ matrix.lisp }}" >> $GITHUB_ENV
-    - uses: 40ants/setup-lisp@v2
+    - uses: 40ants/setup-lisp@76212e4597c780ad0e2ead24144b54310dffb6e3 # v4.2.1
     - name: Compile
       run: |
         ros -L sbcl-bin run -- --eval "(let ((warning (nth-value 1 (compile-file \"src/tictactoe_common-lisp.lisp\")))) (if warning (sb-ext:exit :code 1) (sb-ext:exit)))"

@@ -15,9 +15,9 @@ jobs:
       run:
         working-directory: ./tictactoe_pascal
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup Lazarus/Pascal
-        uses: gcarreno/setup-lazarus@v3
+        uses: gcarreno/setup-lazarus@3ee9d77e0c771b37c1069f218cb68bd5ce7c30fe # v3.4.1
         with:
           lazarus-version: "stable"
           with-cache: false

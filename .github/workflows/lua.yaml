@@ -16,8 +16,8 @@ jobs:
         working-directory: ./tictactoe_lua
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v6
-    - uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       with:
         repository: bluebird75/luaunit
         path: luaunit
@@ -25,7 +25,7 @@ jobs:
         sparse-checkout: |
           luaunit.lua
         sparse-checkout-cone-mode: false
-    - uses: leafo/gh-actions-lua@v12
+    - uses: leafo/gh-actions-lua@8c9e175e7a3d77e21f809eefbee34a19b858641b # v12.0.0
       with:
         luaVersion: "5.4"
     - name: Test

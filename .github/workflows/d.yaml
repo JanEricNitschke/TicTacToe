@@ -15,9 +15,9 @@ jobs:
       run:
         working-directory: ./tictactoe_d
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup D
-        uses: dlang-community/setup-dlang@v2
+        uses: dlang-community/setup-dlang@0a7469b93f791d83f30932c6fd105796c6966e20 # v2.0.0
         with:
           compiler: dmd
       - name: Run tests

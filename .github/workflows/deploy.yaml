@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Setup Pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Base setup
         run: mkdir -p public
@@ -37,7 +37,7 @@ jobs:
           cp -r tictactoe_javascript/ public/javascript
 
       - name: Install elm, elm-format and cache the ELM_HOME directory
-        uses: mpizenberg/elm-tooling-action@v1.7
+        uses: mpizenberg/elm-tooling-action@289c229bc9d81512230e8b827df4c78398e08113 # v1.7
         with:
           cache-key: elm-home-${{ hashFiles('elm-tooling.json', 'elm.json') }}
           cache-restore-key: elm-home
@@ -47,12 +47,12 @@ jobs:
         working-directory: tictactoe_elm
 
       - name: Setup java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: "oracle"
           java-version: "22"
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@13.5
+        uses: DeLaGuardo/setup-clojure@02f5a82b79a547523e664fe8a7a32ea14884d7b2 # 13.6
         with:
           cli: latest
       - name: Setup ClojureScript version
@@ -81,10 +81,10 @@ jobs:
           cp docs/index.html public/index.html
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: ./public
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

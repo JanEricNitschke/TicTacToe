@@ -16,9 +16,9 @@ jobs:
         working-directory: ./tictactoe_crystal
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
     - name: Install Crystal
-      uses: crystal-lang/install-crystal@v1
+      uses: crystal-lang/install-crystal@56684e85b94c6340f5035965d57dcfdedd1ab0de # v1.9.1
     - name: Check formatting
       run: crystal tool format --check
     - name: Build
