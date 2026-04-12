@@ -38,7 +38,7 @@ repos:
     hooks:
       - id: pymend
         language: python
-        args: ["--write", "--check", "--output-style=google"]
+        args: ["--write", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.15.10
     hooks:

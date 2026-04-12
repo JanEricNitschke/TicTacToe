@@ -15,8 +15,8 @@ jobs:
       run:
         working-directory: ./tictactoe_smalltalk
     steps:
-      - uses: actions/checkout@v6
-      - uses: hpi-swa/setup-smalltalkCI@v1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: hpi-swa/setup-smalltalkCI@a104c9a0c7d4226f32474ba28b15bba774fb24ed # v1.5.0
         id: smalltalkci
         with:
           smalltalk-image: 'Squeak64-trunk'

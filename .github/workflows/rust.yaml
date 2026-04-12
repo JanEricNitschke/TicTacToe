@@ -19,9 +19,9 @@ jobs:
         working-directory: ./tictactoe_rust
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
     - name: Set up Rust
-      uses: actions-rust-lang/setup-rust-toolchain@v1
+      uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
       with:
           toolchain: stable
           rustflags: ""
@@ -48,13 +48,14 @@ jobs:
         working-directory: ./tictactoe_rust/tictactoe_rust_python
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Set up Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
         with:
-          toolchain: stable
+            toolchain: stable
+            rustflags: ""
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Run python binding game
