@@ -72,7 +72,7 @@ pub const Player = enum {
 
     pub fn format(
         self: @This(),
-        writer: *std.io.Writer,
+        writer: *std.Io.Writer,
     ) !void {
         try writer.print("{s}", .{@tagName(self)});
     }
@@ -86,7 +86,7 @@ test "Swap player" {
 pub const GameBoard = [9]?Player;
 
 /// Pretty printer for the game board.
-pub fn showBoard(board: *GameBoard, writer: *std.io.Writer) !void {
+pub fn showBoard(board: *GameBoard, writer: *std.Io.Writer) !void {
     const line_separator = "---------------";
     try writer.print("{s}\n", .{line_separator});
     const side_length = 3;
@@ -105,7 +105,7 @@ pub fn showBoard(board: *GameBoard, writer: *std.io.Writer) !void {
 }
 
 /// Gets any u8 from user input.
-fn getUserInputNumber(reader: *std.io.Reader, writer: *std.io.Writer) !usize {
+fn getUserInputNumber(reader: *std.Io.Reader, writer: *std.Io.Writer) !usize {
     const input = try reader.takeDelimiterInclusive('\n');
     const line = std.mem.trimEnd(u8, input, "\r\n");
     const parsed = std.fmt.parseUnsigned(usize, line, 10) catch |err| switch (err) {
@@ -125,7 +125,7 @@ fn getUserInputNumber(reader: *std.io.Reader, writer: *std.io.Writer) !usize {
 /// Invalid characters, out of bounds values and trying to make a move
 /// on an occupied spot return errors (on top of the usual ones that can happen
 /// with input and output).
-fn fixSpot(player: Player, board: *GameBoard, reader: *std.io.Reader, writer: *std.io.Writer) !void {
+fn fixSpot(player: Player, board: *GameBoard, reader: *std.Io.Reader, writer: *std.Io.Writer) !void {
     try writer.print("Where to make your next move? [0-8]\n", .{});
     const parsed = try getUserInputNumber(reader, writer);
 
@@ -144,8 +144,8 @@ fn fixSpot(player: Player, board: *GameBoard, reader: *std.io.Reader, writer: *s
 
 test "fixSpot invalid character" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("a\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("a\n");
     var board = GameBoard{
         null,
         Player.X,
@@ -163,8 +163,8 @@ test "fixSpot invalid character" {
 
 test "fixSpot outofbounds" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("9\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("9\n");
     var board = GameBoard{
         null,
         Player.X,
@@ -181,8 +181,8 @@ test "fixSpot outofbounds" {
 
 test "fixSpot spot occupied" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("1\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("1\n");
     var board = GameBoard{
         null,
         Player.X,
@@ -199,8 +199,8 @@ test "fixSpot spot occupied" {
 
 test "fixSpot valid" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("2\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("2\n");
     var board = GameBoard{
         null,
         Player.X,
@@ -220,7 +220,7 @@ test "fixSpot valid" {
 /// Provides context of the current game state and then asks the user for
 /// input where they want to make their next move until they enter
 /// a valid value.
-pub fn playerTurn(player: Player, board: *GameBoard, reader: *std.io.Reader, writer: *std.io.Writer) !void {
+pub fn playerTurn(player: Player, board: *GameBoard, reader: *std.Io.Reader, writer: *std.Io.Writer) !void {
     try writer.print("Player {f} turn.\n", .{player});
     try showBoard(board, writer);
     try writer.flush();
@@ -238,8 +238,8 @@ pub fn playerTurn(player: Player, board: *GameBoard, reader: *std.io.Reader, wri
 
 test "player turn" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("2\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("2\n");
     var board = GameBoard{
         null,
         Player.X,
@@ -521,7 +521,7 @@ test "board filled" {
 /// Check if the game is over.
 /// This can either happen because the player who made the last move
 /// has won the game. Or if that is not the case, because the game is drawn.
-pub fn isGameOver(player: Player, board: *GameBoard, writer: *std.io.Writer, allocator: std.mem.Allocator) !bool {
+pub fn isGameOver(player: Player, board: *GameBoard, writer: *std.Io.Writer, allocator: std.mem.Allocator) !bool {
     if (try isPlayerWin(player, board, allocator)) {
         try writer.print("Player {f} wins the game!\n", .{player});
         return true;
@@ -536,7 +536,7 @@ pub fn isGameOver(player: Player, board: *GameBoard, writer: *std.io.Writer, all
 
 test "game still going" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
     var board = GameBoard{
         null,
         null,
@@ -554,7 +554,7 @@ test "game still going" {
 
 test "game drawn" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
     var board = GameBoard{
         Player.X,
         Player.O,
@@ -573,7 +573,7 @@ test "game drawn" {
 
 test "game won" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
     var board = GameBoard{
         Player.X,
         Player.X,
@@ -591,7 +591,7 @@ test "game won" {
 }
 
 /// Ask the player for a yes/no answer via stdin.
-fn getPlayerYesNo(question: []const u8, reader: *std.io.Reader, writer: *std.io.Writer) !bool {
+fn getPlayerYesNo(question: []const u8, reader: *std.Io.Reader, writer: *std.Io.Writer) !bool {
     try writer.print("{s} [y/n]\n", .{question});
     try writer.flush();
 
@@ -617,8 +617,8 @@ fn getPlayerYesNo(question: []const u8, reader: *std.io.Reader, writer: *std.io.
 
 test "player yes" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("y\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("y\n");
     try std.testing.expect(try getPlayerYesNo("Whatever?", &reader, &discarding.writer));
 
     reader = .fixed("Y\n");
@@ -627,8 +627,8 @@ test "player yes" {
 
 test "player no" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("n\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("n\n");
     try std.testing.expect(!try getPlayerYesNo("Whatever?", &reader, &discarding.writer));
 
     reader = .fixed("N\n");
@@ -636,13 +636,13 @@ test "player no" {
 }
 
 /// Ask the player if they want to play alone vs AI.
-pub fn getSinglePlayer(reader: *std.io.Reader, writer: *std.io.Writer) !bool {
+pub fn getSinglePlayer(reader: *std.Io.Reader, writer: *std.Io.Writer) !bool {
     return getPlayerYesNo("Play alone vs AI?", reader, writer);
 }
 
 /// Ask the player if the AI should make the first move.
 /// In that case the AI plays as 'X' as 'X' makes the first move.
-pub fn getAIStart(reader: *std.io.Reader, writer: *std.io.Writer) !Player {
+pub fn getAIStart(reader: *std.Io.Reader, writer: *std.Io.Writer) !Player {
     if (try getPlayerYesNo("Should the AI make the first move?", reader, writer)) {
         return Player.X;
     }
@@ -651,20 +651,20 @@ pub fn getAIStart(reader: *std.io.Reader, writer: *std.io.Writer) !Player {
 
 test "ai start yes" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("y\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("y\n");
     try std.testing.expectEqual(try getAIStart(&reader, &discarding.writer), Player.X);
 }
 
 test "ai start no" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("N\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("N\n");
     try std.testing.expectEqual(try getAIStart(&reader, &discarding.writer), Player.O);
 }
 
 /// Ask the player which strength the AI should play with.
-pub fn getAIStrength(reader: *std.io.Reader, writer: *std.io.Writer) !AIStrength {
+pub fn getAIStrength(reader: *std.Io.Reader, writer: *std.Io.Writer) !AIStrength {
     try writer.print("AI strength settings:\n", .{});
     try writer.print("1: Easy\n", .{});
     try writer.print("2: Medium\n", .{});
@@ -690,8 +690,8 @@ pub fn getAIStrength(reader: *std.io.Reader, writer: *std.io.Writer) !AIStrength
 
 test "ai strength valid" {
     var w_buffer: [256]u8 = undefined;
-    var discarding: std.io.Writer.Discarding = .init(&w_buffer);
-    var reader: std.io.Reader = .fixed("3\n");
+    var discarding: std.Io.Writer.Discarding = .init(&w_buffer);
+    var reader: std.Io.Reader = .fixed("3\n");
     try std.testing.expectEqual(try getAIStrength(&reader, &discarding.writer), AIStrength.Hard);
 }
 
@@ -797,10 +797,13 @@ test "get empty cells some" {
 /// Perform a move on a random open spot.
 /// The EndState is not relevant for random moves.
 /// It is only relevant for minmax moves.
-fn randomMove(board: *GameBoard, allocator: std.mem.Allocator) !Move {
+fn randomMove(board: *GameBoard, allocator: std.mem.Allocator, io: std.Io) !Move {
     const empty_cells = try getEmptyCells(board, allocator);
     defer allocator.free(empty_cells);
-    const random_index = std.crypto.random.intRangeLessThan(usize, 0, empty_cells.len);
+
+    const rng_impl: std.Random.IoSource = .{ .io = io };
+    const random_index = rng_impl.interface().intRangeLessThan(usize, 0, empty_cells.len);
+
     const random_element = empty_cells[random_index];
     return .{ .spot = random_element, .end_state = EndState.Loss };
 }
@@ -819,7 +822,7 @@ test "random move is valid" {
     };
 
     for (0..100) |_| {
-        const actual = try randomMove(&board, std.testing.allocator);
+        const actual = try randomMove(&board, std.testing.allocator, std.testing.io);
         const in_expectation = switch (actual.spot) {
             2, 4, 6 => true,
             else => false,
@@ -924,12 +927,12 @@ test "winning move finds null" {
 }
 
 /// Get a winning move. If none can be found return a random one.
-fn winMove(player: Player, board: *GameBoard, allocator: std.mem.Allocator) !Move {
+fn winMove(player: Player, board: *GameBoard, allocator: std.mem.Allocator, io: std.Io) !Move {
     const winning_move = try getWinningMove(player, board, allocator);
     if (winning_move) |move| {
         return move;
     } else {
-        return randomMove(board, allocator);
+        return randomMove(board, allocator, io);
     }
 }
 
@@ -946,7 +949,7 @@ test "winMove finds row" {
         null,
     };
     const expected: Move = .{ .spot = 8, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try winMove(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winMove(Player.X, &board, std.testing.allocator, std.testing.io));
 }
 
 test "winMove finds col" {
@@ -962,7 +965,7 @@ test "winMove finds col" {
         Player.X,
     };
     const expected: Move = .{ .spot = 3, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try winMove(Player.O, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winMove(Player.O, &board, std.testing.allocator, std.testing.io));
 }
 
 test "winMove finds diagonal" {
@@ -978,7 +981,7 @@ test "winMove finds diagonal" {
         null,
     };
     const expected: Move = .{ .spot = 8, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try winMove(Player.O, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winMove(Player.O, &board, std.testing.allocator, std.testing.io));
 }
 
 test "winMove finds antidiagonal" {
@@ -994,7 +997,7 @@ test "winMove finds antidiagonal" {
         null,
     };
     const expected: Move = .{ .spot = 2, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try winMove(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winMove(Player.X, &board, std.testing.allocator, std.testing.io));
 }
 
 test "winMove finds null" {
@@ -1010,11 +1013,11 @@ test "winMove finds null" {
         Player.X,
     };
     const expected: Move = .{ .spot = 3, .end_state = EndState.Loss };
-    try std.testing.expectEqualDeep(expected, try winMove(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winMove(Player.X, &board, std.testing.allocator, std.testing.io));
 }
 
 /// Get a winning, blocking or random move, in that order of availability.
-fn winBlockMove(player: Player, board: *GameBoard, allocator: std.mem.Allocator) !Move {
+fn winBlockMove(player: Player, board: *GameBoard, allocator: std.mem.Allocator, io: std.Io) !Move {
     const winning_move = try getWinningMove(player, board, allocator);
     if (winning_move) |move| {
         return move;
@@ -1023,7 +1026,7 @@ fn winBlockMove(player: Player, board: *GameBoard, allocator: std.mem.Allocator)
     if (blocking_move) |move| {
         return move;
     }
-    return randomMove(board, allocator);
+    return randomMove(board, allocator, io);
 }
 
 test "winBlockMove wins" {
@@ -1039,9 +1042,9 @@ test "winBlockMove wins" {
         null,
     };
     var expected: Move = .{ .spot = 2, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.X, &board, std.testing.allocator, std.testing.io));
     expected = .{ .spot = 5, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.O, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.O, &board, std.testing.allocator, std.testing.io));
 }
 
 test "winBlockMove blocks" {
@@ -1057,7 +1060,7 @@ test "winBlockMove blocks" {
         null,
     };
     const expected: Move = .{ .spot = 5, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.X, &board, std.testing.allocator, std.testing.io));
 }
 
 test "winBlockMove finds null" {
@@ -1073,11 +1076,11 @@ test "winBlockMove finds null" {
         Player.O,
     };
     const expected: Move = .{ .spot = 6, .end_state = EndState.Loss };
-    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try winBlockMove(Player.X, &board, std.testing.allocator, std.testing.io));
 }
 
 /// Get an optimal move.
-fn minMax(player: Player, board: *GameBoard, allocator: std.mem.Allocator) !Move {
+fn minMax(player: Player, board: *GameBoard, allocator: std.mem.Allocator, io: std.Io) !Move {
     // Game already won.
     if (try isPlayerWin(player, board, allocator)) {
         return .{ .spot = 0, .end_state = EndState.Win };
@@ -1096,7 +1099,7 @@ fn minMax(player: Player, board: *GameBoard, allocator: std.mem.Allocator) !Move
 
     // New game
     if (n_empty_cells == board.len) {
-        return randomMove(board, allocator);
+        return randomMove(board, allocator, io);
     }
 
     // Recursive step
@@ -1104,7 +1107,7 @@ fn minMax(player: Player, board: *GameBoard, allocator: std.mem.Allocator) !Move
     for (board, 0..) |value, spot| {
         if (value != null) continue;
         board[spot] = player;
-        const current_move = try minMax(player.swap(), board, allocator);
+        const current_move = try minMax(player.swap(), board, allocator, io);
         if (@intFromEnum(current_move.end_state.reverse()) >= @intFromEnum(best_move.end_state)) {
             best_move = .{ .spot = spot, .end_state = current_move.end_state.reverse() };
         }
@@ -1126,7 +1129,7 @@ test "minMax takes open spot" {
         Player.O,
     };
     const expected: Move = .{ .spot = 2, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try minMax(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try minMax(Player.X, &board, std.testing.allocator, std.testing.io));
 }
 
 test "minMax blocks win" {
@@ -1142,7 +1145,7 @@ test "minMax blocks win" {
         Player.X,
     };
     const expected: Move = .{ .spot = 4, .end_state = EndState.Draw };
-    try std.testing.expectEqualDeep(expected, try minMax(Player.X, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try minMax(Player.X, &board, std.testing.allocator, std.testing.io));
 }
 
 test "minMax takes win" {
@@ -1158,7 +1161,7 @@ test "minMax takes win" {
         Player.X,
     };
     const expected: Move = .{ .spot = 4, .end_state = EndState.Win };
-    try std.testing.expectEqualDeep(expected, try minMax(Player.O, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try minMax(Player.O, &board, std.testing.allocator, std.testing.io));
 }
 
 test "minMax finds best" {
@@ -1174,21 +1177,21 @@ test "minMax finds best" {
         null,
     };
     const expected: Move = .{ .spot = 4, .end_state = EndState.Draw };
-    try std.testing.expectEqualDeep(expected, try minMax(Player.O, &board, std.testing.allocator));
+    try std.testing.expectEqualDeep(expected, try minMax(Player.O, &board, std.testing.allocator, std.testing.io));
 }
 
 /// Have the AI perform a turn.
 /// The used algorithm is determined by `ai_strength`.
-pub fn aiTurn(player: Player, board: *GameBoard, ai_strength: AIStrength, writer: *std.io.Writer, allocator: std.mem.Allocator) !void {
+pub fn aiTurn(player: Player, board: *GameBoard, ai_strength: AIStrength, writer: *std.Io.Writer, allocator: std.mem.Allocator, io: std.Io) !void {
     try writer.print("Player {f} turn.\n", .{player});
     try showBoard(board, writer);
     try writer.flush();
     const ai_move = try switch (ai_strength) {
-        AIStrength.Easy => randomMove(board, allocator),
-        AIStrength.Medium => winMove(player, board, allocator),
-        AIStrength.Hard => winBlockMove(player, board, allocator),
-        AIStrength.Impossible => minMax(player, board, allocator),
+        AIStrength.Easy => randomMove(board, allocator, io),
+        AIStrength.Medium => winMove(player, board, allocator, io),
+        AIStrength.Hard => winBlockMove(player, board, allocator, io),
+        AIStrength.Impossible => minMax(player, board, allocator, io),
     };
     board[ai_move.spot] = player;
-    std.Thread.sleep(1 * std.time.ns_per_s);
+    try io.sleep(.fromSeconds(1), .real);
 }

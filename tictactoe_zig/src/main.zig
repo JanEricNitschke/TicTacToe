@@ -2,7 +2,6 @@
 
 const std = @import("std");
 const tictactoe = @import("tictactoe.zig");
-const io = std.io;
 
 test {
     std.testing.refAllDecls(@This());
@@ -18,12 +17,14 @@ pub fn main() !void {
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
     const fixed_allocator = fba.allocator();
 
+    var threaded: std.Io.Threaded = .init_single_threaded;
+    const single_threaded_io = threaded.io();
     var stdin_buffer: [1024]u8 = undefined;
-    var stdin_reader = std.fs.File.stdin().reader(&stdin_buffer);
+    var stdin_reader = std.Io.File.stdin().reader(single_threaded_io, &stdin_buffer);
     const stdin = &stdin_reader.interface;
 
     var stdout_buffer: [1024]u8 = undefined;
-    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    var stdout_writer = std.Io.File.stdout().writer(single_threaded_io, &stdout_buffer);
     const stdout = &stdout_writer.interface;
 
     var player = tictactoe.Player.X;
@@ -50,13 +51,7 @@ pub fn main() !void {
 
     while (true) {
         if (single_player and player == ai_marker) {
-            try tictactoe.aiTurn(
-                player,
-                &board,
-                ai_strength,
-                stdout,
-                fixed_allocator,
-            );
+            try tictactoe.aiTurn(player, &board, ai_strength, stdout, fixed_allocator, single_threaded_io);
         } else {
             try tictactoe.playerTurn(
                 player,
