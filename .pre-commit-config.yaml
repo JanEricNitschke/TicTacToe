@@ -174,7 +174,7 @@ repos:
 
   # javascript specific
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v10.2.0
+    rev: v10.2.1
     hooks:
       - id: eslint
         files: ^tictactoe_javascript/
