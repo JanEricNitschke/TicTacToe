@@ -171,7 +171,7 @@ pos_taken:
 ; Function to check if the current player has won
 ; The current player is always stored in r15b
 ; Returns:
-; rax: 1 of the game is won, 0 otherwise.
+; rax: 1 if the game is won, 0 otherwise.
 game_won:
 	mov rdi, 0 ; Tracks the condition being checked
 loop_conditions:
@@ -198,7 +198,7 @@ grabbed:
 	jne condition_failed         ; If the current spot is not occupied by the player
 	                             ; we are done with this condition and can check the next.
 	inc rsi                      ; If it is occupied, go to the next spot in the condition
-	cmp rsi, condition_size      ; If we have check all spots and
+	cmp rsi, condition_size      ; If we have checked all spots and
 	jne loop_condition           ; they are all occupied by the current player,
 	mov rax, 1                   ; we have a winner.
 	ret
@@ -212,7 +212,7 @@ no_win:
 ; Function to check if the board is full
 ; Used to check for draw after game_won
 ; Returns:
-; rax: 1 of the board is full, 0 otherwise.
+; rax: 1 if the board is full, 0 otherwise.
 game_draw:
 	mov rdi, 0
 loop_board:
@@ -289,7 +289,7 @@ board_delim1: db "---+---+---",10
 board_delim2: db " 0 | 0 | 0 ",10
 delim_size equ $ - board_delim2
 win_conditions:
-	db  0,1,2, ; Rows
+	db	0,1,2, ; Rows
 	db	3,4,5,
 	db	6,7,8,
 	db	0,3,6, ; Columns
