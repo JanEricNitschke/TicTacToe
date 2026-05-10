@@ -178,7 +178,6 @@ loop_conditions:
 	cmp rdi, n_conditions
 	je no_win
 	mov rsi, 0 ; Tracks the spot in the condition
-	mov rdx, 1 ; Tracks whether the current condition can still be fulfilled
 loop_condition:
 	; Calculate the offset for the win condition
 	; Second spot in third condition (6,7,8)
