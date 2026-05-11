@@ -17,7 +17,6 @@
   (println (str (nth board 6) " | " (nth board 7) " | " (nth board 8))))
 
 (defn player-turn [player board]
-
   (loop []
     (println (str "Player " player " turn"))
     (show-board board)
