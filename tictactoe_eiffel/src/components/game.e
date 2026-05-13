@@ -15,8 +15,6 @@ feature {ANY} -- Initialization
             temp_o_ai: AI_PLAYER
             row1, row2, row3, col1, col2, col3, diag1, diag2: ARRAY [INTEGER]
         do
-
-
             create board.make
 
             row1 := << {INTEGER_32 1}, {INTEGER_32 2}, {INTEGER_32 3} >>
@@ -44,8 +42,6 @@ feature {ANY} -- Initialization
                 create temp_o_player.make('O')
                 o_player := temp_o_player
             end
-
-
         end
 
 feature {ANY} -- Game Logic
