@@ -1,21 +1,21 @@
-from random import seed, random_ui64
-from time import sleep
-import sys
+from std.random import seed, random_ui64
+from std.time import sleep
+import std.sys
 
-alias OPEN: UInt8 = 0  # (00)
-alias X: UInt8 = 1  # (01)
-alias O: UInt8 = 2  # (10)
-alias BOARD = SIMD[DType.uint8, _]
+comptime OPEN: UInt8 = 0  # (00)
+comptime X: UInt8 = 1  # (01)
+comptime O: UInt8 = 2  # (10)
+comptime BOARD = SIMD[DType.uint8, _]
 
 
-@value
-struct Move:
+@fieldwise_init
+struct Move(ImplicitlyCopyable):
     var spot: Int
     var score: Int
 
 
 @always_inline("nodebug")
-fn _board_construction_checks[size: Int]():
+def _board_construction_checks[size: Int]():
     """Checks if the board size is valid.
 
     The board size is valid if it is a power of two and is positive.
@@ -23,11 +23,11 @@ fn _board_construction_checks[size: Int]():
     Parameters:
         size: The number of elements in the board.
     """
-    constrained[size > 0, "board size must be > 0"]()
-    constrained[size & (size - 1) == 0, "board size must be power of 2"]()
+    comptime assert size > 0, "board size must be > 0"
+    comptime assert size & (size - 1) == 0, "board size must be power of 2"
 
 
-fn _swap_player(player: UInt8) -> UInt8:
+def _swap_player(player: UInt8) -> UInt8:
     """Returns the other player.
 
     Args:
@@ -39,7 +39,7 @@ fn _swap_player(player: UInt8) -> UInt8:
     return 3 - player
 
 
-fn _minmax[player: UInt8, size: Int](mut board: BOARD[size * size]) -> Move:
+def _minmax[player: UInt8, size: Int](mut board: BOARD[size * size]) -> Move:
     """Returns the best move for the player.
 
     Args:
@@ -47,6 +47,7 @@ fn _minmax[player: UInt8, size: Int](mut board: BOARD[size * size]) -> Move:
 
     Parameters:
         player: The player to get the best move for.
+        size: The side length of the board
 
     Returns:
         The best move for the player.
@@ -54,8 +55,7 @@ fn _minmax[player: UInt8, size: Int](mut board: BOARD[size * size]) -> Move:
     if _is_winner_param[player](board):
         return Move(-1, 1)
 
-    @parameter
-    if player == X:
+    comptime if player == X:
         if _is_winner_param[O](board):
             return Move(-1, -1)
     else:
@@ -67,21 +67,21 @@ fn _minmax[player: UInt8, size: Int](mut board: BOARD[size * size]) -> Move:
     var best_move = Move(-1, -2)
     var score: Int
     for spot in empty_cells:
-        board[spot[]] = player
-        if player == X:
+        board[spot] = player
+        comptime if player == X:
             score = -(_minmax[O](board).score)
         else:
             score = -(_minmax[X](board).score)
-        board[spot[]] = OPEN
+        board[spot] = OPEN
         if score > best_move.score:
             best_move.score = score
-            best_move.spot = spot[]
+            best_move.spot = spot
         if score == 1:
             break
     return best_move
 
 
-fn _get_empty_cells[size: Int](board: BOARD[size * size]) -> List[Int]:
+def _get_empty_cells[size: Int](board: BOARD[size * size]) -> List[Int]:
     """Returns the empty cells in the board.
 
     Args:
@@ -92,14 +92,13 @@ fn _get_empty_cells[size: Int](board: BOARD[size * size]) -> List[Int]:
     """
     var empty_cells = List[Int]()
 
-    @parameter
-    for i in range(board.size):
+    comptime for i in range(board.size):
         if board[i] == OPEN:
             empty_cells.append(i)
-    return empty_cells
+    return empty_cells^
 
 
-fn _ai_turn[
+def _ai_turn[
     size: Int, //, player: UInt8
 ](mut board: BOARD[size * size], strength: UInt8) -> Int:
     """Returns the move that the X player made.
@@ -123,14 +122,14 @@ fn _ai_turn[
     var empty_cells = _get_empty_cells(board)
     var spot: Int
     if len(empty_cells) >= 12:
-        spot = empty_cells[Int(random_ui64(0, len(empty_cells) - 1))]
+        spot = empty_cells[Int(random_ui64(0, UInt64(len(empty_cells) - 1)))]
     else:
         spot = _minmax[player](board).spot
     sleep(UInt(1))
     return spot
 
 
-fn _player_turn[size: Int](board: BOARD[size * size], player: UInt8) raises -> Int:
+def _player_turn[size: Int](board: BOARD[size * size], player: UInt8) raises -> Int:
     """Returns the move that the player made.
 
     Args:
@@ -165,7 +164,7 @@ fn _player_turn[size: Int](board: BOARD[size * size], player: UInt8) raises -> I
     return move
 
 
-fn _int_to_player(player: UInt8) -> String:
+def _int_to_player(player: UInt8) -> String:
     """Returns the player as a string.
 
     Args:
@@ -182,14 +181,14 @@ fn _int_to_player(player: UInt8) -> String:
         return "-"
 
 
-fn _show_board[size: Int](board: BOARD[size * size]):
+def _show_board[size: Int](board: BOARD[size * size]):
     """Prints the board to the console.
 
     Args:
         board: The board to print.
     """
-    var SEP: String = "-"
-    var SEPARATOR: String = SEP * (5 * size)
+    comptime SEP: String = "-"
+    comptime SEPARATOR: String = SEP * (5 * size)
     print(SEPARATOR)
     for i in range(size):
         for j in range(size):
@@ -198,7 +197,7 @@ fn _show_board[size: Int](board: BOARD[size * size]):
         print(SEPARATOR)
 
 
-fn _is_full[size: Int](board: BOARD[size * size]) -> Bool:
+def _is_full[size: Int](board: BOARD[size * size]) -> Bool:
     """Returns True if the board is full.
 
     Args:
@@ -207,29 +206,25 @@ fn _is_full[size: Int](board: BOARD[size * size]) -> Bool:
     Returns:
         True if the board is full, False otherwise.
     """
-    return all(board != OPEN)
+    return all(board.ne(OPEN))
 
 
-fn _is_winner_param[size: Int, //, player: UInt8](board: BOARD[size * size]) -> Bool:
+def _is_winner_param[size: Int, //, player: UInt8](board: BOARD[size * size]) -> Bool:
     var reference: SIMD[DType.uint8, board.size]
 
-    @parameter
-    for row in range(size):
+    comptime for row in range(size):
         reference = SIMD[DType.uint8, board.size](0)
 
-        @parameter
-        for col in range(size):
+        comptime for col in range(size):
             reference[row * size + col] = player
         if (board & reference).reduce_bit_count() == size:
             return True
 
     # Check columns
-    @parameter
-    for col in range(size):
+    comptime for col in range(size):
         reference = SIMD[DType.uint8, board.size](0)
 
-        @parameter
-        for row in range(size):
+        comptime for row in range(size):
             reference[row * size + col] = player
         if (board & reference).reduce_bit_count() == size:
             return True
@@ -237,8 +232,7 @@ fn _is_winner_param[size: Int, //, player: UInt8](board: BOARD[size * size]) -> 
     # Check main diagonal
     reference = SIMD[DType.uint8, board.size](0)
 
-    @parameter
-    for i in range(size):
+    comptime for i in range(size):
         reference[i * size + i] = player
     if (board & reference).reduce_bit_count() == size:
         return True
@@ -246,15 +240,14 @@ fn _is_winner_param[size: Int, //, player: UInt8](board: BOARD[size * size]) -> 
     # Check anti-diagonal
     reference = SIMD[DType.uint8, board.size](0)
 
-    @parameter
-    for i in range(size):
+    comptime for i in range(size):
         reference[i * size + (size - 1 - i)] = player
     if (board & reference).reduce_bit_count() == size:
         return True
     return False
 
 
-fn _is_winner[size: Int](board: BOARD[size * size], player: UInt8) -> Bool:
+def _is_winner[size: Int](board: BOARD[size * size], player: UInt8) -> Bool:
     """Returns True if the player is the winner.
 
     Args:
@@ -269,7 +262,7 @@ fn _is_winner[size: Int](board: BOARD[size * size], player: UInt8) -> Bool:
     return _is_winner_param[O](board)
 
 
-fn _play[
+def _play[
     size: Int
 ](
     mut board: BOARD[size * size],
@@ -284,9 +277,6 @@ fn _play[
         player: The player that should make the move.
         x_strength: The strength of the X player. (0 means human)
         o_strength: The strength of the O player. (0 means human)
-
-    Returns:
-        The move the player made as an index into the board.
     """
     var move: Int
     if player == X and x_strength > 0:
@@ -298,7 +288,7 @@ fn _play[
     board[move] = player
 
 
-fn play[size: Int](x_strength: UInt8, o_strength: UInt8) raises:
+def play[size: Int](x_strength: UInt8, o_strength: UInt8) raises:
     seed()
     _board_construction_checks[size]()
     var board = BOARD[size * size](0)

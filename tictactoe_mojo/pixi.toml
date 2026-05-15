@@ -1,4 +1,4 @@
-[project]
+[workspace]
 channels = ["conda-forge", "https://conda.modular.com/max"]
 description = "Add a short description here"
 name = "tictactoe_mojo"
@@ -9,3 +9,4 @@ version = "0.1.0"
 
 [dependencies]
 max = "*"
+mojo = ">=1.0.0b1,<2"

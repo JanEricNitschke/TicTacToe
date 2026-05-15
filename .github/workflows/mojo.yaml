@@ -21,8 +21,8 @@ jobs:
         with:
           manifest-path: ./tictactoe_mojo/pixi.toml
       - name: Build
-        run: pixi run mojo build main.🔥
+        run: pixi run mojo build main.mojo
       - name: Run
         run: ./main
       - name: Test
-        run: pixi run mojo test -I . test
+        run: pixi run mojo run -I . test/test_game.mojo

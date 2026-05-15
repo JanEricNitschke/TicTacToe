@@ -1,8 +1,8 @@
-from testing import assert_equal
+from std.testing import assert_equal, TestSuite
 from tictactoe.game import Move, BOARD, X, O, OPEN, _swap_player, _minmax
 
 
-def test_minmax():
+def test_minmax() raises:
     var board = BOARD[16](
         X,
         O,
@@ -26,6 +26,9 @@ def test_minmax():
     assert_equal(result.spot, 12)
 
 
-def test_swap_player():
+def test_swap_player() raises:
     assert_equal(_swap_player(X), O)
     assert_equal(_swap_player(O), X)
+
+def main() raises:
+    TestSuite.discover_tests[__functions_in_module()]().run()
