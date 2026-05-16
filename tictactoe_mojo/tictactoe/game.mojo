@@ -1,3 +1,57 @@
+# =========================================================================
+# Future optimization ideas
+# =========================================================================
+#
+# --- Move ordering ---
+# Alpha-beta prunes more when good moves are tried first.  Trying center
+# and corner cells before edges would improve the effective branching
+# factor.  A static priority table indexed by cell position costs almost
+# nothing and can dramatically reduce nodes visited on larger boards.
+#
+# --- Iterative deepening ---
+# Search depth 1, then 2, etc.  Each shallow pass populates the TT, so
+# deeper passes benefit from cached results AND better move ordering
+# (try the best move from the previous depth first).  The overhead of
+# re-searching shallow depths is small because those trees are tiny.
+#
+# --- Symmetry reduction ---
+# A 4x4 board has 8 symmetries (4 rotations x 2 reflections).  Before
+# storing a TT entry, canonicalize the board to its lexicographically
+# smallest symmetric equivalent.  This reduces unique states by up to
+# 8x, shrinking the TT and increasing cache hits.  Trade-off: computing
+# the canonical form adds cost per node.
+#
+# --- Heuristic evaluation for larger boards ---
+# For boards where full solving is infeasible (6x6+), replace terminal-
+# only scoring (-1/0/+1) with a heuristic at a depth cutoff:
+#   - Count "open" lines (where the opponent has no pieces).
+#   - Weight lines by pieces already placed (3-of-4 >> 1-of-4).
+#   - Penalize positions where the opponent has a fork (two threats).
+# This turns the engine from an exact solver into a depth-limited AI,
+# similar to how chess engines work.
+#
+# --- Zobrist hashing for TT keys ---
+# The current TT key packs both bitmasks + player bit into a KeyInt,
+# limiting board size to what fits.  Zobrist hashing assigns a random
+# number to each (cell, player) pair and XORs them together.  The hash
+# is incrementally updated per move (one XOR), making it O(1) regardless
+# of board size.  Collisions are possible but rare with 64-bit hashes.
+# This would decouple board size from key type width entirely.
+#
+# --- Comptime win mask array ---
+# The win mask helpers are called inside comptime-for loops, so the
+# compiler likely folds them already.  Making this explicit by storing
+# all masks in a comptime InlineArray would guarantee zero runtime
+# overhead and make the generated code inspectable.
+#
+# --- SIMD-parallel win checking ---
+# Instead of checking win patterns sequentially (even if unrolled), pack
+# all masks into a SIMD register and check them in parallel.  For a 4x4
+# board, a SIMD[DType.uint16, 16] could hold all 10 masks and do a
+# single SIMD AND + compare.  Whether this beats the unrolled scalar
+# version depends on register pressure and reduction cost.
+# =========================================================================
+
 from std.bit import bit_width
 from std.collections import Dict
 from std.random import seed, random_ui64
@@ -63,6 +117,7 @@ def _swap_player(player: PlayerInt) -> PlayerInt:
 # --- Bitboard helpers ---
 # The board is stored as two BoardInt bitmasks: one for X, one for O.
 # Bit i is set if position i is occupied by that player.
+# Bit 0 (rightmost) is the top-left cell; bit 15 is the bottom-right.
 #
 # 4x4 board layout (bit positions):
 #
@@ -71,6 +126,21 @@ def _swap_player(player: PlayerInt) -> PlayerInt:
 #      4    5    6    7     row 1
 #      8    9   10   11     row 2
 #     12   13   14   15     row 3
+#
+# Example board:
+#
+#   X | O | - | -        X at positions 0, 5, 8
+#   - | X | - | -        O at positions 1, 9, 13
+#   X | O | - | -
+#   - | O | - | -
+#
+#   x_bits = 0b0000_0001_0010_0001  (bits 0, 5, 8)
+#                 15..12  11..8  7..4  3..0
+#                  0000   0001   0010  0001
+#
+#   o_bits = 0b0010_0010_0000_0010  (bits 1, 9, 13)
+#                 15..12  11..8  7..4  3..0
+#                  0010   0010   0000  0010
 
 
 def _row_mask[size: Int, row: Int]() -> BoardInt:
@@ -711,8 +781,7 @@ def _minmax_impl[player: PlayerInt, size: Int](
         )
 
     # Check if we've already evaluated this exact board state.
-    var cached = tt.get(key)
-    if cached:
+    if (cached := tt.get(key)):
         var v = cached.value()
         var flag = _tt_flag(v)
         var score = _tt_score(v)
@@ -735,41 +804,43 @@ def _minmax_impl[player: PlayerInt, size: Int](
     var occupied = x_bits | o_bits
 
     for pos in range(size * size):
-        if (occupied >> BoardInt(pos)) & 1 == 0:
-            # Place the current player's piece at `pos` by setting the bit.
-            # Because x_bits/o_bits are owned copies, the caller's state
-            # is untouched — no undo step needed.
-            var bit = BoardInt(1) << BoardInt(pos)
-            var score: Int
-            # Recurse as the opponent with a negated, flipped window.
-            # Their +1 is our -1, so we negate the returned score.
-            comptime if player == X:
-                score = -_minmax_impl[O, size](
-                    x_bits | bit, o_bits, -beta, -cur_alpha, tt
-                ).score
-            else:
-                score = -_minmax_impl[X, size](
-                    x_bits, o_bits | bit, -beta, -cur_alpha, tt
-                ).score
+        if (occupied >> BoardInt(pos)) & 1:
+            continue
+        # Place the current player's piece at `pos` by setting the bit.
+        # Because x_bits/o_bits are owned copies, the caller's state
+        # is untouched — no undo step needed.
+        var bit = BoardInt(1) << BoardInt(pos)
+        var score: Int
+        # Recurse as the opponent with a negated, flipped window.
+        # Their +1 is our -1, so we negate the returned score.
+        comptime if player == X:
+            score = -_minmax_impl[O, size](
+                x_bits | bit, o_bits, -beta, -cur_alpha, tt
+            ).score
+        else:
+            score = -_minmax_impl[X, size](
+                x_bits, o_bits | bit, -beta, -cur_alpha, tt
+            ).score
 
-            # Update best move if this score is higher.
-            if score > best.score:
-                best = Move(pos, score)
-                if score > cur_alpha:
-                    cur_alpha = score  # Raise our guaranteed lower bound
+        # Update best move if this score is higher.
+        if score > best.score:
+            best = Move(pos, score)
+            if score > cur_alpha:
+                cur_alpha = score  # Raise our guaranteed lower bound
 
-            # Beta cutoff: the opponent already has a better option
-            # elsewhere, so they'd never let us reach this position.
-            # No need to search remaining moves.
-            if cur_alpha >= beta:
-                # LOWER: We found a move good enough to cause a cutoff,
-                # but we didn't try all moves — there might be an even
-                # better one we never looked at.  So the true value is
-                # at LEAST best.score, possibly higher.
-                tt[key] = _tt_pack(best.score, best.spot, TT_LOWER)
-                return best
+        # Beta cutoff: the opponent already has a better option
+        # elsewhere, so they'd never let us reach this position.
+        # No need to search remaining moves.
+        if cur_alpha >= beta:
+            break
+
 
     # --- Store result in transposition table ---
+
+    # LOWER: We found a move good enough to cause a cutoff,
+    # but we didn't try all moves — there might be an even
+    # better one we never looked at.  So the true value is
+    # at LEAST best.score, possibly higher.
     #
     # We searched ALL moves (no cutoff).  Two cases:
     #
@@ -793,7 +864,13 @@ def _minmax_impl[player: PlayerInt, size: Int](
     # Parent O gets -0=0, thinks it's a draw.  But true value is -1
     # for X = +1 for O — O misses a win.  UPPER prevents this by
     # forcing a re-search when 0 > alpha(-1).
-    var flag = TT_UPPER if best.score <= alpha else TT_EXACT
+    var flag: EntryInt
+    if best.score >= beta:
+        flag = TT_LOWER
+    elif best.score <= alpha:
+        flag = TT_UPPER
+    else:
+        flag = TT_EXACT
     tt[key] = _tt_pack(best.score, best.spot, flag)
     return best
 
