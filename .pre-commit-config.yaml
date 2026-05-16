@@ -72,7 +72,7 @@ repos:
 
   # golang specific
   - repo: https://github.com/golangci/golangci-lint
-    rev: v2.11.4
+    rev: v2.12.2
     hooks:
       - id: golangci-lint
         entry: bash -c 'cd tictactoe_go && golangci-lint run --new-from-rev HEAD --fix'
