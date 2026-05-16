@@ -5,3 +5,5 @@
 # magic environments
 .magic
 main
+tictactoe
+bench*
