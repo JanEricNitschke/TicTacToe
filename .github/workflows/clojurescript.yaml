@@ -22,7 +22,7 @@ jobs:
           distribution: 'oracle'
           java-version: '22'
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@02f5a82b79a547523e664fe8a7a32ea14884d7b2 # 13.6
+        uses: DeLaGuardo/setup-clojure@4c7a6f613e5089821bb3bb2a33a3ee115578580d # 13.6
         with:
           cli: latest
       - name: Run
