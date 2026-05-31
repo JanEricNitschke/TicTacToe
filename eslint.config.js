@@ -1,4 +1,3 @@
-/* eslint-env node */
 import js from "@eslint/js";
 // import eslintConfigPrettier from "eslint-config-prettier";
 // import eslintConfigGoogle from "eslint-config-google";

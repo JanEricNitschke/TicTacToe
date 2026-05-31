@@ -77,8 +77,8 @@ function swapPlayer() {
  *     (as (x, y) tuple). or 'false' if no win was found.
  */
 function isPlayerWin(curPlayer, state) {
-  let win = false;
   const n = state.length;
+  let win;
   let fields;
   // checking rows
   for (let i = 0; i < n; i++) {
@@ -523,7 +523,7 @@ function blockWinMove(curPlayer, state) {
  * @return {undefined} - Returns nothing. Only early exit.
  */
 function aiTurn() {
-  let best = null;
+  let best;
   // Get a move according to the difficulty setting
   switch (difficultySetting) {
     case 1:
