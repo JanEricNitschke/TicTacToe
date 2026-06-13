@@ -218,7 +218,7 @@ class TicTacToe {
     };
   }
 
-  fn PrintBoard[self: Self]() {
+  fn PrintBoard(self) {
     var i: i32 = 0;
     while (i < 9) {
       let cell: i32 = self.board[i];
@@ -238,7 +238,7 @@ class TicTacToe {
     }
   }
 
-  fn CheckWinner[self: Self]() -> i32 {
+  fn CheckWinner(self) -> i32 {
     var i: i32 = 0;
     while (i < 8) {
       if (self.board[self.wins[i][0]] != 0
@@ -251,7 +251,7 @@ class TicTacToe {
     return 0;
   }
 
-  fn IsFull[self: Self]() -> bool {
+  fn IsFull(self) -> bool {
     var i: i32 = 0;
     while (i < 9) {
       if (self.board[i] == 0) {
@@ -262,7 +262,7 @@ class TicTacToe {
     return true;
   }
 
-  fn InputMove[self: Self]() -> i32 {
+  fn InputMove(self) -> i32 {
     var move: i32 = 0;
     while (true) {
       self.PrintBoard();
@@ -285,7 +285,7 @@ class TicTacToe {
     return move;
   }
 
-  fn PlayGame[ref self: Self]() {
+  fn PlayGame(ref self) {
     while (true) {
       var move: i32 = self.InputMove();
       self.board[move] = self.current_player;
