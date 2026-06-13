@@ -16,7 +16,7 @@ jobs:
         working-directory: ./tictactoe_cobol
     steps:
     - name: Checkout repo
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
     - name: Setup Cobol
       uses: fabasoad/setup-cobol-action@bdd06ad15f6c2a9df376bc25acbdc361aea50831 # v1.6.2
     - name: Compile.
