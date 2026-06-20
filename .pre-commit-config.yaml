@@ -236,7 +236,7 @@ repos:
 
   # Perl specific
   - repo: https://github.com/perltidy/perltidy
-    rev: "20260204.03"
+    rev: "20260204.04"
     hooks:
       - id: perltidy
         files: ^tictactoe_perl/
