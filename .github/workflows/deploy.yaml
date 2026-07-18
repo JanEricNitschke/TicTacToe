@@ -37,7 +37,7 @@ jobs:
           cp -r tictactoe_javascript/ public/javascript
 
       - name: Install elm, elm-format and cache the ELM_HOME directory
-        uses: mpizenberg/elm-tooling-action@289c229bc9d81512230e8b827df4c78398e08113 # v1.7
+        uses: mpizenberg/elm-tooling-action@cbc43aedc689be4271ecec1bdd18755a6ed7f8f3 # v2.1.0
         with:
           cache-key: elm-home-${{ hashFiles('elm-tooling.json', 'elm.json') }}
           cache-restore-key: elm-home
@@ -47,7 +47,7 @@ jobs:
         working-directory: tictactoe_elm
 
       - name: Setup java
-        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
+        uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
         with:
           distribution: "oracle"
           java-version: "22"
