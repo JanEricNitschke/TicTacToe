@@ -20,9 +20,11 @@ jobs:
       - uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f # v0.10.0
         with:
           manifest-path: ./tictactoe_mojo/pixi.toml
+      - name: Print effective target
+        run: pixi run mojo build --print-effective-target main.mojo
       - name: Build
-        run: pixi run mojo build main.mojo
+        run: pixi run mojo build --march=x86-64 main.mojo
       - name: Run
         run: ./main
       - name: Test
-        run: pixi run mojo run -I . test/test_game.mojo
+        run: pixi run mojo run --march=x86-64 -I . test/test_game.mojo
