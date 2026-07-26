@@ -1,5 +1,1 @@
-from typing import Optional
-
-def play_game(
-    X_strength: Optional[int] = None, O_strength: Optional[int] = None
-) -> None: ...
+def play_game(X_strength: int | None = None, O_strength: int | None = None) -> None: ...

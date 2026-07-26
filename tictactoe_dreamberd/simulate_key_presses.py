@@ -1,9 +1,10 @@
 """Helper scripts to get dreamberd version useable in CI."""
 
 import argparse
-from pynput.keyboard import Controller
 import time
-from typing import Iterable
+from collections.abc import Iterable
+
+from pynput.keyboard import Controller
 
 # Initialize the keyboard controller
 keyboard_controller = Controller()
