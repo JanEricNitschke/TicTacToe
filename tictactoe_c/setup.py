@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Setup scripts for C extension."""
 
-from setuptools import setup, Extension
+from setuptools import Extension, setup
 
 setup(
     name="tictactoe_c",
