@@ -40,7 +40,7 @@ repos:
         language: python
         args: ["--write", "--output-style=google"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.15.22
+    rev: v0.16.0
     hooks:
       - id: ruff-check
         args:
