@@ -30,7 +30,7 @@ jobs:
 
     # Execute gradle build command with stacktrace flag
     - name: Build with gradle
-      run: ./gradlew build --stacktrace # Execute gradle script to build project
+      run: ./gradlew build --stacktrace --warning-mode all # Execute gradle script to build project
 
     # Execute gradle script to perform lint check
     - name: Lint check
