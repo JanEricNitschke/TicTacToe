@@ -116,7 +116,7 @@ repos:
         types: [c++]
         args: ["--filter=-build/include_subdir,-build/include_order"]
   - repo: https://github.com/pocc/pre-commit-hooks
-    rev: v1.3.5
+    rev: v1.4.0
     hooks:
       - id: clang-format
         args: ["--style=Google", "-i"]
