@@ -131,8 +131,8 @@ class TestPlayerGeneral < Minitest::Test
   end
 
   def test_swap_player
-    assert_equal(:X,  Player.swap_player(:O))
-    assert_equal(:O,  Player.swap_player(:X))
+    assert_equal(:X, Player.swap_player(:O))
+    assert_equal(:O, Player.swap_player(:X))
   end
 
   def test_it_does_something_useful_humanplayer
