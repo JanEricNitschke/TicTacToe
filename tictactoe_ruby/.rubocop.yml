@@ -1,5 +1,6 @@
 AllCops:
   TargetRubyVersion: 3.1
+  NewCops: enable
   SuggestExtensions: false
 Style/StringLiterals:
   Enabled: true
@@ -9,6 +10,8 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 Layout/LineLength:
   Max: 120
+Layout/EndOfLine:
+  EnforcedStyle: lf
 # Style/MethodCallWithoutArgsParentheses:
 #   Enabled: false
 Gemspec/DeprecatedAttributeAssignment:

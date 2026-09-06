@@ -123,7 +123,7 @@ module TictactoeRuby
         board.fix_spot?(row + 1, col + 1, player)
         current_move = minmax(board, Player.swap_player(player))
         best_move = Move.new(row, col, -current_move.end_state) if -current_move.end_state >= best_move.end_state
-        board.clear_spot(row, col)
+        board.clear_spot?(row, col)
       end
       best_move
     end
@@ -209,7 +209,7 @@ module TictactoeRuby
       false
     end
 
-    def clear_spot(row, col)
+    def clear_spot?(row, col)
       if !input_nil?(row, col) && in_bounds?(row, col)
         @board[row][col] = "-"
         return true
