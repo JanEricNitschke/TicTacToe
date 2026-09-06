@@ -5,6 +5,7 @@ require "test_helper"
 # This class tests tictactoe_ruby.
 class TestTictactoeRuby < Minitest::Test
   include TictactoeRuby
+
   def test_that_it_has_a_version_number
     refute_nil VERSION
   end
@@ -14,6 +15,7 @@ end
 # This class tests TicTacToe.
 class TestTicTacToe < Minitest::Test
   include TictactoeRuby
+
   def test_it_does_something_useful_tictactoe
     refute_nil TicTacToe.new
   end
@@ -23,6 +25,7 @@ end
 # This class tests Move.
 class TestMove < Minitest::Test
   include TictactoeRuby
+
   def test_it_does_something_useful_move
     refute_nil Move.new
   end
@@ -32,6 +35,7 @@ end
 # This class tests Board.
 class TestBoard < Minitest::Test
   include TictactoeRuby
+
   def test_it_does_something_useful_board
     refute_nil Board.new
   end
@@ -98,11 +102,11 @@ class TestBoard < Minitest::Test
     refute board.fix_spot?(0, 16, :O)
   end
 
-  def test_clear_spot
+  def test_clear_spot?
     board = Board.new([[:X, "-", "-"], ["-", "-", "-"], ["-", "-", "-"]])
-    assert board.clear_spot(0, 0)
+    assert board.clear_spot?(0, 0)
     assert_equal([["-", "-", "-"], ["-", "-", "-"], ["-", "-", "-"]], board.board)
-    assert board.clear_spot(0, 0)
+    assert board.clear_spot?(0, 0)
     refute board.fix_spot?(-1, 1, :O)
     refute board.fix_spot?(0, nil, :O)
     refute board.fix_spot?(0, 16, :O)
@@ -120,6 +124,7 @@ end
 # This class tests Player.
 class TestPlayerGeneral < Minitest::Test
   include TictactoeRuby
+
   def test_it_does_something_useful_player
     refute_nil Player.new
   end
@@ -148,6 +153,7 @@ end
 # This class tests random ai move.
 class TestAIPlayerMoveRandom < Minitest::Test
   include TictactoeRuby
+
   def test_ai_move_random
     ai_player = AIPlayer.new(1, :X)
     board = Board.new([[:X, "-", "-"], ["-", "-", "-"], ["-", :X, "-"]])
@@ -205,6 +211,7 @@ end
 # This class tests blocking/winning ai move.
 class TestAIPlayerMoveBlockingWinning < Minitest::Test
   include TictactoeRuby
+
   def test_ai_move_blocking_winning_diag
     # Main diagonal
     ai_player = AIPlayer.new(3, :X)
