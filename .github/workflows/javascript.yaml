@@ -14,11 +14,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install prettier
+        run: npm i prettier --save-dev
       - name: Prettier
-        uses: actionsx/prettier@3d9f7c3fa44c9cb819e68292a328d7f4384be206 # v3
-        with:
-          # prettier CLI arguments.
-          args: --check "./tictactoe_javascript/**.{css,js}"
+        run: ./node_modules/.bin/prettier --check "./tictactoe_javascript/**.{css,js}"
       - name: Install eslint
         run: |
           npm i eslint --save-dev
