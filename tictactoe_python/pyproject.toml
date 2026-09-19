@@ -16,7 +16,7 @@ dependencies = ["typing-extensions>=4.6.0; python_version < '3.13'"]
 dev = [
     "pre-commit==4.6.2",
     "pylint==4.0.8",
-    "pyright==1.1.411",
+    "pyright==1.1.414",
     "pytest==9.1.1",
     "pytest-cov==7.1.0",
 ]
