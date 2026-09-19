@@ -201,7 +201,7 @@ repos:
 
   # ruby specific
   - repo: https://github.com/rubocop/rubocop
-    rev: v1.90.0
+    rev: v1.91.0
     hooks:
       - id: rubocop
         entry: bash -c 'cd tictactoe_ruby && rubocop --autocorrect --force-exclusion'
