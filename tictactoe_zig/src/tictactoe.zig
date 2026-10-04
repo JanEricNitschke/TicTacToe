@@ -680,7 +680,7 @@ pub fn getAIStrength(reader: *std.Io.Reader, writer: *std.Io.Writer) !AIStrength
             else => return err,
         };
         switch (user_input) {
-            1...4 => return @enumFromInt(user_input - 1),
+            1...4 => return @fromBackingInt(@intCast(user_input - 1)),
             else => {
                 try writer.print("ERROR: AIStrength has to be in range [1-4] but was {d}!\n", .{user_input});
             },
@@ -1108,7 +1108,7 @@ fn minMax(player: Player, board: *GameBoard, allocator: std.mem.Allocator, io: s
         if (value != null) continue;
         board[spot] = player;
         const current_move = try minMax(player.swap(), board, allocator, io);
-        if (@intFromEnum(current_move.end_state.reverse()) >= @intFromEnum(best_move.end_state)) {
+        if (@backingInt(current_move.end_state.reverse()) >= @backingInt(best_move.end_state)) {
             best_move = .{ .spot = spot, .end_state = current_move.end_state.reverse() };
         }
         board[spot] = null;
