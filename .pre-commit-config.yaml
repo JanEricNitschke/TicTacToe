@@ -51,7 +51,7 @@ repos:
     hooks:
       - id: pyright
         name: pyright
-        entry: pyright -p tictactoe_python/pyproject.toml tictactoe_python/tictactoe/
+        entry: uv run pyright -p tictactoe_python/pyproject.toml tictactoe_python/tictactoe/
         language: system
         types: [python]
         pass_filenames: false
@@ -59,7 +59,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint tictactoe_python/tictactoe/
+        entry: uv run pylint tictactoe_python/tictactoe/
         language: system
         types: [python]
         pass_filenames: false
@@ -131,7 +131,7 @@ repos:
         args:
           [
             "-warnings-as-errors=*",
-            -header-filter=.*",
+            "-header-filter=.*",
             "--",
             "-Itictactoe_c/include/",
             "-isystemC:/Users/Jan-Eric/AppData/Local/Programs/Python/Python311/include/",

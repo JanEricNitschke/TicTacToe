@@ -2,7 +2,6 @@
 Checks: "bugprone-*,cert-*,cppcoreguidelines-*,google-*,linuxkernel-*,misc-*,modernize-*,performance-*,portability-*,readability-*"
 WarningsAsErrors: "*"
 HeaderFilterRegex: ""
-AnalyzeTemporaryDtors: false
 FormatStyle: google
 User: Jan-Eric
 CheckOptions:

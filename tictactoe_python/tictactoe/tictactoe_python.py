@@ -16,11 +16,15 @@ if sys.version_info >= (3, 13):
     except ImportError:
         # Help users on older alphas
         if not TYPE_CHECKING:
-            from typing_extensions import Self, override
+            from typing import Self
+
+            from typing_extensions import override
         else:
             raise
 else:
-    from typing_extensions import Self, override
+    from typing import Self
+
+    from typing_extensions import override
 
 
 class Board(Iterable[list[str]], Sized):

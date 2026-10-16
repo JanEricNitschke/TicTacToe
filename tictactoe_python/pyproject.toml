@@ -8,7 +8,7 @@ version         = "0.1.0"
 authors         = [{ name = "Jan-Eric Nitschke", email = "janericnitschke@gmail.com" }]
 maintainers     = [{ name = "Jan-Eric Nitschke", email = "janericnitschke@gmail.com" }]
 license         = { text = "MIT" }
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 dependencies = ["typing-extensions>=4.6.0; python_version < '3.13'"]
 
@@ -62,8 +62,8 @@ exclude = [
 line-length = 88
 
 
-# Assume Python 3.10.
-target-version = "py310"
+# Assume Python 3.11.
+target-version = "py311"
 
 [tool.ruff.lint]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
@@ -103,7 +103,7 @@ convention = "google" # Accepts: "google", "numpy", or "pep257".
 [tool.pyright]
 include                            = ["tictactoe/"]
 exclude                            = ["tests"]
-pythonVersion                      = "3.10"
+pythonVersion                      = "3.11"
 typeCheckingMode                   = "strict"
 strictListInference                = true
 strictDictionaryInference          = true
@@ -125,7 +125,6 @@ reportUnnecessaryContains          = "error"
 reportAssertAlwaysTrue             = "error"
 reportUnnecessaryTypeIgnoreComment = "error"
 reportImplicitOverride             = "error"
-reportShadowedImports              = "error"
 
 [tool.pylint.main]
 # Specify a score threshold under which the program will exit with error.
