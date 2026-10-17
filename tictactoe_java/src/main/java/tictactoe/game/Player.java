@@ -1,13 +1,7 @@
 package tictactoe.game;
 
-/**
- * Interface for human and ai moves.
- */
+/** Interface for human and ai moves. */
 public interface Player {
-    /**
-     * Function to make a move on a board with a marker.
-     * @param board Game board to make the move on.
-     * @param marker Marker to make the move as.
-     */
+    /** Function to make a move on a board with a marker. */
     void makeMove(Board board, Marker marker);
 }

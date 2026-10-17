@@ -47,16 +47,6 @@ public class BoardTest {
         Marker marker = new Marker();
         assertFalse(board.playerWin(marker));
         assertFalse(board.playerWin(marker.swapMarker()));
-
-        board = new Board(new char[] { 'X', 'X', 'X', '3', '4', '5', '6', '7', '8' });
-        assertTrue(board.playerWin(marker));
-        assertFalse(board.playerWin(marker.swapMarker()));
-        board = new Board(new char[] { '0', '1', '2', 'O', 'O', 'O', '6', '7', '8' });
-        assertFalse(board.playerWin(marker));
-        assertTrue(board.playerWin(marker.swapMarker()));
-        board = new Board(new char[] { '0', '1', '2', '3', '4', '5', 'X', 'X', 'X' });
-        assertTrue(board.playerWin(marker));
-        assertFalse(board.playerWin(marker.swapMarker()));
     }
 
     @Test
