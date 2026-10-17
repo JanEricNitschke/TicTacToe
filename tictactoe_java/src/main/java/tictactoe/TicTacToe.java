@@ -8,19 +8,10 @@ import tictactoe.game.HumanPlayer;
 import tictactoe.game.AIPlayer;
 import tictactoe.game.Marker;
 
-/**
- * Class for playing TicTacToe.
- */
+/** Class for playing TicTacToe. */
 public class TicTacToe {
 
-  /**
-   * Game loop of tictactoe.
-   * Initializes the board, marker and players.
-   * And then lets players make their moves.
-   *
-   * @param humanPlayer Human player playing the game.
-   * @param aiPlayer    Optional AI player as an opponent.
-   */
+  /** Game loop of tictactoe. Initializes the board, marker and players. */
   void playGame(final HumanPlayer humanPlayer, final AIPlayer aiPlayer) {
     Board board = new Board();
     Marker marker = new Marker();
@@ -38,13 +29,7 @@ public class TicTacToe {
     board.showBoard();
   }
 
-  /**
-   * Ask the user a yes/no question and return if the answer was yes.
-   *
-   * @param question Question to ask the user.
-   * @param scanner  Scanner to read the user input.
-   * @return Whether the user answered in the affirmative.
-   */
+  /** Ask the user a yes/no question and return if the answer was yes. */
   public boolean getUserYesNo(final String question, final Scanner scanner) {
     char answer;
     while (true) {
@@ -59,22 +44,12 @@ public class TicTacToe {
     }
   }
 
-  /**
-   * Ask the user if they want to play alone vs an AI.
-   *
-   * @param scanner Scanner to read the user input.
-   * @return Whether the user will play vs an AI.
-   */
+  /** Ask the user if they want to play alone vs an AI. */
   boolean getAIOpponentExists(final Scanner scanner) {
     return getUserYesNo("Play alone vs AI?[y/n]", scanner);
   }
 
-  /**
-   * Get the character that the AI plays as depending on if it goes first.
-   *
-   * @param scanner Scanner to read the user input.
-   * @return Character that the AI will play as.
-   */
+  /** Get the character that the AI plays as depending on if it goes first. */
   char getAIOpponentStart(final Scanner scanner) {
     if (getUserYesNo("Should the AI make the first move?[y/n]", scanner)) {
       return 'X';
@@ -82,12 +57,7 @@ public class TicTacToe {
     return 'O';
   }
 
-  /**
-   * Get the strength of the ai from the player.
-   *
-   * @param scanner Scanner to use to get input from player.
-   * @return Chosen strength of the AI.
-   */
+  /** Get the strength of the ai from the player. */
   int getAIOpponentDifficulty(final Scanner scanner) {
     int difficulty;
     String failureString = "ERROR: Input must be a"
@@ -112,16 +82,7 @@ public class TicTacToe {
     }
   }
 
-  /**
-   * Checks whether the game is over.
-   * Either due to the current player winning
-   * or due to a draw.
-   * Prints an appropriate message if the game is finished.
-   *
-   * @param marker Player that made the last move and can possibly be the winner
-   * @param board  Game board currently being played on.
-   * @return Whether the game is over or not.
-   */
+  /** Checks whether the game is over and prints a result message. */
   boolean gameOver(final Marker marker, final Board board) {
     if (board.playerWin(marker)) {
       System.out.println("Player " + marker.getMarker() + " wins the game!");
@@ -134,11 +95,7 @@ public class TicTacToe {
     return false;
   }
 
-  /**
-   * Initializes a game and starts the game loop.
-   *
-   * @param args CL arguments. Not used.
-   */
+  /** Initializes a game and starts the game loop. */
   public static void main(final String[] args) {
     TicTacToe tictactoe = new TicTacToe();
     Scanner inputScanner = new Scanner(System.in);

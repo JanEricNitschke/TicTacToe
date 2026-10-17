@@ -48,11 +48,10 @@ public class AIPlayerTest {
     @Test
     @DisplayName("Winning move should find rows.")
     public void testWinningMoveRow() {
-        Board board = new Board();
         Marker marker = new Marker();
 
         AIPlayer aiPlayer = new AIPlayer('X', 2);
-        board = new Board(new char[] { 'X', 'X', '2', '3', '4', '5', '6', '7', '8' });
+        Board board = new Board(new char[] { 'X', 'X', '2', '3', '4', '5', '6', '7', '8' });
         Move winningMove = aiPlayer.getMove(board, marker);
         assertEquals(2, winningMove.getSpot());
 
@@ -68,11 +67,10 @@ public class AIPlayerTest {
     @Test
     @DisplayName("Winning move should find cols.")
     public void testWinningMoveCol() {
-        Board board = new Board();
         Marker marker = new Marker();
 
         AIPlayer aiPlayer = new AIPlayer('X', 2);
-        board = new Board(new char[] { 'O', '1', '2', 'O', '4', '5', '6', '7', '8' });
+        Board board = new Board(new char[] { 'O', '1', '2', 'O', '4', '5', '6', '7', '8' });
         Move winningMove = aiPlayer.getMove(board, marker.swapMarker());
         assertEquals(6, winningMove.getSpot());
 
@@ -88,11 +86,10 @@ public class AIPlayerTest {
     @Test
     @DisplayName("Winning move should find diagonals.")
     public void testWinningMoveDiag() {
-        Board board = new Board();
         Marker marker = new Marker();
 
         AIPlayer aiPlayer = new AIPlayer('X', 2);
-        board = new Board(new char[] { 'X', '1', '2', '3', 'X', '5', '6', '7', '8' });
+        Board board = new Board(new char[] { 'X', '1', '2', '3', 'X', '5', '6', '7', '8' });
         Move winningMove = aiPlayer.getMove(board, marker);
         assertEquals(8, winningMove.getSpot());
 
@@ -119,11 +116,10 @@ public class AIPlayerTest {
     @Test
     @DisplayName("Blocking move should find rows.")
     public void testBlockingMoveRow() {
-        Board board = new Board();
         Marker marker = new Marker();
 
         AIPlayer aiPlayer = new AIPlayer('X', 3);
-        board = new Board(new char[] { 'X', 'X', '2', '3', '4', '5', 'O', 'O', '8' });
+        Board board = new Board(new char[] { 'X', 'X', '2', '3', '4', '5', 'O', 'O', '8' });
         Move winningMove = aiPlayer.getMove(board, marker);
         assertEquals(2, winningMove.getSpot(), "Should prioritize win");
 
@@ -136,11 +132,10 @@ public class AIPlayerTest {
     @Test
     @DisplayName("Blockingmove should find cols.")
     public void testBlockingMoveCol() {
-        Board board = new Board();
         Marker marker = new Marker();
 
         AIPlayer aiPlayer = new AIPlayer('X', 3);
-        board = new Board(new char[] { 'O', '1', 'X', '3', '4', '5', 'O', '7', 'X' });
+        Board board = new Board(new char[] { 'O', '1', 'X', '3', '4', '5', 'O', '7', 'X' });
         Move winningMove = aiPlayer.getMove(board, marker.swapMarker());
         assertEquals(3, winningMove.getSpot(), "Should prioritize win");
 
@@ -153,11 +148,10 @@ public class AIPlayerTest {
     @Test
     @DisplayName("Blocking move should find diagonals.")
     public void testBlockingMoveDiag() {
-        Board board = new Board();
         Marker marker = new Marker();
 
         AIPlayer aiPlayer = new AIPlayer('X', 3);
-        board = new Board(new char[] { 'X', '1', '2', '3', '4', '5', '6', '7', 'X' });
+        Board board = new Board(new char[] { 'X', '1', '2', '3', '4', '5', '6', '7', 'X' });
         Move winningMove = aiPlayer.getMove(board, marker);
         assertEquals(4, winningMove.getSpot(), "Should prioritize win");
 
@@ -239,6 +233,5 @@ public class AIPlayerTest {
         Move bestMove = aiPlayer.getMove(board, marker);
         assertEquals(4, bestMove.getSpot());
         assertEquals(0, bestMove.getEndState());
-        ;
     }
 }
