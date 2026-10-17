@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Scanner;
@@ -16,7 +15,6 @@ import tictactoe.game.Board;
 public class HumanPlayerTest {
 
     @Test
-    @DisplayName("Human MakeMove should loop until valid input.")
     public void testMakeMove() {
         Board board = new Board();
         Marker marker = new Marker();

@@ -1,6 +1,5 @@
 package tictactoe;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,7 +16,6 @@ import tictactoe.game.Marker;
 public class BoardTest {
 
     @Test
-    @DisplayName("Full board should be recognized for draws.")
     public void testBoardFull() {
         Board board = new Board();
         assertFalse(board.boardFull());
@@ -26,7 +24,6 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("Open spots should be recognized correctly.")
     public void testGetOpenSpots() {
         Board board = new Board();
         ArrayList<Integer> expectedList = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8));
@@ -41,26 +38,14 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("PlayerWin should work for empty board.")
     public void testPlayerWinEmpty() {
         Board board = new Board();
         Marker marker = new Marker();
         assertFalse(board.playerWin(marker));
         assertFalse(board.playerWin(marker.swapMarker()));
-
-        board = new Board(new char[] { 'X', 'X', 'X', '3', '4', '5', '6', '7', '8' });
-        assertTrue(board.playerWin(marker));
-        assertFalse(board.playerWin(marker.swapMarker()));
-        board = new Board(new char[] { '0', '1', '2', 'O', 'O', 'O', '6', '7', '8' });
-        assertFalse(board.playerWin(marker));
-        assertTrue(board.playerWin(marker.swapMarker()));
-        board = new Board(new char[] { '0', '1', '2', '3', '4', '5', 'X', 'X', 'X' });
-        assertTrue(board.playerWin(marker));
-        assertFalse(board.playerWin(marker.swapMarker()));
     }
 
     @Test
-    @DisplayName("PlayerWin should work for rows.")
     public void testPlayerWinRows() {
         Board board = new Board();
         Marker marker = new Marker();
@@ -76,7 +61,6 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("PlayerWin should work for columns.")
     public void testPlayerWinCols() {
         Board board = new Board();
         Marker marker = new Marker();
@@ -92,7 +76,6 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("PlayerWin should work for diagonals.")
     public void testPlayerWinDiags() {
         Board board = new Board();
         Marker marker = new Marker();
@@ -105,7 +88,6 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("Check condition should work.")
     public void testCheckCondition() {
         Board board = new Board();
         Marker marker = new Marker();
@@ -124,7 +106,6 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("Fix spot should work.")
     public void testFixSpot() {
         Board board = new Board();
         Marker marker = new Marker();
@@ -135,7 +116,6 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("Clear spot clears spot.")
     public void testClearSpot() {
         Board board = new Board(new char[] { 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
         char cleared = board.clearSpot(1);
