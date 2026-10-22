@@ -624,6 +624,22 @@ python3 -m http.server
 
 Hosted [here](https://janericnitschke.github.io/TicTacToe/wasm) on GH-Pages.
 
+## TicTacToe-Zustand
+
+Simple tictactoe game with [React](https://react.dev/) and TypeScript using
+[Zustand](https://zustand.docs.pmnd.rs/).
+
+Hosted [here](https://janericnitschke.github.io/TicTacToe/zustand) on GH-Pages.
+
+To install, lint, build and run:
+
+```bash
+pnpm install
+pnpm lint
+pnpm build
+pnpm dev
+```
+
 ## TicTacToe-scratch
 
 Very simple two player tictactoe game with Scratch.

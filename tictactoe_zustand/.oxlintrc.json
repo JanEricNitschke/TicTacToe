@@ -1,0 +1,106 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "import",
+    "jsx-a11y",
+    "oxc",
+    "promise",
+    "react",
+    "react-perf",
+    "typescript",
+    "unicorn"
+  ],
+  "env": {
+    "browser": true,
+    "builtin": true
+  },
+  "ignorePatterns": ["dist", "node_modules"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "pedantic": "error",
+    "perf": "error",
+    "style": "error",
+    "restriction": "off",
+    "nursery": "off"
+  },
+  "rules": {
+    "eslint/id-length": "error",
+    "eslint/no-ternary": "off",
+    "eslint/one-var": ["error", "never"],
+    "eslint/sort-keys": "off",
+    "import/exports-last": "off",
+    "react/no-array-index-key": "off",
+    "react-perf/jsx-no-new-function-as-prop": "off",
+    "react-perf/jsx-no-new-object-as-prop": "off",
+    "unicorn/filename-case": "off",
+    "unicorn/no-null": "off",
+
+    "eslint/complexity": ["error", { "max": 15 }],
+    "eslint/default-case": "error",
+    "eslint/func-style": ["error", "declaration"],
+    "eslint/max-depth": ["error", { "max": 4 }],
+    "eslint/max-lines": [
+      "error",
+      { "max": 300, "skipBlankLines": true, "skipComments": true }
+    ],
+    "eslint/max-lines-per-function": [
+      "error",
+      { "max": 100, "skipBlankLines": true, "skipComments": true }
+    ],
+    "eslint/max-nested-callbacks": ["error", { "max": 4 }],
+    "eslint/max-params": ["error", { "max": 4 }],
+    "eslint/max-statements": ["error", { "max": 15 }],
+    "eslint/no-alert": "error",
+    "eslint/no-console": "error",
+    "eslint/no-empty-function": "error",
+    "eslint/no-implicit-globals": "error",
+    "eslint/no-magic-numbers": [
+      "error",
+      {
+        "ignore": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "ignoreArrayIndexes": true
+      }
+    ],
+    "eslint/no-param-reassign": "error",
+    "eslint/no-proto": "error",
+    "eslint/no-undefined": "error",
+    "eslint/no-use-before-define": ["error", { "functions": false }],
+    "eslint/no-var": "error",
+    "eslint/no-void": "error",
+    "import/no-amd": "error",
+    "import/no-commonjs": "error",
+    "import/no-cycle": "error",
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
+    "import/unambiguous": "error",
+    "promise/catch-or-return": "error",
+    "react/button-has-type": "error",
+    "react/jsx-filename-extension": [
+      "error",
+      { "allow": "as-needed", "extensions": ["jsx", "tsx"] }
+    ],
+    "react/jsx-max-depth": ["error", { "max": 5 }],
+    "react/no-clone-element": "error",
+    "react/no-danger": "error",
+    "react/no-unknown-property": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/only-export-components": ["error", { "allowConstantExport": true }],
+    "typescript/consistent-type-imports": "error",
+    "typescript/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowHigherOrderFunctions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "unicorn/no-abusive-eslint-disable": "error",
+    "unicorn/no-anonymous-default-export": "error",
+    "unicorn/no-array-for-each": "error",
+    "unicorn/prefer-module": "error",
+    "unicorn/prefer-number-properties": "error"
+  }
+}

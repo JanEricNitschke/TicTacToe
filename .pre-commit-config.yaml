@@ -7,6 +7,7 @@ repos:
     hooks:
       - id: check-yaml
         language: python
+        args: [--allow-multiple-documents]
       - id: check-json
         language: python
       - id: end-of-file-fixer
@@ -190,6 +191,15 @@ repos:
     hooks:
       - id: prettier
         types_or: [css, javascript]
+        exclude: ^tictactoe_zustand/
+  - repo: local
+    hooks:
+      - id: oxfmt
+        name: oxfmt
+        entry: bash -c 'cd tictactoe_zustand && pnpm exec oxfmt'
+        language: system
+        files: ^tictactoe_zustand/
+        pass_filenames: false
   - repo: https://github.com/Lucas-C/pre-commit-hooks-nodejs
     rev: v1.1.2
     hooks:
