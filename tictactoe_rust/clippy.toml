@@ -1,1 +1,1 @@
-allowed-duplicate-crates = ["zerocopy", "zerocopy-derive", "hashbrown"]
+allowed-duplicate-crates = ["zerocopy", "zerocopy-derive", "hashbrown", "syn"]
