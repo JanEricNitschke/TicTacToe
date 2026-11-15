@@ -2,7 +2,7 @@
 
 import "package:tictactoe_dart/main.dart";
 import "package:test/test.dart";
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group("EndState", () {
