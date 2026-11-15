@@ -236,20 +236,23 @@ impl TicTacToe {
         let mut rows_map = collections::HashMap::new();
         let mut cols_map = collections::HashMap::new();
         let mut diag_map = collections::HashMap::new();
-        for row in 0..self.board.len() {
-            for col in 0..self.board[0].len() {
-                if self.board[row][col] == player {
+        for (row, board_row) in self.board.iter().enumerate() {
+            for (col, cell) in board_row.iter().enumerate() {
+                if *cell == player {
                     // Player shows up +1 time in this row
                     let count = rows_map.entry(row).or_insert(0);
                     *count += 1;
+
                     // and column
                     let count = cols_map.entry(col).or_insert(0);
                     *count += 1;
+
                     if row == col {
                         // and on the main diagonal
                         let count = diag_map.entry(0).or_insert(0);
                         *count += 1;
                     }
+
                     if row == (self.board.len() - col - 1) {
                         // and on the anti-diagonal
                         let count = diag_map.entry(1).or_insert(0);
@@ -285,14 +288,7 @@ impl TicTacToe {
     /// After a negative check if either player has won
     /// this indicates a draw
     fn is_board_filled(&self) -> bool {
-        for row in 0..self.board.len() {
-            for col in 0..self.board[0].len() {
-                if self.board[row][col] == '-' {
-                    return false;
-                }
-            }
-        }
-        true
+        self.board.iter().flatten().all(|&cell| cell != '-')
     }
 
     /// Prints the current game board to stdout
@@ -308,9 +304,9 @@ impl TicTacToe {
         let str_line = "---------------";
 
         println!("{str_line}");
-        for row in 0..self.board.len() {
-            for col in 0..self.board[0].len() {
-                print!("| {} |", self.board[row][col]);
+        for row in &self.board {
+            for cell in row {
+                print!("| {cell} |");
             }
             println!("\n{str_line}");
         }
@@ -351,13 +347,15 @@ impl TicTacToe {
     /// Gathers all empty cells in the current game state
     fn empty_cells(&self) -> Vec<[usize; 2]> {
         let mut empty_cells_vector = Vec::new();
-        for row in 0..self.board.len() {
-            for col in 0..self.board[0].len() {
-                if self.board[row][col] == '-' {
+
+        for (row, board_row) in self.board.iter().enumerate() {
+            for (col, cell) in board_row.iter().enumerate() {
+                if *cell == '-' {
                     empty_cells_vector.push([row, col]);
                 }
             }
         }
+
         empty_cells_vector
     }
 
@@ -438,25 +436,28 @@ impl TicTacToe {
             std::collections::HashSet<(usize, usize)>,
         >,
     ) {
-        for row in 0..self.board.len() {
-            for col in 0..self.board[0].len() {
+        for (row, board_row) in self.board.iter().enumerate() {
+            for (col, cell) in board_row.iter().enumerate() {
                 /*
                 If the given player occupies this cell
                 then that reduces the required positions
                 in that line by one
                 */
-                if self.board[row][col] == player {
+                if *cell == player {
                     win_conditions.entry(format!("row{row}")).and_modify(|set| {
                         _ = set.remove(&(row, col));
                     });
+
                     win_conditions.entry(format!("col{col}")).and_modify(|set| {
                         _ = set.remove(&(row, col));
                     });
+
                     if row == col {
                         win_conditions.entry("diag".to_string()).and_modify(|set| {
                             _ = set.remove(&(row, col));
                         });
                     }
+
                     if row == (self.board.len() - 1 - col) {
                         win_conditions
                             .entry("antidiag".to_string())
@@ -465,20 +466,24 @@ impl TicTacToe {
                             });
                     }
                 }
+
                 // If the opposing player occupies this cell
                 // then all lines that contain it become useless
-                if self.board[row][col] == swap_player(player) {
+                if *cell == swap_player(player) {
                     win_conditions.entry(format!("row{row}")).and_modify(|set| {
                         set.clear();
                     });
+
                     win_conditions.entry(format!("col{col}")).and_modify(|set| {
                         set.clear();
                     });
+
                     if row == col {
                         win_conditions.entry("diag".to_string()).and_modify(|set| {
                             set.clear();
                         });
                     }
+
                     if row == (self.board.len() - 1 - col) {
                         win_conditions
                             .entry("antidiag".to_string())
