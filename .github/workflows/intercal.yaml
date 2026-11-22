@@ -21,6 +21,8 @@ jobs:
       run: |
         sudo apt-get install intercal
     - name: Compile tictactoe
+      env:
+        CC: gcc -std=gnu17
       run: ick -Ofb tictactoe.i
     - name: Run
       run: |

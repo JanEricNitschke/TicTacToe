@@ -18,7 +18,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Setup Cobol
-      uses: fabasoad/setup-cobol-action@7d20ae68e3fa2c54482d42951fd201a87a1ba5b3 # v1.6.3
+      uses: fabasoad/setup-cobol-action@25753f9bac63f5c86661f9778a546564f4858a66 # v1.7.0
     - name: Compile.
       run: |
         cobc -x tictactoe_cobol.cob
